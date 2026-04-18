@@ -30,18 +30,7 @@ public interface ResourceRepository extends MongoRepository<Resource, String> {
     // Find active resources
     List<Resource> findByStatusIgnoreCase(String status);
     
-    // Find resources by multiple criteria
-    @Query("{ $and: [ " +
-           "{ $or: [ { 'name': { $regex: ?0, $options: 'i' } }, " +
-           "{ 'type': { $regex: ?0, $options: 'i' } }, " +
-           "{ 'location': { $regex: ?0, $options: 'i' } } ] }, " +
-           "{ 'type': ?1 }, " +
-           "{ 'capacity': ?2 }, " +
-           "{ 'location': ?3 }, " +
-           "{ 'status': ?4 } " +
-           "] }")
-    List<Resource> findByMultipleCriteria(String searchTerm, String type, Integer capacity, String location, String status);
-    
+        
     // Count resources by type
     long countByType(String type);
     

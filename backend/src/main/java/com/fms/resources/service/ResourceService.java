@@ -108,11 +108,46 @@ public class ResourceService {
     
     // Search resources
     public List<Resource> searchResources(String searchTerm, String type, Integer capacity, String location, String status) {
+        List<Resource> resources = resourceRepository.findAll();
+        
+        // Filter by search term (name, type, location)
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            return resourceRepository.findByMultipleCriteria(searchTerm, type, capacity, location, status);
-        } else {
-            return resourceRepository.findByMultipleCriteria("", type, capacity, location, status);
+            resources = resources.stream()
+                .filter(r -> r.getName().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                           r.getType().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                           r.getLocation().toLowerCase().contains(searchTerm.toLowerCase()))
+                .collect(java.util.stream.Collectors.toList());
         }
+        
+        // Filter by type
+        if (type != null && !type.trim().isEmpty()) {
+            resources = resources.stream()
+                .filter(r -> r.getType().equals(type))
+                .collect(java.util.stream.Collectors.toList());
+        }
+        
+        // Filter by capacity
+        if (capacity != null) {
+            resources = resources.stream()
+                .filter(r -> capacity.equals(r.getCapacity()))
+                .collect(java.util.stream.Collectors.toList());
+        }
+        
+        // Filter by location
+        if (location != null && !location.trim().isEmpty()) {
+            resources = resources.stream()
+                .filter(r -> r.getLocation().equals(location))
+                .collect(java.util.stream.Collectors.toList());
+        }
+        
+        // Filter by status
+        if (status != null && !status.trim().isEmpty()) {
+            resources = resources.stream()
+                .filter(r -> r.getStatus().equals(status))
+                .collect(java.util.stream.Collectors.toList());
+        }
+        
+        return resources;
     }
     
     // Get resources by type
