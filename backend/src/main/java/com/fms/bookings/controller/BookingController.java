@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fms.bookings.dto.BookingCreateRequest;
+import com.fms.bookings.dto.BookingDecisionRequest;
 import com.fms.bookings.dto.BookingResponse;
 import com.fms.bookings.dto.BookingUpdateRequest;
 import com.fms.bookings.service.BookingService;
@@ -67,5 +68,12 @@ public class BookingController {
 		@RequestParam String approvedBy) {
 		BookingResponse response = bookingService.approveBooking(id, approvedBy);
 		return ResponseEntity.ok(ApiResponse.success("Booking approved successfully.", response));
+	}
+
+	@PatchMapping("/{id}/reject")
+	public ResponseEntity<ApiResponse<BookingResponse>> rejectBooking(@PathVariable String id,
+		@Valid @RequestBody BookingDecisionRequest request) {
+		BookingResponse response = bookingService.rejectBooking(id, request.getReason());
+		return ResponseEntity.ok(ApiResponse.success("Booking rejected successfully.", response));
 	}
 }
