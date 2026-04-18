@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fms.bookings.dto.BookingCreateRequest;
@@ -52,5 +53,11 @@ public class BookingController {
 		@Valid @RequestBody BookingUpdateRequest request) {
 		BookingResponse response = bookingService.updateBooking(id, request);
 		return ResponseEntity.ok(ApiResponse.success("Booking updated successfully.", response));
+	}
+
+	@PatchMapping("/{id}/cancel")
+	public ResponseEntity<ApiResponse<BookingResponse>> cancelBooking(@PathVariable String id) {
+		BookingResponse response = bookingService.cancelBooking(id);
+		return ResponseEntity.ok(ApiResponse.success("Booking cancelled successfully.", response));
 	}
 }
