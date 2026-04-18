@@ -1,3 +1,401 @@
+import { useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { cancelBooking, createBooking, getBookings, updateBooking } from '../../api/bookings';
+import './bookings.css';
+
+const initialForm = {
+  resourceId: '',
+  resourceName: '',
+  requestedBy: '',
+  purpose: '',
+  startDateTime: '',
+  endDateTime: ''
+};
+
+const statusOrder = ['ALL', 'PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'];
+
+function toDatetimeLocal(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function formatBookingTime(value) {
+  if (!value) return 'N/A';
+  return new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  }).format(new Date(value));
+}
+
+function statusClass(status) {
+  return String(status || '').toLowerCase();
+}
+
 export default function BookingsPage() {
-  return <h1>Bookings Module</h1>;
+  const [form, setForm] = useState(initialForm);
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState('ALL');
+  const [search, setSearch] = useState('');
+  const [errorBanner, setErrorBanner] = useState('');
+  const [successBanner, setSuccessBanner] = useState('');
+
+  useEffect(() => {
+    loadBookings();
+  }, []);
+
+  async function loadBookings() {
+    try {
+      setLoading(true);
+      const { data } = await getBookings();
+      setBookings(data?.data ?? []);
+      setErrorBanner('');
+    } catch (error) {
+      const message = error?.response?.data?.message || 'Failed to load bookings.';
+      setErrorBanner(message);
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function resetForm() {
+    setForm(initialForm);
+    setEditingId(null);
+  }
+
+  function handleFormChange(event) {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setSaving(true);
+
+    const payload = {
+      ...form,
+      requestedBy: form.requestedBy.trim(),
+      resourceId: form.resourceId.trim(),
+      resourceName: form.resourceName.trim(),
+      purpose: form.purpose.trim()
+    };
+
+    try {
+      if (editingId) {
+        await updateBooking(editingId, payload);
+        toast.success('Booking updated successfully.');
+        setSuccessBanner('Booking updated successfully.');
+      } else {
+        await createBooking(payload);
+        toast.success('Booking requested successfully.');
+        setSuccessBanner('Booking requested successfully.');
+      }
+
+      resetForm();
+      await loadBookings();
+    } catch (error) {
+      const message = error?.response?.data?.message || 'Unable to save booking.';
+      setErrorBanner(message);
+      toast.error(message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleCancel(id) {
+    try {
+      await cancelBooking(id);
+      toast.success('Booking cancelled.');
+      setSuccessBanner('Booking cancelled.');
+      await loadBookings();
+    } catch (error) {
+      const message = error?.response?.data?.message || 'Unable to cancel booking.';
+      setErrorBanner(message);
+      toast.error(message);
+    }
+  }
+
+  const filteredBookings = useMemo(() => {
+    return bookings.filter((booking) => {
+      const matchesStatus = selectedStatus === 'ALL' || booking.status === selectedStatus;
+      const query = search.trim().toLowerCase();
+      const haystack = [
+        booking.id,
+        booking.resourceId,
+        booking.resourceName,
+        booking.requestedBy,
+        booking.purpose,
+        booking.status
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return matchesStatus && (!query || haystack.includes(query));
+    });
+  }, [bookings, selectedStatus, search]);
+
+  const counts = useMemo(() => {
+    const total = bookings.length;
+    const pending = bookings.filter((booking) => booking.status === 'PENDING').length;
+    const approved = bookings.filter((booking) => booking.status === 'APPROVED').length;
+    const rejected = bookings.filter((booking) => booking.status === 'REJECTED').length;
+
+    return { total, pending, approved, rejected };
+  }, [bookings]);
+
+  return (
+    <div className="bookings-page">
+      <div className="bookings-shell">
+        <section className="bookings-hero">
+          <div className="hero-panel">
+            <div className="eyebrow">
+              <span className="eyebrow-dot" />
+              User booking page
+            </div>
+            <h1>Request and manage your facility bookings.</h1>
+            <p className="hero-copy">
+              Use this page to create, update, view, search, and cancel bookings. Admin approval
+              actions live on the separate admin page.
+            </p>
+            <div className="hero-stats">
+              <div className="stat-tile">
+                <div className="stat-label">Total bookings</div>
+                <div className="stat-value">{counts.total}</div>
+              </div>
+              <div className="stat-tile">
+                <div className="stat-label">Pending</div>
+                <div className="stat-value">{counts.pending}</div>
+              </div>
+              <div className="stat-tile">
+                <div className="stat-label">Approved</div>
+                <div className="stat-value">{counts.approved}</div>
+              </div>
+            </div>
+          </div>
+
+          <aside className="side-panel">
+            <div>
+              <div className="side-title">User workflow</div>
+              <div className="side-text">
+                The user view stays focused on request creation and tracking. Approval and rejection
+                are handled in the admin page so the module stays clean and role-based.
+              </div>
+              <div className="rule-list">
+                <div className="rule">
+                  <span className="rule-badge">1</span>
+                  Create a request with a valid resource and time window.
+                </div>
+                <div className="rule">
+                  <span className="rule-badge">2</span>
+                  Edit or cancel only while the booking is still pending.
+                </div>
+                <div className="rule">
+                  <span className="rule-badge">3</span>
+                  Search and filter bookings by resource, user, purpose, or status.
+                </div>
+              </div>
+            </div>
+            <div className="mini-grid">
+              <div className="mini-card">
+                <h3>Current scope</h3>
+                <p>Create, update, view, and cancel your own bookings from one page.</p>
+                <div className="pill-row">
+                  <span className="pill">Create</span>
+                  <span className="pill">Edit</span>
+                  <span className="pill">Cancel</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        {errorBanner ? <div className="banner error">{errorBanner}</div> : null}
+        {successBanner ? <div className="banner success">{successBanner}</div> : null}
+
+        <section className="toolbar">
+          <div className="form-card">
+            <div className="section-title">{editingId ? 'Update booking' : 'Create booking'}</div>
+            <div className="section-subtitle">
+              Fill in the booking request exactly as the backend expects.
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              <div className="grid-form">
+                <div className="field">
+                  <label htmlFor="resourceId">Resource ID</label>
+                  <input id="resourceId" name="resourceId" value={form.resourceId} onChange={handleFormChange} placeholder="LAB-101" required />
+                </div>
+                <div className="field">
+                  <label htmlFor="resourceName">Resource name</label>
+                  <input id="resourceName" name="resourceName" value={form.resourceName} onChange={handleFormChange} placeholder="Computer Lab 101" />
+                </div>
+                <div className="field">
+                  <label htmlFor="requestedBy">Requested by</label>
+                  <input id="requestedBy" name="requestedBy" value={form.requestedBy} onChange={handleFormChange} placeholder="student1" required />
+                </div>
+                <div className="field">
+                  <label htmlFor="purpose">Purpose</label>
+                  <input id="purpose" name="purpose" value={form.purpose} onChange={handleFormChange} placeholder="Project meeting" required />
+                </div>
+                <div className="field">
+                  <label htmlFor="startDateTime">Start date/time</label>
+                  <input id="startDateTime" type="datetime-local" name="startDateTime" value={form.startDateTime} onChange={handleFormChange} required />
+                </div>
+                <div className="field">
+                  <label htmlFor="endDateTime">End date/time</label>
+                  <input id="endDateTime" type="datetime-local" name="endDateTime" value={form.endDateTime} onChange={handleFormChange} required />
+                </div>
+              </div>
+              <div className="form-actions">
+                <button className="btn btn-primary" type="submit" disabled={saving}>
+                  {saving ? 'Saving...' : editingId ? 'Update booking' : 'Create booking'}
+                </button>
+                <button className="btn btn-secondary" type="button" onClick={resetForm}>
+                  Reset
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div className="filter-card">
+            <div className="section-title">Quick tips</div>
+            <div className="section-subtitle">
+              Pending bookings can be edited or cancelled. Approved and rejected bookings are read-only.
+            </div>
+            <div className="mini-grid">
+              <div className="mini-card">
+                <h3>Conflict handling</h3>
+                <p>Overlapping time ranges are blocked by the backend before they can be saved.</p>
+              </div>
+              <div className="mini-card">
+                <h3>Need admin review?</h3>
+                <p>Open the admin bookings page to approve or reject pending requests.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="table-card">
+          <div className="controls">
+            <div className="search">
+              <input
+                type="search"
+                placeholder="Search by resource, user, purpose, or booking id"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </div>
+            <div className="filter-chips">
+              {statusOrder.map((status) => (
+                <button
+                  key={status}
+                  type="button"
+                  className={`chip ${selectedStatus === status ? 'active' : ''}`}
+                  onClick={() => setSelectedStatus(status)}
+                >
+                  {status === 'ALL' ? 'All' : status}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="section-title">Bookings</div>
+          <div className="section-subtitle">
+            Review your bookings, then edit or cancel pending ones when needed.
+          </div>
+
+          {loading ? (
+            <div className="empty-state">Loading bookings...</div>
+          ) : filteredBookings.length === 0 ? (
+            <div className="empty-state">
+              No bookings match the current filter. Create a new request or clear the search/status filter.
+            </div>
+          ) : (
+            <div className="booking-grid">
+              {filteredBookings.map((booking) => {
+                const editable = booking.status === 'PENDING';
+
+                return (
+                  <article className="booking-card" key={booking.id}>
+                    <div className="booking-main">
+                      <div className="booking-head">
+                        <div>
+                          <div className="booking-title">{booking.resourceName || booking.resourceId}</div>
+                          <div className="booking-meta">Booking ID: {booking.id}</div>
+                        </div>
+                        <span className={`status ${statusClass(booking.status)}`}>
+                          <span className="status-dot" />
+                          {booking.status}
+                        </span>
+                      </div>
+
+                      <div className="booking-meta">
+                        <strong>Resource:</strong> {booking.resourceId}
+                        <br />
+                        <strong>Requested by:</strong> {booking.requestedBy}
+                        <br />
+                        <strong>Purpose:</strong> {booking.purpose}
+                        <br />
+                        <strong>Time:</strong> {formatBookingTime(booking.startDateTime)} to {formatBookingTime(booking.endDateTime)}
+                        {booking.approvedBy ? (
+                          <>
+                            <br />
+                            <strong>Approved by:</strong> {booking.approvedBy}
+                          </>
+                        ) : null}
+                        {booking.rejectionReason ? (
+                          <>
+                            <br />
+                            <strong>Rejection reason:</strong> {booking.rejectionReason}
+                          </>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    <div className="booking-actions">
+                      {editable ? (
+                        <>
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => {
+                              setEditingId(booking.id);
+                              setForm({
+                                resourceId: booking.resourceId || '',
+                                resourceName: booking.resourceName || '',
+                                requestedBy: booking.requestedBy || '',
+                                purpose: booking.purpose || '',
+                                startDateTime: toDatetimeLocal(booking.startDateTime),
+                                endDateTime: toDatetimeLocal(booking.endDateTime)
+                              });
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button type="button" className="btn btn-danger" onClick={() => handleCancel(booking.id)}>
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <button type="button" className="btn btn-secondary" onClick={() => setEditingId(null)}>
+                          View only
+                        </button>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </div>
+    </div>
+  );
 }

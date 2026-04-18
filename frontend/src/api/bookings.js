@@ -1,0 +1,27 @@
+import api from './axios';
+
+export function getBookings() {
+  return api.get('/bookings');
+}
+
+export function createBooking(payload) {
+  return api.post('/bookings', payload);
+}
+
+export function updateBooking(id, payload) {
+  return api.put(`/bookings/${id}`, payload);
+}
+
+export function cancelBooking(id) {
+  return api.patch(`/bookings/${id}/cancel`);
+}
+
+export function approveBooking(id, approvedBy) {
+  return api.patch(`/bookings/${id}/approve`, null, {
+    params: { approvedBy }
+  });
+}
+
+export function rejectBooking(id, reason) {
+  return api.patch(`/bookings/${id}/reject`, { reason });
+}

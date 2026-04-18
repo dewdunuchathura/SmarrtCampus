@@ -5,6 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import ResourcesPage from './pages/resources';
 import BookingsPage from './pages/bookings';
+import BookingAdminPage from './pages/bookings/admin';
 import TicketsPage from './pages/tickets';
 import LoginPage from './pages/auth';
 import NotificationsPage from './pages/notifications';
@@ -21,6 +22,7 @@ function Shell() {
         <Route path="/" element={<Home />} />
         <Route path="/resources" element={<ResourcesPage />} />
         <Route path="/bookings" element={<BookingsPage />} />
+        <Route path="/bookings/admin" element={<BookingAdminPage />} />
         <Route path="/tickets" element={<TicketsPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/login" element={<LoginPage />} />
