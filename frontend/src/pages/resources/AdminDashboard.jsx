@@ -298,6 +298,9 @@ const AdminDashboard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('handleSubmit called - selectedResource:', selectedResource);
+    console.log('handleSubmit called - formData:', formData);
+    
     try {
       // Convert "None" to null for backend
       const submissionData = {
@@ -306,11 +309,13 @@ const AdminDashboard = () => {
       };
       
       if (selectedResource) {
+        console.log('Updating existing resource with ID:', selectedResource.id);
         // Update existing resource
         await api.put(`/resources/${selectedResource.id}`, submissionData);
         toast.success('Resource updated successfully');
         setShowEditModal(false);
       } else {
+        console.log('Creating new resource');
         // Create new resource
         await api.post('/resources', submissionData);
         toast.success('Resource created successfully');
@@ -324,6 +329,7 @@ const AdminDashboard = () => {
   };
 
   const handleEdit = (resource) => {
+    console.log('handleEdit called with resource:', resource);
     setSelectedResource(resource);
     setFormData({
       name: resource.name,
@@ -350,6 +356,7 @@ const AdminDashboard = () => {
   };
 
   const resetForm = () => {
+    console.log('resetForm called - clearing selectedResource');
     setFormData({
       name: '',
       type: 'Lecture Hall',
