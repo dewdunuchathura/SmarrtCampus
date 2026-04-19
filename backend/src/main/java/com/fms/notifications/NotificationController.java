@@ -31,4 +31,10 @@ public class NotificationController {
         long count = notificationService.countUnread(userEmail);
         return new ApiResponse<>(true, "Unread count fetched", count);
     }
+
+    @PatchMapping("/{id}/read")
+    public ApiResponse<Notification> markAsRead(@PathVariable String id) {
+        Notification updated = notificationService.markAsRead(id);
+        return new ApiResponse<>(true, "Notification marked as read", updated);
+    }
 }
