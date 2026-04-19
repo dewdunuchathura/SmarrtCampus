@@ -7,5 +7,5 @@ public interface NotificationRepository extends MongoRepository<Notification, St
 
     //List<Notification> findByUserId(String userId);
     List<Notification> findByUserEmail(String userEmail);
-
+    long countByUserEmailAndReadFalse(String userEmail);
 }
