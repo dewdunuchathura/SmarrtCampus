@@ -2,6 +2,7 @@ package com.fms.auth;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Document(collection = "users")
 public class User {
@@ -10,9 +11,13 @@ public class User {
     private String id;
     private String name;
     private String email;
+
+    @JsonIgnore
     private String password;
+
     private String role;
     private String provider;
+    
 
     public User() {
     }
