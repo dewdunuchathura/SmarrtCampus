@@ -22,4 +22,15 @@ public class NotificationService {
     public long countUnread(String userEmail) {
         return notificationRepository.countByUserEmailAndReadFalse(userEmail);
     }
+
+    public Notification markAsRead(String id) {
+    Notification notification = notificationRepository.findById(id).orElse(null);
+
+    if (notification != null) {
+        notification.setRead(true);
+        return notificationRepository.save(notification);
+    }
+
+    return null;
+}
 }
