@@ -25,4 +25,10 @@ public class NotificationController {
         List<Notification> list = notificationService.getUserNotifications(userEmail);
         return new ApiResponse<>(true, "Notifications fetched", list);
     }
+
+    @GetMapping("/user/{userEmail}/count-unread")
+    public ApiResponse<Long> countUnread(@PathVariable String userEmail) {
+        long count = notificationService.countUnread(userEmail);
+        return new ApiResponse<>(true, "Unread count fetched", count);
+    }
 }
