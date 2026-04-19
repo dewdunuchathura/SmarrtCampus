@@ -33,4 +33,15 @@ public class AuthController {
 
         return new ApiResponse<>(false, message, null);
     }
+
+    @GetMapping("/me")
+    public ApiResponse<User> getCurrentUser(@RequestParam String email) {
+    User user = authService.getUserByEmail(email);
+
+        if (user == null) {
+            return new ApiResponse<>(false, "User not found", null);
+        }
+
+        return new ApiResponse<>(true, "User fetched successfully", user);
+}
 }
