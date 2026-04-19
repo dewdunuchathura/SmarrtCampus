@@ -18,4 +18,8 @@ public class NotificationService {
     public List<Notification> getUserNotifications(String userEmail) {
         return notificationRepository.findByUserEmail(userEmail);
     }
+
+    public long countUnread(String userEmail) {
+        return notificationRepository.countByUserEmailAndReadFalse(userEmail);
+    }
 }
