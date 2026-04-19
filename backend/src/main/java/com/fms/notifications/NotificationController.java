@@ -20,9 +20,9 @@ public class NotificationController {
         return new ApiResponse<>(true, "Notification created", saved);
     }
 
-    @GetMapping("/user/{userId}")
-    public ApiResponse<List<Notification>> getUserNotifications(@PathVariable String userId) {
-        List<Notification> list = notificationService.getUserNotifications(userId);
+    @GetMapping("/user/{userEmail}")
+    public ApiResponse<List<Notification>> getUserNotifications(@PathVariable String userEmail) {
+        List<Notification> list = notificationService.getUserNotifications(userEmail);
         return new ApiResponse<>(true, "Notifications fetched", list);
     }
 }

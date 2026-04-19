@@ -15,7 +15,7 @@ public class NotificationService {
         return notificationRepository.save(notification);
     }
 
-    public List<Notification> getUserNotifications(String userId) {
-        return notificationRepository.findByUserId(userId);
+    public List<Notification> getUserNotifications(String userEmail) {
+        return notificationRepository.findByUserEmail(userEmail);
     }
 }
