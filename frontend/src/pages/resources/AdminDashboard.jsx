@@ -318,7 +318,7 @@ const AdminDashboard = () => {
         console.log('Creating new resource');
         // Create new resource
         await api.post('/resources', submissionData);
-        toast.success('Resource created successfully');
+        toast.success('Resource are successfully uploaded');
         resetForm();
       }
       fetchResources();
