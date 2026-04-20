@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import ResourcesPage from './pages/resources';
+import AdminDashboard from './pages/resources/AdminDashboard';
 import BookingsPage from './pages/bookings';
 import BookingAdminPage from './pages/bookings/admin';
 import TicketsPage from './pages/tickets';
@@ -21,6 +22,7 @@ function Shell() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/bookings" element={<BookingsPage />} />
         <Route path="/bookings/admin" element={<BookingAdminPage />} />
         <Route path="/tickets" element={<TicketsPage />} />
