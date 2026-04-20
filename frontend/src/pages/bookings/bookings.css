@@ -22,6 +22,10 @@
   margin-bottom: 20px;
 }
 
+.bookings-hero-simple {
+  grid-template-columns: 1fr;
+}
+
 .hero-panel,
 .side-panel,
 .form-card,
@@ -36,6 +40,10 @@
 .hero-panel {
   border-radius: 28px;
   padding: 28px;
+}
+
+.hero-panel-simple {
+  grid-column: 1 / -1;
 }
 
 .eyebrow {
@@ -157,7 +165,7 @@
 
 .toolbar {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1fr;
   gap: 18px;
   margin: 18px 0;
 }
@@ -167,6 +175,10 @@
 .table-card {
   border-radius: 24px;
   padding: 22px;
+}
+
+.form-card-wide {
+  grid-column: 1 / -1;
 }
 
 .section-title {
