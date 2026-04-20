@@ -17,7 +17,7 @@ const ResourceCatalogue = () => {
       textAlign: 'center',
       marginBottom: '3rem',
       padding: '2rem',
-      background: 'linear-gradient(135deg, #34A85A 0%, #2ECC71 100%)',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       color: 'white',
       borderRadius: '15px',
       boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
@@ -26,13 +26,13 @@ const ResourceCatalogue = () => {
       fontSize: '2.5rem',
       fontWeight: '700',
       margin: '0 0 0.5rem 0',
-      color: '#1F2937',
+      color: 'white',
       fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     subtitle: {
       fontSize: '1rem',
       fontWeight: '400',
-      color: '#64748B',
+      color: 'rgba(255, 255, 255, 0.9)',
       margin: '0 0 1rem 0',
       fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
@@ -48,10 +48,10 @@ const ResourceCatalogue = () => {
       fontSize: '1.5rem',
       fontWeight: '600',
       marginBottom: '1.5rem',
-      color: '#1F2937',
+      color: '#2d3748',
       fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       paddingBottom: '0.5rem',
-      borderBottom: '2px solid #34A85A'
+      borderBottom: '2px solid #667eea'
     },
     filterSection: {
       display: 'grid',
@@ -65,51 +65,47 @@ const ResourceCatalogue = () => {
       flexDirection: 'column'
     },
     label: {
-      fontWeight: '500',
+      fontWeight: '600',
       marginBottom: '0.5rem',
-      color: '#374151',
-      fontSize: '0.875rem',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      color: '#4a5568',
+      fontSize: '0.9rem'
     },
     input: {
-      padding: '0.75rem 1rem',
-      border: '1px solid #E5E7EB',
+      padding: '0.75rem',
+      border: '2px solid #e2e8f0',
       borderRadius: '8px',
-      fontSize: '0.875rem',
-      transition: 'all 0.2s ease',
-      outline: 'none',
-      backgroundColor: '#FFFFFF',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontSize: '1rem',
+      transition: 'all 0.3s ease',
+      outline: 'none'
     },
     inputFocus: {
-      borderColor: '#34A85A',
-      boxShadow: '0 0 0 3px rgba(52, 168, 83, 0.1)',
+      borderColor: '#667eea',
+      boxShadow: '0 0 0 3px rgba(102, 126, 234, 0.1)',
       transform: 'translateY(-1px)'
     },
     button: {
       padding: '0.75rem 1.5rem',
-      border: '1px solid #E5E7EB',
+      border: 'none',
       borderRadius: '8px',
-      fontSize: '0.875rem',
-      fontWeight: '500',
+      fontSize: '1rem',
+      fontWeight: '600',
       cursor: 'pointer',
-      transition: 'all 0.2s ease',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      transition: 'all 0.3s ease'
     },
     primaryButton: {
-      background: '#34A85A',
+      background: '#667eea',
       color: '#FFFFFF',
-      border: '1px solid #34A85A'
+      boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)'
     },
     primaryButtonHover: {
-      background: '#2ECC71',
-      transform: 'translateY(-1px)',
-      boxShadow: '0 4px 12px rgba(52, 168, 83, 0.15)'
+      background: '#5a67d8',
+      transform: 'translateY(-2px)',
+      boxShadow: '0 6px 20px rgba(102, 126, 234, 0.4)'
     },
     secondaryButton: {
-      background: '#FFFFFF',
-      color: '#374151',
-      border: '1px solid #E5E7EB'
+      background: '#f7fafc',
+      color: '#4a5568',
+      border: '2px solid #e2e8f0'
     },
     secondaryButtonHover: {
       background: '#edf2f7',
@@ -121,19 +117,19 @@ const ResourceCatalogue = () => {
       gap: '1.5rem'
     },
     resourceCard: {
-      background: '#FFFFFF',
-      borderRadius: '16px',
+      background: 'white',
+      borderRadius: '15px',
       padding: '1.5rem',
-      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
-      border: '1px solid #E5E7EB',
-      transition: 'all 0.2s ease',
+      boxShadow: '0 5px 20px rgba(0,0,0,0.08)',
+      border: '1px solid #e5e7eb',
+      transition: 'all 0.3s ease',
       position: 'relative',
       overflow: 'hidden'
     },
     resourceCardHover: {
-      transform: 'translateY(-2px)',
-      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-      borderColor: '#34A85A'
+      transform: 'translateY(-5px)',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+      borderColor: '#667eea'
     },
     resourceHeader: {
       display: 'flex',
@@ -155,25 +151,23 @@ const ResourceCatalogue = () => {
     },
     resourceDetail: {
       fontSize: '0.9rem',
-      color: '#4a5568'
+      color: '#7A288A'
     },
     statusActive: {
-      color: '#34A85A',
-      fontWeight: '600',
-      background: '#F0FDF4',
-      padding: '0.25rem 0.75rem',
+      color: '#38a169',
+      fontWeight: 'bold',
+      background: '#c6f6d5',
+      padding: '0.25rem 0.5rem',
       borderRadius: '20px',
-      fontSize: '0.75rem',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontSize: '0.8rem'
     },
     statusOutOfService: {
-      color: '#EF4444',
-      fontWeight: '500',
-      background: '#FEF2F2',
-      padding: '0.25rem 0.75rem',
+      color: '#e53e3e',
+      fontWeight: 'bold',
+      background: '#fed7d7',
+      padding: '0.25rem 0.5rem',
       borderRadius: '20px',
-      fontSize: '0.75rem',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontSize: '0.8rem'
     },
     loading: {
       textAlign: 'center',
