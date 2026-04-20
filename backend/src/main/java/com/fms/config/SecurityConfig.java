@@ -17,7 +17,7 @@ public class SecurityConfig {
 				.requestMatchers("/oauth2/**", "/login/**").permitAll()
 				.anyRequest().permitAll()
 			)
-			.oauth2Login(Customizer.withDefaults())
+			.oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:5174/", true))
 			.httpBasic(basic -> basic.disable())
 			.formLogin(form -> form.disable());
 
