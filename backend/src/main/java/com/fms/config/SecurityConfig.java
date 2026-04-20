@@ -11,10 +11,13 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		// ⚠️ TEMPORARY — Member 4 will replace this with OAuth2 + roles
 		http.csrf(csrf -> csrf.disable())
 			.cors(Customizer.withDefaults())
-			.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/oauth2/**", "/login/**").permitAll()
+				.anyRequest().permitAll()
+			)
+			.oauth2Login(Customizer.withDefaults())
 			.httpBasic(basic -> basic.disable())
 			.formLogin(form -> form.disable());
 
