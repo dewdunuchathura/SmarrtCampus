@@ -15,7 +15,7 @@ const ResourceCatalogue = () => {
       textAlign: 'center',
       marginBottom: '3rem',
       padding: '2rem',
-      background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
+      background: 'linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)',
       color: 'white',
       borderRadius: '15px',
       boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
@@ -39,7 +39,7 @@ const ResourceCatalogue = () => {
       fontWeight: '600',
       marginBottom: '1.5rem',
       color: '#2d3748',
-      borderBottom: '3px solid #4CAF50',
+      borderBottom: '3px solid #A78BFA',
       paddingBottom: '0.5rem'
     },
     filterSection: {
@@ -68,8 +68,8 @@ const ResourceCatalogue = () => {
       outline: 'none'
     },
     inputFocus: {
-      borderColor: '#4CAF50',
-      boxShadow: '0 0 0 3px rgba(76, 175, 80, 0.1)',
+      borderColor: '#A78BFA',
+      boxShadow: '0 0 0 3px rgba(167, 139, 250, 0.1)',
       transform: 'translateY(-1px)'
     },
     button: {
@@ -84,13 +84,13 @@ const ResourceCatalogue = () => {
       letterSpacing: '0.5px'
     },
     primaryButton: {
-      background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
+      background: 'linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)',
       color: 'white',
-      boxShadow: '0 4px 15px rgba(76, 175, 80, 0.3)'
+      boxShadow: '0 4px 15px rgba(167, 139, 250, 0.3)'
     },
     primaryButtonHover: {
       transform: 'translateY(-2px)',
-      boxShadow: '0 6px 20px rgba(76, 175, 80, 0.4)'
+      boxShadow: '0 6px 20px rgba(167, 139, 250, 0.4)'
     },
     secondaryButton: {
       background: '#f7fafc',
@@ -119,7 +119,7 @@ const ResourceCatalogue = () => {
     resourceCardHover: {
       transform: 'translateY(-5px)',
       boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-      borderColor: '#4CAF50'
+      borderColor: '#A78BFA'
     },
     resourceHeader: {
       display: 'flex',
@@ -144,9 +144,9 @@ const ResourceCatalogue = () => {
       color: '#4a5568'
     },
     statusActive: {
-      color: '#38a169',
+      color: '#7C3AED',
       fontWeight: 'bold',
-      background: '#c6f6d5',
+      background: '#EDE9FE',
       padding: '0.25rem 0.5rem',
       borderRadius: '20px',
       fontSize: '0.8rem'
