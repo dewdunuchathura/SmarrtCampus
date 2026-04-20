@@ -9,38 +9,49 @@ const ResourceCatalogue = () => {
       maxWidth: '1200px',
       margin: '0 auto',
       padding: '2rem',
-      fontFamily: 'Arial, sans-serif'
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      backgroundColor: '#F8FAFC',
+      minHeight: '100vh'
     },
     header: {
       textAlign: 'center',
       marginBottom: '3rem',
       padding: '2rem',
-      background: 'linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)',
+      background: 'linear-gradient(135deg, #34A85A 0%, #2ECC71 100%)',
       color: 'white',
       borderRadius: '15px',
       boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
     },
     title: {
       fontSize: '2.5rem',
-      fontWeight: 'bold',
+      fontWeight: '700',
       margin: '0 0 0.5rem 0',
-      textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+      color: '#1F2937',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    },
+    subtitle: {
+      fontSize: '1rem',
+      fontWeight: '400',
+      color: '#64748B',
+      margin: '0 0 1rem 0',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     section: {
-      background: 'white',
-      borderRadius: '15px',
+      background: '#FFFFFF',
+      borderRadius: '16px',
       padding: '2rem',
       marginBottom: '2rem',
-      boxShadow: '0 5px 20px rgba(0,0,0,0.08)',
-      border: '1px solid #e5e7eb'
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+      border: '1px solid #E5E7EB'
     },
     sectionTitle: {
       fontSize: '1.5rem',
       fontWeight: '600',
       marginBottom: '1.5rem',
-      color: '#2d3748',
-      borderBottom: '3px solid #A78BFA',
-      paddingBottom: '0.5rem'
+      color: '#1F2937',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      paddingBottom: '0.5rem',
+      borderBottom: '2px solid #34A85A'
     },
     filterSection: {
       display: 'grid',
@@ -54,48 +65,51 @@ const ResourceCatalogue = () => {
       flexDirection: 'column'
     },
     label: {
-      fontWeight: '600',
+      fontWeight: '500',
       marginBottom: '0.5rem',
-      color: '#4a5568',
-      fontSize: '0.9rem'
+      color: '#374151',
+      fontSize: '0.875rem',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     input: {
-      padding: '0.75rem',
-      border: '2px solid #e2e8f0',
+      padding: '0.75rem 1rem',
+      border: '1px solid #E5E7EB',
       borderRadius: '8px',
-      fontSize: '1rem',
-      transition: 'all 0.3s ease',
-      outline: 'none'
+      fontSize: '0.875rem',
+      transition: 'all 0.2s ease',
+      outline: 'none',
+      backgroundColor: '#FFFFFF',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     inputFocus: {
-      borderColor: '#A78BFA',
-      boxShadow: '0 0 0 3px rgba(167, 139, 250, 0.1)',
+      borderColor: '#34A85A',
+      boxShadow: '0 0 0 3px rgba(52, 168, 83, 0.1)',
       transform: 'translateY(-1px)'
     },
     button: {
       padding: '0.75rem 1.5rem',
-      border: 'none',
+      border: '1px solid #E5E7EB',
       borderRadius: '8px',
-      fontSize: '1rem',
-      fontWeight: '600',
+      fontSize: '0.875rem',
+      fontWeight: '500',
       cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px'
+      transition: 'all 0.2s ease',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     primaryButton: {
-      background: 'linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%)',
-      color: 'white',
-      boxShadow: '0 4px 15px rgba(167, 139, 250, 0.3)'
+      background: '#34A85A',
+      color: '#FFFFFF',
+      border: '1px solid #34A85A'
     },
     primaryButtonHover: {
-      transform: 'translateY(-2px)',
-      boxShadow: '0 6px 20px rgba(167, 139, 250, 0.4)'
+      background: '#2ECC71',
+      transform: 'translateY(-1px)',
+      boxShadow: '0 4px 12px rgba(52, 168, 83, 0.15)'
     },
     secondaryButton: {
-      background: '#f7fafc',
-      color: '#4a5568',
-      border: '2px solid #e2e8f0'
+      background: '#FFFFFF',
+      color: '#374151',
+      border: '1px solid #E5E7EB'
     },
     secondaryButtonHover: {
       background: '#edf2f7',
@@ -107,19 +121,19 @@ const ResourceCatalogue = () => {
       gap: '1.5rem'
     },
     resourceCard: {
-      background: 'white',
-      borderRadius: '15px',
+      background: '#FFFFFF',
+      borderRadius: '16px',
       padding: '1.5rem',
-      boxShadow: '0 5px 20px rgba(0,0,0,0.08)',
-      border: '1px solid #e5e7eb',
-      transition: 'all 0.3s ease',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+      border: '1px solid #E5E7EB',
+      transition: 'all 0.2s ease',
       position: 'relative',
       overflow: 'hidden'
     },
     resourceCardHover: {
-      transform: 'translateY(-5px)',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-      borderColor: '#A78BFA'
+      transform: 'translateY(-2px)',
+      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.05)',
+      borderColor: '#34A85A'
     },
     resourceHeader: {
       display: 'flex',
@@ -144,20 +158,22 @@ const ResourceCatalogue = () => {
       color: '#4a5568'
     },
     statusActive: {
-      color: '#38a169',
-      fontWeight: 'bold',
-      background: '#c6f6d5',
-      padding: '0.25rem 0.5rem',
+      color: '#34A85A',
+      fontWeight: '600',
+      background: '#F0FDF4',
+      padding: '0.25rem 0.75rem',
       borderRadius: '20px',
-      fontSize: '0.8rem'
+      fontSize: '0.75rem',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     statusOutOfService: {
-      color: '#e53e3e',
-      fontWeight: 'bold',
-      background: '#fed7d7',
-      padding: '0.25rem 0.5rem',
+      color: '#EF4444',
+      fontWeight: '500',
+      background: '#FEF2F2',
+      padding: '0.25rem 0.75rem',
       borderRadius: '20px',
-      fontSize: '0.8rem'
+      fontSize: '0.75rem',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     loading: {
       textAlign: 'center',
