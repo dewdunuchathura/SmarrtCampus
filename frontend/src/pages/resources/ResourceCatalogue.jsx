@@ -144,9 +144,9 @@ const ResourceCatalogue = () => {
       color: '#4a5568'
     },
     statusActive: {
-      color: '#7C3AED',
+      color: '#38a169',
       fontWeight: 'bold',
-      background: '#EDE9FE',
+      background: '#c6f6d5',
       padding: '0.25rem 0.5rem',
       borderRadius: '20px',
       fontSize: '0.8rem'
