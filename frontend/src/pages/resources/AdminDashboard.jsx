@@ -220,6 +220,16 @@ const AdminDashboard = () => {
       padding: '3rem',
       color: '#718096',
       fontSize: '1.1rem'
+    },
+    error: {
+      color: '#e53e3e',
+      fontSize: '0.875rem',
+      marginTop: '0.25rem',
+      marginBottom: '0.5rem'
+    },
+    inputError: {
+      borderColor: '#e53e3e',
+      boxShadow: '0 0 0 1px #e53e3e'
     }
   };
   const [resources, setResources] = useState([]);
@@ -246,6 +256,8 @@ const AdminDashboard = () => {
     status: 'Active',
     description: ''
   });
+  
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     fetchResources();
@@ -301,6 +313,12 @@ const AdminDashboard = () => {
     console.log('handleSubmit called - selectedResource:', selectedResource);
     console.log('handleSubmit called - formData:', formData);
     
+    // Validate form before submission
+    if (!validateForm()) {
+      toast.error('Please fix the errors in the form');
+      return;
+    }
+    
     try {
       // Convert "None" to null for backend
       const submissionData = {
@@ -355,6 +373,42 @@ const AdminDashboard = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    
+    // Name validation
+    if (!formData.name.trim()) {
+      errors.name = 'Resource name is required';
+    } else if (formData.name.trim().length < 2) {
+      errors.name = 'Resource name must be at least 2 characters';
+    } else if (formData.name.trim().length > 100) {
+      errors.name = 'Resource name must be less than 100 characters';
+    }
+    
+    // Type validation
+    if (!formData.type || formData.type === '') {
+      errors.type = 'Resource type is required';
+    }
+    
+    // Location validation
+    if (!formData.location || formData.location === '') {
+      errors.location = 'Location is required';
+    }
+    
+    // Status validation
+    if (!formData.status || formData.status === '') {
+      errors.status = 'Status is required';
+    }
+    
+    // Description validation (optional but if provided, should be reasonable)
+    if (formData.description && formData.description.trim().length > 500) {
+      errors.description = 'Description must be less than 500 characters';
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const resetForm = () => {
     console.log('resetForm called - clearing selectedResource');
     setFormData({
@@ -366,6 +420,7 @@ const AdminDashboard = () => {
       description: ''
     });
     setSelectedResource(null);
+    setFormErrors({});
   };
 
   const handleInputChange = (e) => {
@@ -374,6 +429,14 @@ const AdminDashboard = () => {
       ...prev,
       [name]: value
     }));
+    
+    // Clear error for this field when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   const clearFilters = () => {
@@ -409,10 +472,16 @@ const AdminDashboard = () => {
               value={formData.name}
               onChange={handleInputChange}
               required
-              style={styles.input}
+              style={{
+                ...styles.input,
+                ...(formErrors.name ? styles.inputError : {})
+              }}
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.input)}
             />
+            {formErrors.name && (
+              <div style={styles.error}>{formErrors.name}</div>
+            )}
           </div>
           
           <div style={styles.formGroup}>
@@ -422,7 +491,10 @@ const AdminDashboard = () => {
               value={formData.type}
               onChange={handleInputChange}
               required
-              style={styles.input}
+              style={{
+                ...styles.input,
+                ...(formErrors.type ? styles.inputError : {})
+              }}
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.input)}
             >
@@ -430,6 +502,9 @@ const AdminDashboard = () => {
                 <option key={type} value={type}>{type}</option>
               ))}
             </select>
+            {formErrors.type && (
+              <div style={styles.error}>{formErrors.type}</div>
+            )}
           </div>
           
           <div style={styles.formGroup}>
@@ -456,7 +531,10 @@ const AdminDashboard = () => {
               value={formData.location}
               onChange={handleInputChange}
               required
-              style={styles.input}
+              style={{
+                ...styles.input,
+                ...(formErrors.location ? styles.inputError : {})
+              }}
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.input)}
             >
@@ -464,6 +542,9 @@ const AdminDashboard = () => {
                 <option key={location} value={location}>{location}</option>
               ))}
             </select>
+            {formErrors.location && (
+              <div style={styles.error}>{formErrors.location}</div>
+            )}
           </div>
           
           <div style={styles.formGroup}>
@@ -473,7 +554,10 @@ const AdminDashboard = () => {
               value={formData.status}
               onChange={handleInputChange}
               required
-              style={styles.input}
+              style={{
+                ...styles.input,
+                ...(formErrors.status ? styles.inputError : {})
+              }}
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.input)}
             >
@@ -481,6 +565,9 @@ const AdminDashboard = () => {
                 <option key={status} value={status}>{status}</option>
               ))}
             </select>
+            {formErrors.status && (
+              <div style={styles.error}>{formErrors.status}</div>
+            )}
           </div>
           
           <div style={styles.formGroup}>
@@ -489,10 +576,16 @@ const AdminDashboard = () => {
               name="description"
               value={formData.description}
               onChange={handleInputChange}
-              style={styles.textarea}
+              style={{
+                ...styles.textarea,
+                ...(formErrors.description ? styles.inputError : {})
+              }}
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.textarea)}
             />
+            {formErrors.description && (
+              <div style={styles.error}>{formErrors.description}</div>
+            )}
           </div>
           
           <div style={styles.formGroup}>
