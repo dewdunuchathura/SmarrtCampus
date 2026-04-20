@@ -491,8 +491,15 @@ const AdminDashboard = () => {
     }
     
     // Description validation (optional but if provided, should be reasonable)
-    if (formData.description && formData.description.trim().length > 500) {
-      errors.description = 'Description must be less than 500 characters';
+    if (formData.description && formData.description.trim()) {
+      const descLength = formData.description.trim().length;
+      if (descLength < 5) {
+        errors.description = 'Description must be at least 5 characters if provided';
+      } else if (descLength > 500) {
+        errors.description = 'Description must be less than 500 characters';
+      } else if (!/^[a-zA-Z0-9\s.,!?()-]+$/.test(formData.description.trim())) {
+        errors.description = 'Description contains invalid characters. Only letters, numbers, spaces, and .,!?-() are allowed';
+      }
     }
     
     setFormErrors(errors);
@@ -662,11 +669,12 @@ const AdminDashboard = () => {
           </div>
           
           <div style={styles.formGroup}>
-            <label style={styles.label}>Description</label>
+            <label style={styles.label}>Description <span style={{ color: '#64748B', fontWeight: '400' }}>(Optional)</span></label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleInputChange}
+              placeholder="Enter resource description (5-500 characters, optional)"
               style={{
                 ...styles.textarea,
                 ...(formErrors.description ? styles.inputError : {})
@@ -674,6 +682,36 @@ const AdminDashboard = () => {
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.textarea)}
             />
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginTop: '0.25rem'
+            }}>
+              <span style={{ 
+                fontSize: '0.75rem', 
+                color: '#64748B',
+                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+              }}>
+                {formData.description.trim().length === 0 
+                  ? 'Optional: Add a brief description of the resource'
+                  : formData.description.trim().length < 5
+                  ? 'Description must be at least 5 characters'
+                  : `${formData.description.trim().length}/500 characters used`
+                }
+              </span>
+              {formData.description.trim().length > 0 && (
+                <span style={{
+                  fontSize: '0.75rem',
+                  color: formData.description.trim().length > 500 ? '#e53e3e' : 
+                         formData.description.trim().length < 5 ? '#e53e3e' : '#38a169',
+                  fontWeight: '500'
+                }}>
+                  {formData.description.trim().length > 500 ? 'Too long' :
+                   formData.description.trim().length < 5 ? 'Too short' : 'Valid'}
+                </span>
+              )}
+            </div>
             {formErrors.description && (
               <div style={styles.error}>{formErrors.description}</div>
             )}
