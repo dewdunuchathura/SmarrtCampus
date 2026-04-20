@@ -190,6 +190,7 @@ const ResourceCatalogue = () => {
   const [filterCapacity, setFilterCapacity] = useState('');
   const [filterLocation, setFilterLocation] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [capacitySortOrder, setCapacitySortOrder] = useState(''); // '', 'asc', 'desc'
   
   // Dropdown options
   const [types] = useState(['Lecture Hall', 'Lab', 'Meeting Room', 'Equipment']);
@@ -211,13 +212,37 @@ const ResourceCatalogue = () => {
     }, 500);
 
     return () => clearTimeout(delayedSearch);
-  }, [searchTerm, filterType, filterCapacity, filterLocation, filterStatus]);
+  }, [searchTerm, filterType, filterCapacity, filterLocation, filterStatus, capacitySortOrder]);
 
   const fetchResources = async () => {
     try {
       setLoading(true);
       const response = await api.get('/resources');
-      setResources(response.data);
+      console.log('API Response:', response);
+      console.log('Response data:', response.data);
+      console.log('Response data type:', typeof response.data);
+      console.log('Is array?', Array.isArray(response.data));
+      
+      let sortedResources = response.data;
+      
+      // Apply capacity sorting if selected
+      if (capacitySortOrder) {
+        sortedResources = [...response.data].sort((a, b) => {
+          // Handle null/None capacity values
+          const capacityA = a.capacity === null || a.capacity === 'None' ? -1 : parseInt(a.capacity);
+          const capacityB = b.capacity === null || b.capacity === 'None' ? -1 : parseInt(b.capacity);
+          
+          if (capacitySortOrder === 'asc') {
+            return capacityA - capacityB;
+          } else if (capacitySortOrder === 'desc') {
+            return capacityB - capacityA;
+          }
+          return 0;
+        });
+      }
+      
+      setResources(sortedResources);
+      console.log('Resources set:', sortedResources);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching resources:', error);
@@ -237,7 +262,26 @@ const ResourceCatalogue = () => {
       if (filterStatus) params.append('status', filterStatus);
       
       const response = await api.get(`/resources/search?${params}`);
-      setResources(response.data);
+      
+      let sortedResources = response.data;
+      
+      // Apply capacity sorting if selected
+      if (capacitySortOrder) {
+        sortedResources = [...response.data].sort((a, b) => {
+          // Handle null/None capacity values
+          const capacityA = a.capacity === null || a.capacity === 'None' ? -1 : parseInt(a.capacity);
+          const capacityB = b.capacity === null || b.capacity === 'None' ? -1 : parseInt(b.capacity);
+          
+          if (capacitySortOrder === 'asc') {
+            return capacityA - capacityB;
+          } else if (capacitySortOrder === 'desc') {
+            return capacityB - capacityA;
+          }
+          return 0;
+        });
+      }
+      
+      setResources(sortedResources);
       setLoading(false);
     } catch (error) {
       console.error('Error searching resources:', error);
@@ -252,6 +296,7 @@ const ResourceCatalogue = () => {
     setFilterCapacity('');
     setFilterLocation('');
     setFilterStatus('');
+    setCapacitySortOrder('');
   };
 
   return (
@@ -312,6 +357,66 @@ const ResourceCatalogue = () => {
           </div>
           
           <div style={styles.formGroup}>
+            <label style={styles.label}>Sort by Capacity</label>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={() => setCapacitySortOrder(capacitySortOrder === 'asc' ? '' : 'asc')}
+                style={{
+                  ...styles.button,
+                  ...styles.secondaryButton,
+                  ...(capacitySortOrder === 'asc' ? styles.primaryButton : {}),
+                  fontSize: '0.75rem',
+                  padding: '0.5rem 1rem'
+                }}
+                onMouseEnter={(e) => {
+                  if (capacitySortOrder !== 'asc') {
+                    Object.assign(e.target.style, styles.secondaryButtonHover);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButtonHover);
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (capacitySortOrder !== 'asc') {
+                    Object.assign(e.target.style, styles.secondaryButton);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButton);
+                  }
+                }}
+              >
+                {capacitySortOrder === 'asc' ? 'Ascending' : 'Ascending'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setCapacitySortOrder(capacitySortOrder === 'desc' ? '' : 'desc')}
+                style={{
+                  ...styles.button,
+                  ...styles.secondaryButton,
+                  ...(capacitySortOrder === 'desc' ? styles.primaryButton : {}),
+                  fontSize: '0.75rem',
+                  padding: '0.5rem 1rem'
+                }}
+                onMouseEnter={(e) => {
+                  if (capacitySortOrder !== 'desc') {
+                    Object.assign(e.target.style, styles.secondaryButtonHover);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButtonHover);
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (capacitySortOrder !== 'desc') {
+                    Object.assign(e.target.style, styles.secondaryButton);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButton);
+                  }
+                }}
+              >
+                {capacitySortOrder === 'desc' ? 'Descending' : 'Descending'}
+              </button>
+            </div>
+          </div>
+          
+          <div style={styles.formGroup}>
             <label style={styles.label}>Location</label>
             <select
               value={filterLocation}
@@ -360,6 +465,9 @@ const ResourceCatalogue = () => {
       {/* Resources List */}
       <div style={styles.section}>
         <h2 style={styles.sectionTitle}>Available Resources ({resources.length})</h2>
+        {console.log('Render - resources:', resources)}
+        {console.log('Render - loading:', loading)}
+        {console.log('Render - resources.length:', resources.length)}
         {loading ? (
           <div style={styles.loading}>
             <div>Loading resources...</div>
