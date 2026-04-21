@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Home.css';
 
 const modules = [
@@ -113,6 +114,7 @@ const activity = [
 
 export default function Home() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   return (
     <div className="home">
@@ -135,8 +137,39 @@ export default function Home() {
           <button className="nav-link" onClick={() => navigate('/notifications')}>Notifications</button>
         </div>
         <div className="nav-right">
-          <button className="btn-ghost" onClick={() => navigate('/login')}>Sign in</button>
-          <button className="btn-primary" onClick={() => navigate('/login')}>Get started</button>
+          {user ? (
+            <div className="user-chip">
+              <button className="icon-button" type="button" aria-label="Notifications" onClick={() => navigate('/notifications')}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22ZM18 16v-5a6 6 0 1 0-12 0v5l-2 2v1h16v-1l-2-2Z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <div className="user-summary">
+                {user.picture ? (
+                  <img className="user-avatar" src={user.picture} alt={user.name || 'User'} />
+                ) : (
+                  <div className="user-avatar user-avatar-fallback">
+                    {(user.name || 'U').charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div className="user-meta">
+                  <span className="user-name">{user.name || 'User'}</span>
+                  <span className="user-role">{user.role || 'USER'}</span>
+                </div>
+              </div>
+              <button className="icon-button" type="button" aria-label="Logout" onClick={logout}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M15 7l5 5-5 5M20 12H9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M13 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+          ) : (
+            <>
+              <button className="btn-ghost" onClick={() => navigate('/login')}>Sign in</button>
+              <button className="btn-primary" onClick={() => navigate('/login')}>Get started</button>
+            </>
+          )}
         </div>
       </nav>
 

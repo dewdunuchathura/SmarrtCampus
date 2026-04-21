@@ -2,11 +2,15 @@ package com.fms.auth;
 
 import com.fms.common.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(
+    origins = {"http://localhost:5173", "http://localhost:5174"},
+    allowCredentials = "true"
+)
 public class AuthController {
 
     @Autowired
@@ -36,12 +40,21 @@ public class AuthController {
 
     @GetMapping("/me")
     public ApiResponse<User> getCurrentUser(@RequestParam String email) {
-    User user = authService.getUserByEmail(email);
+        User user = authService.getUserByEmail(email);
 
         if (user == null) {
             return new ApiResponse<>(false, "User not found", null);
         }
 
         return new ApiResponse<>(true, "User fetched successfully", user);
-}
+    }
+
+    @GetMapping("/google-user")
+    public Object getGoogleUser(Authentication authentication) {
+        if (authentication == null) {
+            return "User not authenticated";
+        }
+
+        return authentication.getPrincipal();
+    }
 }

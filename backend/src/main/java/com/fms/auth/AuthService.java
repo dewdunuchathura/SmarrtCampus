@@ -53,4 +53,24 @@ public class AuthService {
     public User getUserByEmail(String email) {
              return userRepository.findByEmail(email).orElse(null);
     }
+
+    public User saveGoogleUser(String name, String email) {
+
+    Optional<User> existingUser = userRepository.findByEmail(email);
+
+    // already exist → return it
+    if (existingUser.isPresent()) {
+        return existingUser.get();
+    }
+
+    // new user → create
+    User user = new User();
+    user.setName(name);
+    user.setEmail(email);
+    user.setPassword(""); // Google user → no password
+    user.setRole("USER");
+    user.setProvider("GOOGLE");
+
+    return userRepository.save(user);
+}
 }

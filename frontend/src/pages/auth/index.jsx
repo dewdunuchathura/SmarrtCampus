@@ -1,8 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function AuthPage() {
+  const navigate = useNavigate();
+
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
+
   const handleGoogleLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
+  };
+
+  const handleAdminLogin = async () => {
+    try {
+      const loginRes = await axios.post("http://localhost:8080/api/auth/login", {
+        email: adminEmail,
+        password: adminPassword,
+      });
+
+      if (!loginRes.data.success) {
+        alert("Invalid admin email or password");
+        return;
+      }
+
+      const userRes = await axios.get(
+        `http://localhost:8080/api/auth/me?email=${adminEmail}`
+      );
+
+      if (!userRes.data.success) {
+        alert("Admin user not found");
+        return;
+      }
+
+      if (userRes.data.data.role !== "ADMIN") {
+        alert("You are not an admin");
+        return;
+      }
+
+      navigate("/admin-dashboard");
+    } catch (error) {
+      alert("Admin login failed");
+      console.error(error);
+    }
   };
 
   return (
@@ -136,10 +177,112 @@ export default function AuthPage() {
             fontWeight: "600",
           }}
         >
-          <a href="#" style={{ color: "#5b4bff", textDecoration: "underline" }}>
-            System Administrator Login
-          </a>
+          <span
+            onClick={() => setShowAdmin(!showAdmin)}
+            style={{
+              color: "#5b4bff",
+              textDecoration: "underline",
+              cursor: "pointer",
+            }}
+          >
+            {showAdmin ? "Hide Admin Login" : "System Administrator Login"}
+          </span>
         </p>
+
+        {showAdmin && (
+          <div
+            style={{
+              marginTop: "16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              padding: "14px",
+              border: "1px solid #e5e7eb",
+              borderRadius: "12px",
+              textAlign: "left",
+            }}
+          >
+            <h3
+              style={{
+                margin: 0,
+                fontSize: "18px",
+                fontWeight: "700",
+                color: "#111827",
+              }}
+            >
+              Admin Access
+            </h3>
+
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "6px",
+                  fontSize: "14px",
+                  color: "#6b7280",
+                }}
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                placeholder="Admin Email"
+                value={adminEmail}
+                onChange={(e) => setAdminEmail(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  borderRadius: "8px",
+                  border: "1px solid #cbd5e1",
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "6px",
+                  fontSize: "14px",
+                  color: "#6b7280",
+                }}
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="Password"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  borderRadius: "8px",
+                  border: "1px solid #cbd5e1",
+                  outline: "none",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            <button
+              onClick={handleAdminLogin}
+              style={{
+                padding: "12px",
+                borderRadius: "8px",
+                border: "none",
+                background: "linear-gradient(135deg, #5b4bff, #4a3df0)",
+                color: "#fff",
+                fontWeight: "700",
+                cursor: "pointer",
+              }}
+            >
+              Sign In as Admin
+            </button>
+          </div>
+        )}
 
         <p
           style={{
