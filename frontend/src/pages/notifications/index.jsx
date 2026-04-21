@@ -9,21 +9,31 @@ export default function NotificationsPage() {
   const [activeFilter, setActiveFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
 
-  const userEmail = user?.email || "krishan@gmail.com";
+  const demoEmail = "krishan@gmail.com";
+  const userEmail = user?.email || demoEmail;
 
-  const fetchNotifications = () => {
+  const fetchNotifications = async () => {
     setLoading(true);
-    api
-      .get(`/notifications/user/${userEmail}`)
-      .then((res) => {
-        setNotifications(res.data.data || []);
-      })
-      .catch((err) => {
-        console.error("Error fetching notifications:", err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+
+    try {
+      const userRes = await api.get(`/notifications/user/${userEmail}`);
+      const userNotifications = userRes.data.data || [];
+
+      if (userNotifications.length > 0 || userEmail === demoEmail) {
+        setNotifications(userNotifications);
+        return;
+      }
+
+      // Demo-safe fallback so the notifications UI is not empty for accounts
+      // that do not yet have seeded records in the database.
+      const demoRes = await api.get(`/notifications/user/${demoEmail}`);
+      setNotifications(demoRes.data.data || []);
+    } catch (err) {
+      console.error("Error fetching notifications:", err);
+      setNotifications([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
