@@ -253,7 +253,7 @@ export default function Home() {
           </div>
           FMS
         </div>
-        <span className="footer-text">Facility Management System â€” Group Project 2025</span>
+        <span className="footer-text">Facility Management System — Group Project 2025</span>
         <span className="footer-text">Spring Boot - MongoDB - React</span>
       </footer>
     </div>

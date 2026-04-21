@@ -22,7 +22,6 @@ export default function Navbar() {
       <div className="app-nav-links" aria-label="Primary navigation">
         <Link className="app-nav-link" to="/resources">Resources</Link>
         <Link className="app-nav-link" to="/bookings">Bookings</Link>
-        <Link className="app-nav-link" to="/bookings/admin">Bookings Admin</Link>
         <Link className="app-nav-link" to="/tickets">Tickets</Link>
         <Link className="app-nav-link" to="/notifications">Notifications</Link>
         <Link className="app-nav-link" to="/login">Auth</Link>
