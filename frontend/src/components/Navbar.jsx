@@ -18,17 +18,20 @@ export default function Navbar() {
         FMS
       </Link>
 
-      <div className="app-nav-links">
+      <div className="app-nav-links" aria-label="Primary navigation">
         <Link className="app-nav-link" to="/resources">Resources</Link>
         <Link className="app-nav-link" to="/bookings">Bookings</Link>
         <Link className="app-nav-link" to="/bookings/admin">Bookings Admin</Link>
         <Link className="app-nav-link" to="/tickets">Tickets</Link>
+        <Link className="app-nav-link" to="/notifications">Notifications</Link>
         <Link className="app-nav-link" to="/login">Auth</Link>
       </div>
 
       <div className="app-nav-right">
         {user ? (
-          <button type="button" className="app-btn-ghost">Logout</button>
+          <button type="button" className="app-btn-ghost" aria-label="Logout">
+            Logout
+          </button>
         ) : (
           <>
             <Link className="app-btn-ghost" to="/login">Login</Link>
