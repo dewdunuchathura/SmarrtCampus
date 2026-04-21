@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(
@@ -56,5 +58,15 @@ public class AuthController {
         }
 
         return authentication.getPrincipal();
+    }
+
+    @GetMapping("/admin/users")
+    public ApiResponse<List<User>> getAllUsers() {
+        return ApiResponse.success("Users fetched successfully", authService.getAllUsers());
+    }
+
+    @GetMapping("/admin/users/count")
+    public ApiResponse<Long> getUserCount() {
+        return ApiResponse.success("User count fetched successfully", authService.getUserCount());
     }
 }

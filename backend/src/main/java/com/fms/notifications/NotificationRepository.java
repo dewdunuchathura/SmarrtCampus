@@ -5,7 +5,8 @@ import java.util.List;
 
 public interface NotificationRepository extends MongoRepository<Notification, String> {
 
-    //List<Notification> findByUserId(String userId);
-    List<Notification> findByUserEmail(String userEmail);
+    List<Notification> findAllByOrderByCreatedAtDesc();
+    List<Notification> findByUserEmailOrderByCreatedAtDesc(String userEmail);
     long countByUserEmailAndReadFalse(String userEmail);
+    long countByReadFalse();
 }

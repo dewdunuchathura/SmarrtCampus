@@ -3,6 +3,7 @@ package com.fms.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,6 +53,14 @@ public class AuthService {
 
     public User getUserByEmail(String email) {
              return userRepository.findByEmail(email).orElse(null);
+    }
+
+    public long getUserCount() {
+        return userRepository.count();
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     public User saveGoogleUser(String name, String email) {
