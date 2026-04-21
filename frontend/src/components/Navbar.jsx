@@ -6,51 +6,37 @@ export default function Navbar() {
   const { user } = useAuth();
 
   return (
-    <nav className="nav">
-      {/* Logo Section */}
-      <div className="nav-logo">
-        <span className="logo-mark" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <rect x="2" y="2" width="5" height="5" rx="1.2" fill="white" />
-            <rect x="9" y="2" width="5" height="5" rx="1.2" fill="white" opacity="0.8" />
-            <rect x="2" y="9" width="5" height="5" rx="1.2" fill="white" opacity="0.8" />
-            <rect x="9" y="9" width="5" height="5" rx="1.2" fill="white" opacity="0.6" />
+    <nav className="app-nav">
+      <Link className="app-nav-logo" to="/">
+        <span className="app-nav-mark" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <rect x="1.5" y="1.5" width="4" height="4" rx="1.2" fill="white" />
+            <rect x="8.5" y="1.5" width="4" height="4" rx="1.2" fill="white" opacity="0.75" />
+            <rect x="1.5" y="8.5" width="4" height="4" rx="1.2" fill="white" opacity="0.75" />
+            <rect x="8.5" y="8.5" width="4" height="4" rx="1.2" fill="white" opacity="0.5" />
           </svg>
         </span>
         FMS
+      </Link>
+
+      <div className="app-nav-links" aria-label="Primary navigation">
+        <Link className="app-nav-link" to="/resources">Resources</Link>
+        <Link className="app-nav-link" to="/bookings">Bookings</Link>
+        <Link className="app-nav-link" to="/bookings/admin">Bookings Admin</Link>
+        <Link className="app-nav-link" to="/tickets">Tickets</Link>
+        <Link className="app-nav-link" to="/notifications">Notifications</Link>
+        <Link className="app-nav-link" to="/login">Auth</Link>
       </div>
 
-      {/* Navigation Links */}
-      <div className="nav-links">
-        <Link className="nav-link" to="/resources">Resources</Link>
-        <Link className="nav-link" to="/bookings">Bookings</Link>
-        <Link className="nav-link" to="/tickets">Tickets</Link>
-      </div>
-
-      {/* Right Section - User Actions */}
-      <div className="nav-right">
+      <div className="app-nav-right">
         {user ? (
-          <>
-            <div style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: '50%',
-              background: '#1d9e75',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: '12px',
-              fontWeight: '500'
-            }}>
-              {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-            </div>
-            <button className="btn-ghost">Logout</button>
-          </>
+          <button type="button" className="app-btn-ghost" aria-label="Logout">
+            Logout
+          </button>
         ) : (
           <>
-            <button className="btn-ghost">Login</button>
-            <button className="btn-primary">Get started</button>
+            <Link className="app-btn-ghost" to="/login">Login</Link>
+            <Link className="app-btn-primary" to="/login">Get started</Link>
           </>
         )}
       </div>

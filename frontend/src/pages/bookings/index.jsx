@@ -152,20 +152,19 @@ export default function BookingsPage() {
   return (
     <div className="bookings-page">
       <div className="bookings-shell">
-        <section className="bookings-hero">
-          <div className="hero-panel">
+        <section className="bookings-hero bookings-hero-simple">
+          <div className="hero-panel hero-panel-simple">
             <div className="eyebrow">
               <span className="eyebrow-dot" />
               User booking page
             </div>
-            <h1>Request and manage your facility bookings.</h1>
+            <h1>Book a room or facility in a few quick steps.</h1>
             <p className="hero-copy">
-              Use this page to create, update, view, search, and cancel bookings. Admin approval
-              actions live on the separate admin page.
+              Choose a resource, set your time range, and submit your booking request.
             </p>
-            <div className="hero-stats">
+            <div className="hero-stats hero-stats-simple">
               <div className="stat-tile">
-                <div className="stat-label">Total bookings</div>
+                <div className="stat-label">Total</div>
                 <div className="stat-value">{counts.total}</div>
               </div>
               <div className="stat-tile">
@@ -178,51 +177,16 @@ export default function BookingsPage() {
               </div>
             </div>
           </div>
-
-          <aside className="side-panel">
-            <div>
-              <div className="side-title">User workflow</div>
-              <div className="side-text">
-                The user view stays focused on request creation and tracking. Approval and rejection
-                are handled in the admin page so the module stays clean and role-based.
-              </div>
-              <div className="rule-list">
-                <div className="rule">
-                  <span className="rule-badge">1</span>
-                  Create a request with a valid resource and time window.
-                </div>
-                <div className="rule">
-                  <span className="rule-badge">2</span>
-                  Edit or cancel only while the booking is still pending.
-                </div>
-                <div className="rule">
-                  <span className="rule-badge">3</span>
-                  Search and filter bookings by resource, user, purpose, or status.
-                </div>
-              </div>
-            </div>
-            <div className="mini-grid">
-              <div className="mini-card">
-                <h3>Current scope</h3>
-                <p>Create, update, view, and cancel your own bookings from one page.</p>
-                <div className="pill-row">
-                  <span className="pill">Create</span>
-                  <span className="pill">Edit</span>
-                  <span className="pill">Cancel</span>
-                </div>
-              </div>
-            </div>
-          </aside>
         </section>
 
         {errorBanner ? <div className="banner error">{errorBanner}</div> : null}
         {successBanner ? <div className="banner success">{successBanner}</div> : null}
 
         <section className="toolbar">
-          <div className="form-card">
+          <div className="form-card form-card-wide">
             <div className="section-title">{editingId ? 'Update booking' : 'Create booking'}</div>
             <div className="section-subtitle">
-              Fill in the booking request exactly as the backend expects.
+              Step 1: choose a resource. Step 2: pick the start and end time. Step 3: submit.
             </div>
 
             <form onSubmit={handleSubmit}>
@@ -251,33 +215,21 @@ export default function BookingsPage() {
                   <label htmlFor="endDateTime">End date/time</label>
                   <input id="endDateTime" type="datetime-local" name="endDateTime" value={form.endDateTime} onChange={handleFormChange} required />
                 </div>
+                <div className="field full">
+                  <div className="form-help">
+                    Need the room for 3 hours? Pick an end time that is exactly 3 hours after the start time.
+                  </div>
+                </div>
               </div>
               <div className="form-actions">
                 <button className="btn btn-primary" type="submit" disabled={saving}>
-                  {saving ? 'Saving...' : editingId ? 'Update booking' : 'Create booking'}
+                  {saving ? 'Saving...' : editingId ? 'Save changes' : 'Submit booking'}
                 </button>
                 <button className="btn btn-secondary" type="button" onClick={resetForm}>
                   Reset
                 </button>
               </div>
             </form>
-          </div>
-
-          <div className="filter-card">
-            <div className="section-title">Quick tips</div>
-            <div className="section-subtitle">
-              Pending bookings can be edited or cancelled. Approved and rejected bookings are read-only.
-            </div>
-            <div className="mini-grid">
-              <div className="mini-card">
-                <h3>Conflict handling</h3>
-                <p>Overlapping time ranges are blocked by the backend before they can be saved.</p>
-              </div>
-              <div className="mini-card">
-                <h3>Need admin review?</h3>
-                <p>Open the admin bookings page to approve or reject pending requests.</p>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -286,7 +238,7 @@ export default function BookingsPage() {
             <div className="search">
               <input
                 type="search"
-                placeholder="Search by resource, user, purpose, or booking id"
+                placeholder="Search bookings..."
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
               />
@@ -307,14 +259,14 @@ export default function BookingsPage() {
 
           <div className="section-title">Bookings</div>
           <div className="section-subtitle">
-            Review your bookings, then edit or cancel pending ones when needed.
+            View your requests and edit or cancel only the ones that are still pending.
           </div>
 
           {loading ? (
             <div className="empty-state">Loading bookings...</div>
           ) : filteredBookings.length === 0 ? (
             <div className="empty-state">
-              No bookings match the current filter. Create a new request or clear the search/status filter.
+              No bookings match the current filter. Try clearing the search or choosing a different status.
             </div>
           ) : (
             <div className="booking-grid">

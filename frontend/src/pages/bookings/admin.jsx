@@ -102,44 +102,27 @@ export default function BookingAdminPage() {
   return (
     <div className="bookings-page">
       <div className="bookings-shell">
-        <section className="bookings-hero">
-          <div className="hero-panel">
+        <section className="bookings-hero bookings-hero-simple">
+          <div className="hero-panel hero-panel-simple">
             <div className="eyebrow">
               <span className="eyebrow-dot" />
               Admin booking page
             </div>
-            <h1>Review pending bookings and make approval decisions.</h1>
+            <h1>Approve or reject pending bookings quickly.</h1>
             <p className="hero-copy">
-              This page is reserved for booking approval and rejection. It uses the same backend
-              endpoints, but keeps admin actions separated from the user booking flow.
+              Use this page when a booking needs a decision. Pending requests can be approved or rejected here.
             </p>
           </div>
-
-          <aside className="side-panel">
-            <div>
-              <div className="side-title">Admin tools</div>
-              <div className="side-text">
-                Enter the approver name once, then use the approve or reject buttons on pending
-                bookings.
-              </div>
-            </div>
-            <div className="mini-grid">
-              <div className="mini-card">
-                <h3>Admin fields</h3>
-                <p>Approved by and rejection reason are entered here, not on the user page.</p>
-              </div>
-            </div>
-          </aside>
         </section>
 
         {errorBanner ? <div className="banner error">{errorBanner}</div> : null}
         {successBanner ? <div className="banner success">{successBanner}</div> : null}
 
         <section className="toolbar">
-          <div className="form-card">
+          <div className="form-card form-card-wide">
             <div className="section-title">Decision inputs</div>
             <div className="section-subtitle">
-              These values are reused while approving or rejecting pending bookings.
+              Enter the approver name once, then reuse it for booking decisions.
             </div>
 
             <div className="grid-form">
@@ -161,23 +144,10 @@ export default function BookingAdminPage() {
                   placeholder="Reason for rejection..."
                 />
               </div>
-            </div>
-          </div>
-
-          <div className="filter-card">
-            <div className="section-title">Decision rules</div>
-            <div className="section-subtitle">
-              Only pending bookings should be acted on from this page. Approved, rejected, and
-              cancelled bookings remain visible for history.
-            </div>
-            <div className="mini-grid">
-              <div className="mini-card">
-                <h3>Rule 1</h3>
-                <p>Approve only when the resource is still available for the time slot.</p>
-              </div>
-              <div className="mini-card">
-                <h3>Rule 2</h3>
-                <p>Reject with a short reason so the requester can understand what happened.</p>
+              <div className="field full">
+                <div className="form-help">
+                  Keep rejection reasons short and clear so the requester understands what to fix.
+                </div>
               </div>
             </div>
           </div>
@@ -209,14 +179,14 @@ export default function BookingAdminPage() {
 
           <div className="section-title">All bookings</div>
           <div className="section-subtitle">
-            Approve or reject pending bookings from this page.
+            Review bookings, then approve or reject the ones that are still pending.
           </div>
 
           {loading ? (
             <div className="empty-state">Loading bookings...</div>
           ) : filteredBookings.length === 0 ? (
             <div className="empty-state">
-              No bookings match the current filter. Adjust the search or status filter.
+              No bookings match the current filter. Try a different search term or status.
             </div>
           ) : (
             <div className="booking-grid">
