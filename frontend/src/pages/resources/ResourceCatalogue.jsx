@@ -9,38 +9,49 @@ const ResourceCatalogue = () => {
       maxWidth: '1200px',
       margin: '0 auto',
       padding: '2rem',
-      fontFamily: 'Arial, sans-serif'
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      backgroundColor: '#F8FAFC',
+      minHeight: '100vh'
     },
     header: {
       textAlign: 'center',
       marginBottom: '3rem',
       padding: '2rem',
-      background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       color: 'white',
       borderRadius: '15px',
       boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
     },
     title: {
       fontSize: '2.5rem',
-      fontWeight: 'bold',
+      fontWeight: '700',
       margin: '0 0 0.5rem 0',
-      textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+      color: 'white',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    },
+    subtitle: {
+      fontSize: '1rem',
+      fontWeight: '400',
+      color: 'rgba(255, 255, 255, 0.9)',
+      margin: '0 0 1rem 0',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     section: {
-      background: 'white',
-      borderRadius: '15px',
+      background: '#FFFFFF',
+      borderRadius: '16px',
       padding: '2rem',
       marginBottom: '2rem',
-      boxShadow: '0 5px 20px rgba(0,0,0,0.08)',
-      border: '1px solid #e5e7eb'
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+      border: '1px solid #E5E7EB'
     },
     sectionTitle: {
       fontSize: '1.5rem',
       fontWeight: '600',
       marginBottom: '1.5rem',
       color: '#2d3748',
-      borderBottom: '3px solid #4CAF50',
-      paddingBottom: '0.5rem'
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      paddingBottom: '0.5rem',
+      borderBottom: '2px solid #667eea'
     },
     filterSection: {
       display: 'grid',
@@ -68,8 +79,8 @@ const ResourceCatalogue = () => {
       outline: 'none'
     },
     inputFocus: {
-      borderColor: '#4CAF50',
-      boxShadow: '0 0 0 3px rgba(76, 175, 80, 0.1)',
+      borderColor: '#667eea',
+      boxShadow: '0 0 0 3px rgba(102, 126, 234, 0.1)',
       transform: 'translateY(-1px)'
     },
     button: {
@@ -79,18 +90,17 @@ const ResourceCatalogue = () => {
       fontSize: '1rem',
       fontWeight: '600',
       cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px'
+      transition: 'all 0.3s ease'
     },
     primaryButton: {
-      background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
-      color: 'white',
-      boxShadow: '0 4px 15px rgba(76, 175, 80, 0.3)'
+      background: '#667eea',
+      color: '#FFFFFF',
+      boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)'
     },
     primaryButtonHover: {
+      background: '#5a67d8',
       transform: 'translateY(-2px)',
-      boxShadow: '0 6px 20px rgba(76, 175, 80, 0.4)'
+      boxShadow: '0 6px 20px rgba(102, 126, 234, 0.4)'
     },
     secondaryButton: {
       background: '#f7fafc',
@@ -119,7 +129,7 @@ const ResourceCatalogue = () => {
     resourceCardHover: {
       transform: 'translateY(-5px)',
       boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-      borderColor: '#4CAF50'
+      borderColor: '#667eea'
     },
     resourceHeader: {
       display: 'flex',
@@ -141,7 +151,7 @@ const ResourceCatalogue = () => {
     },
     resourceDetail: {
       fontSize: '0.9rem',
-      color: '#4a5568'
+      color: '#7A288A'
     },
     statusActive: {
       color: '#38a169',
@@ -180,6 +190,7 @@ const ResourceCatalogue = () => {
   const [filterCapacity, setFilterCapacity] = useState('');
   const [filterLocation, setFilterLocation] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [capacitySortOrder, setCapacitySortOrder] = useState(''); // '', 'asc', 'desc'
   
   // Dropdown options
   const [types] = useState(['Lecture Hall', 'Lab', 'Meeting Room', 'Equipment']);
@@ -201,13 +212,37 @@ const ResourceCatalogue = () => {
     }, 500);
 
     return () => clearTimeout(delayedSearch);
-  }, [searchTerm, filterType, filterCapacity, filterLocation, filterStatus]);
+  }, [searchTerm, filterType, filterCapacity, filterLocation, filterStatus, capacitySortOrder]);
 
   const fetchResources = async () => {
     try {
       setLoading(true);
       const response = await api.get('/resources');
-      setResources(response.data);
+      console.log('API Response:', response);
+      console.log('Response data:', response.data);
+      console.log('Response data type:', typeof response.data);
+      console.log('Is array?', Array.isArray(response.data));
+      
+      let sortedResources = response.data;
+      
+      // Apply capacity sorting if selected
+      if (capacitySortOrder) {
+        sortedResources = [...response.data].sort((a, b) => {
+          // Handle null/None capacity values
+          const capacityA = a.capacity === null || a.capacity === 'None' ? -1 : parseInt(a.capacity);
+          const capacityB = b.capacity === null || b.capacity === 'None' ? -1 : parseInt(b.capacity);
+          
+          if (capacitySortOrder === 'asc') {
+            return capacityA - capacityB;
+          } else if (capacitySortOrder === 'desc') {
+            return capacityB - capacityA;
+          }
+          return 0;
+        });
+      }
+      
+      setResources(sortedResources);
+      console.log('Resources set:', sortedResources);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching resources:', error);
@@ -227,7 +262,26 @@ const ResourceCatalogue = () => {
       if (filterStatus) params.append('status', filterStatus);
       
       const response = await api.get(`/resources/search?${params}`);
-      setResources(response.data);
+      
+      let sortedResources = response.data;
+      
+      // Apply capacity sorting if selected
+      if (capacitySortOrder) {
+        sortedResources = [...response.data].sort((a, b) => {
+          // Handle null/None capacity values
+          const capacityA = a.capacity === null || a.capacity === 'None' ? -1 : parseInt(a.capacity);
+          const capacityB = b.capacity === null || b.capacity === 'None' ? -1 : parseInt(b.capacity);
+          
+          if (capacitySortOrder === 'asc') {
+            return capacityA - capacityB;
+          } else if (capacitySortOrder === 'desc') {
+            return capacityB - capacityA;
+          }
+          return 0;
+        });
+      }
+      
+      setResources(sortedResources);
       setLoading(false);
     } catch (error) {
       console.error('Error searching resources:', error);
@@ -242,6 +296,7 @@ const ResourceCatalogue = () => {
     setFilterCapacity('');
     setFilterLocation('');
     setFilterStatus('');
+    setCapacitySortOrder('');
   };
 
   return (
@@ -302,6 +357,66 @@ const ResourceCatalogue = () => {
           </div>
           
           <div style={styles.formGroup}>
+            <label style={styles.label}>Sort by Capacity</label>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={() => setCapacitySortOrder(capacitySortOrder === 'asc' ? '' : 'asc')}
+                style={{
+                  ...styles.button,
+                  ...styles.secondaryButton,
+                  ...(capacitySortOrder === 'asc' ? styles.primaryButton : {}),
+                  fontSize: '0.75rem',
+                  padding: '0.5rem 1rem'
+                }}
+                onMouseEnter={(e) => {
+                  if (capacitySortOrder !== 'asc') {
+                    Object.assign(e.target.style, styles.secondaryButtonHover);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButtonHover);
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (capacitySortOrder !== 'asc') {
+                    Object.assign(e.target.style, styles.secondaryButton);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButton);
+                  }
+                }}
+              >
+                {capacitySortOrder === 'asc' ? 'Ascending' : 'Ascending'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setCapacitySortOrder(capacitySortOrder === 'desc' ? '' : 'desc')}
+                style={{
+                  ...styles.button,
+                  ...styles.secondaryButton,
+                  ...(capacitySortOrder === 'desc' ? styles.primaryButton : {}),
+                  fontSize: '0.75rem',
+                  padding: '0.5rem 1rem'
+                }}
+                onMouseEnter={(e) => {
+                  if (capacitySortOrder !== 'desc') {
+                    Object.assign(e.target.style, styles.secondaryButtonHover);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButtonHover);
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (capacitySortOrder !== 'desc') {
+                    Object.assign(e.target.style, styles.secondaryButton);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButton);
+                  }
+                }}
+              >
+                {capacitySortOrder === 'desc' ? 'Descending' : 'Descending'}
+              </button>
+            </div>
+          </div>
+          
+          <div style={styles.formGroup}>
             <label style={styles.label}>Location</label>
             <select
               value={filterLocation}
@@ -350,6 +465,9 @@ const ResourceCatalogue = () => {
       {/* Resources List */}
       <div style={styles.section}>
         <h2 style={styles.sectionTitle}>Available Resources ({resources.length})</h2>
+        {console.log('Render - resources:', resources)}
+        {console.log('Render - loading:', loading)}
+        {console.log('Render - resources.length:', resources.length)}
         {loading ? (
           <div style={styles.loading}>
             <div>Loading resources...</div>

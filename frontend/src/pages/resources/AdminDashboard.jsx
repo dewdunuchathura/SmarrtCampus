@@ -9,7 +9,9 @@ const AdminDashboard = () => {
       maxWidth: '1400px',
       margin: '0 auto',
       padding: '2rem',
-      fontFamily: 'Arial, sans-serif'
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      backgroundColor: '#F8FAFC',
+      minHeight: '100vh'
     },
     header: {
       textAlign: 'center',
@@ -22,25 +24,34 @@ const AdminDashboard = () => {
     },
     title: {
       fontSize: '2.5rem',
-      fontWeight: 'bold',
+      fontWeight: '700',
       margin: '0 0 0.5rem 0',
-      textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+      color: 'white',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    },
+    subtitle: {
+      fontSize: '1rem',
+      fontWeight: '400',
+      color: 'rgba(255, 255, 255, 0.9)',
+      margin: '0 0 1rem 0',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     section: {
-      background: 'white',
-      borderRadius: '15px',
+      background: '#FFFFFF',
+      borderRadius: '16px',
       padding: '2rem',
       marginBottom: '2rem',
-      boxShadow: '0 5px 20px rgba(0,0,0,0.08)',
-      border: '1px solid #e5e7eb'
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+      border: '1px solid #E5E7EB'
     },
     sectionTitle: {
       fontSize: '1.5rem',
       fontWeight: '600',
       marginBottom: '1.5rem',
       color: '#2d3748',
-      borderBottom: '3px solid #667eea',
-      paddingBottom: '0.5rem'
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      paddingBottom: '0.5rem',
+      borderBottom: '2px solid #667eea'
     },
     form: {
       display: 'grid',
@@ -49,21 +60,25 @@ const AdminDashboard = () => {
     },
     formGroup: {
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      flex: '1'
     },
     label: {
-      fontWeight: '600',
+      fontWeight: '500',
       marginBottom: '0.5rem',
-      color: '#4a5568',
-      fontSize: '0.9rem'
+      color: '#374151',
+      fontSize: '0.875rem',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     input: {
-      padding: '0.75rem',
-      border: '2px solid #e2e8f0',
+      padding: '0.75rem 1rem',
+      border: '1px solid #E5E7EB',
       borderRadius: '8px',
-      fontSize: '1rem',
-      transition: 'all 0.3s ease',
-      outline: 'none'
+      fontSize: '0.875rem',
+      transition: 'all 0.2s ease',
+      outline: 'none',
+      backgroundColor: '#FFFFFF',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     inputFocus: {
       borderColor: '#667eea',
@@ -71,39 +86,46 @@ const AdminDashboard = () => {
       transform: 'translateY(-1px)'
     },
     textarea: {
-      padding: '0.75rem',
-      border: '2px solid #e2e8f0',
+      padding: '0.75rem 1rem',
+      border: '1px solid #E5E7EB',
       borderRadius: '8px',
-      fontSize: '1rem',
-      transition: 'all 0.3s ease',
+      fontSize: '0.875rem',
+      transition: 'all 0.2s ease',
       outline: 'none',
+      minHeight: '100px',
       resize: 'vertical',
-      minHeight: '100px'
+      backgroundColor: '#FFFFFF',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    },
+    textareaFocus: {
+      borderColor: '#667eea',
+      boxShadow: '0 0 0 3px rgba(102, 126, 234, 0.1)',
+      transform: 'translateY(-1px)'
     },
     button: {
       padding: '0.75rem 1.5rem',
-      border: 'none',
+      border: '1px solid #E5E7EB',
       borderRadius: '8px',
-      fontSize: '1rem',
-      fontWeight: '600',
+      fontSize: '0.875rem',
+      fontWeight: '500',
       cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px'
+      transition: 'all 0.2s ease',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     primaryButton: {
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      color: 'white',
-      boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)'
+      background: '#667eea',
+      color: '#FFFFFF',
+      border: '1px solid #667eea'
     },
     primaryButtonHover: {
-      transform: 'translateY(-2px)',
-      boxShadow: '0 6px 20px rgba(102, 126, 234, 0.4)'
+      background: '#5a67d8',
+      transform: 'translateY(-1px)',
+      boxShadow: '0 4px 12px rgba(102, 126, 234, 0.15)'
     },
     secondaryButton: {
-      background: '#f7fafc',
-      color: '#4a5568',
-      border: '2px solid #e2e8f0'
+      background: '#FFFFFF',
+      color: '#374151',
+      border: '1px solid #E5E7EB'
     },
     secondaryButtonHover: {
       background: '#edf2f7',
@@ -130,18 +152,18 @@ const AdminDashboard = () => {
       gap: '1.5rem'
     },
     resourceCard: {
-      background: 'white',
-      borderRadius: '15px',
+      background: '#FFFFFF',
+      borderRadius: '16px',
       padding: '1.5rem',
-      boxShadow: '0 5px 20px rgba(0,0,0,0.08)',
-      border: '1px solid #e5e7eb',
-      transition: 'all 0.3s ease',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+      border: '1px solid #E5E7EB',
+      transition: 'all 0.2s ease',
       position: 'relative',
       overflow: 'hidden'
     },
     resourceCardHover: {
-      transform: 'translateY(-5px)',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+      transform: 'translateY(-2px)',
+      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.05)',
       borderColor: '#667eea'
     },
     resourceHeader: {
@@ -151,36 +173,40 @@ const AdminDashboard = () => {
       marginBottom: '1rem'
     },
     resourceTitle: {
-      fontSize: '1.25rem',
-      fontWeight: 'bold',
+      fontSize: '1.125rem',
+      fontWeight: '600',
       color: '#2d3748',
-      margin: '0'
+      margin: '0',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     resourceDetails: {
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: '0.5rem',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.75rem',
       marginBottom: '1rem'
     },
     resourceDetail: {
-      fontSize: '0.9rem',
-      color: '#4a5568'
+      fontSize: '0.875rem',
+      color: '#64748B',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     statusActive: {
       color: '#38a169',
-      fontWeight: 'bold',
+      fontWeight: '600',
       background: '#c6f6d5',
-      padding: '0.25rem 0.5rem',
+      padding: '0.25rem 0.75rem',
       borderRadius: '20px',
-      fontSize: '0.8rem'
+      fontSize: '0.75rem',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     statusOutOfService: {
       color: '#e53e3e',
-      fontWeight: 'bold',
+      fontWeight: '500',
       background: '#fed7d7',
-      padding: '0.25rem 0.5rem',
+      padding: '0.25rem 0.75rem',
       borderRadius: '20px',
-      fontSize: '0.8rem'
+      fontSize: '0.75rem',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     resourceActions: {
       display: 'flex',
@@ -212,14 +238,49 @@ const AdminDashboard = () => {
     loading: {
       textAlign: 'center',
       padding: '3rem',
-      fontSize: '1.2rem',
-      color: '#4a5568'
+      fontSize: '1rem',
+      color: '#64748B',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     },
     emptyState: {
       textAlign: 'center',
       padding: '3rem',
-      color: '#718096',
-      fontSize: '1.1rem'
+      color: '#64748B',
+      fontSize: '1rem',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    },
+    error: {
+      color: '#e53e3e',
+      fontSize: '0.875rem',
+      marginTop: '0.5rem',
+      padding: '0.5rem',
+      borderRadius: '8px',
+      background: '#fed7d7',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    },
+    statsContainer: {
+      display: 'flex',
+      justifyContent: 'space-around',
+      marginBottom: '2rem'
+    },
+    statItem: {
+      textAlign: 'center',
+      padding: '1rem',
+      background: '#F8FAFC',
+      borderRadius: '12px',
+      border: '1px solid #E5E7EB'
+    },
+    statNumber: {
+      fontSize: '2rem',
+      fontWeight: '700',
+      color: '#667eea',
+      marginBottom: '0.5rem',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    },
+    statLabel: {
+      fontSize: '0.875rem',
+      color: '#64748B',
+      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }
   };
   const [resources, setResources] = useState([]);
@@ -231,6 +292,7 @@ const AdminDashboard = () => {
   const [filterStatus, setFilterStatus] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
+  const [capacitySortOrder, setCapacitySortOrder] = useState(''); // '', 'asc', 'desc'
   
   // Dropdown options
   const [types] = useState(['Lecture Hall', 'Lab', 'Meeting Room', 'Equipment']);
@@ -246,6 +308,8 @@ const AdminDashboard = () => {
     status: 'Active',
     description: ''
   });
+  
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     fetchResources();
@@ -261,13 +325,32 @@ const AdminDashboard = () => {
     }, 500);
 
     return () => clearTimeout(delayedSearch);
-  }, [searchTerm, filterType, filterCapacity, filterLocation, filterStatus]);
+  }, [searchTerm, filterType, filterCapacity, filterLocation, filterStatus, capacitySortOrder]);
 
   const fetchResources = async () => {
     try {
       setLoading(true);
       const response = await api.get('/resources');
-      setResources(response.data);
+      
+      let sortedResources = response.data;
+      
+      // Apply capacity sorting if selected
+      if (capacitySortOrder) {
+        sortedResources = [...response.data].sort((a, b) => {
+          // Handle null/None capacity values
+          const capacityA = a.capacity === null || a.capacity === 'None' ? -1 : parseInt(a.capacity);
+          const capacityB = b.capacity === null || b.capacity === 'None' ? -1 : parseInt(b.capacity);
+          
+          if (capacitySortOrder === 'asc') {
+            return capacityA - capacityB;
+          } else if (capacitySortOrder === 'desc') {
+            return capacityB - capacityA;
+          }
+          return 0;
+        });
+      }
+      
+      setResources(sortedResources);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching resources:', error);
@@ -287,7 +370,26 @@ const AdminDashboard = () => {
       if (filterStatus) params.append('status', filterStatus);
       
       const response = await api.get(`/resources/search?${params}`);
-      setResources(response.data);
+      
+      let sortedResources = response.data;
+      
+      // Apply capacity sorting if selected
+      if (capacitySortOrder) {
+        sortedResources = [...response.data].sort((a, b) => {
+          // Handle null/None capacity values
+          const capacityA = a.capacity === null || a.capacity === 'None' ? -1 : parseInt(a.capacity);
+          const capacityB = b.capacity === null || b.capacity === 'None' ? -1 : parseInt(b.capacity);
+          
+          if (capacitySortOrder === 'asc') {
+            return capacityA - capacityB;
+          } else if (capacitySortOrder === 'desc') {
+            return capacityB - capacityA;
+          }
+          return 0;
+        });
+      }
+      
+      setResources(sortedResources);
       setLoading(false);
     } catch (error) {
       console.error('Error searching resources:', error);
@@ -300,6 +402,12 @@ const AdminDashboard = () => {
     e.preventDefault();
     console.log('handleSubmit called - selectedResource:', selectedResource);
     console.log('handleSubmit called - formData:', formData);
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      toast.error('Please fix the errors in the form');
+      return;
+    }
     
     try {
       // Convert "None" to null for backend
@@ -318,7 +426,7 @@ const AdminDashboard = () => {
         console.log('Creating new resource');
         // Create new resource
         await api.post('/resources', submissionData);
-        toast.success('Resource created successfully');
+        toast.success('Resource are successfully uploaded');
         resetForm();
       }
       fetchResources();
@@ -355,6 +463,49 @@ const AdminDashboard = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = {};
+    
+    // Name validation
+    if (!formData.name.trim()) {
+      errors.name = 'Resource name is required';
+    } else if (formData.name.trim().length < 2) {
+      errors.name = 'Resource name must be at least 2 characters';
+    } else if (formData.name.trim().length > 100) {
+      errors.name = 'Resource name must be less than 100 characters';
+    }
+    
+    // Type validation
+    if (!formData.type || formData.type === '') {
+      errors.type = 'Resource type is required';
+    }
+    
+    // Location validation
+    if (!formData.location || formData.location === '') {
+      errors.location = 'Location is required';
+    }
+    
+    // Status validation
+    if (!formData.status || formData.status === '') {
+      errors.status = 'Status is required';
+    }
+    
+    // Description validation (optional but if provided, should be reasonable)
+    if (formData.description && formData.description.trim()) {
+      const descLength = formData.description.trim().length;
+      if (descLength < 5) {
+        errors.description = 'Description must be at least 5 characters if provided';
+      } else if (descLength > 500) {
+        errors.description = 'Description must be less than 500 characters';
+      } else if (!/^[a-zA-Z0-9\s.,!?()-]+$/.test(formData.description.trim())) {
+        errors.description = 'Description contains invalid characters. Only letters, numbers, spaces, and .,!?-() are allowed';
+      }
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const resetForm = () => {
     console.log('resetForm called - clearing selectedResource');
     setFormData({
@@ -366,6 +517,7 @@ const AdminDashboard = () => {
       description: ''
     });
     setSelectedResource(null);
+    setFormErrors({});
   };
 
   const handleInputChange = (e) => {
@@ -374,6 +526,14 @@ const AdminDashboard = () => {
       ...prev,
       [name]: value
     }));
+    
+    // Clear error for this field when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   const clearFilters = () => {
@@ -382,6 +542,7 @@ const AdminDashboard = () => {
     setFilterCapacity('');
     setFilterLocation('');
     setFilterStatus('');
+    setCapacitySortOrder('');
   };
 
   const closeModal = () => {
@@ -409,10 +570,16 @@ const AdminDashboard = () => {
               value={formData.name}
               onChange={handleInputChange}
               required
-              style={styles.input}
+              style={{
+                ...styles.input,
+                ...(formErrors.name ? styles.inputError : {})
+              }}
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.input)}
             />
+            {formErrors.name && (
+              <div style={styles.error}>{formErrors.name}</div>
+            )}
           </div>
           
           <div style={styles.formGroup}>
@@ -422,7 +589,10 @@ const AdminDashboard = () => {
               value={formData.type}
               onChange={handleInputChange}
               required
-              style={styles.input}
+              style={{
+                ...styles.input,
+                ...(formErrors.type ? styles.inputError : {})
+              }}
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.input)}
             >
@@ -430,6 +600,9 @@ const AdminDashboard = () => {
                 <option key={type} value={type}>{type}</option>
               ))}
             </select>
+            {formErrors.type && (
+              <div style={styles.error}>{formErrors.type}</div>
+            )}
           </div>
           
           <div style={styles.formGroup}>
@@ -456,7 +629,10 @@ const AdminDashboard = () => {
               value={formData.location}
               onChange={handleInputChange}
               required
-              style={styles.input}
+              style={{
+                ...styles.input,
+                ...(formErrors.location ? styles.inputError : {})
+              }}
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.input)}
             >
@@ -464,6 +640,9 @@ const AdminDashboard = () => {
                 <option key={location} value={location}>{location}</option>
               ))}
             </select>
+            {formErrors.location && (
+              <div style={styles.error}>{formErrors.location}</div>
+            )}
           </div>
           
           <div style={styles.formGroup}>
@@ -473,7 +652,10 @@ const AdminDashboard = () => {
               value={formData.status}
               onChange={handleInputChange}
               required
-              style={styles.input}
+              style={{
+                ...styles.input,
+                ...(formErrors.status ? styles.inputError : {})
+              }}
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.input)}
             >
@@ -481,18 +663,58 @@ const AdminDashboard = () => {
                 <option key={status} value={status}>{status}</option>
               ))}
             </select>
+            {formErrors.status && (
+              <div style={styles.error}>{formErrors.status}</div>
+            )}
           </div>
           
           <div style={styles.formGroup}>
-            <label style={styles.label}>Description</label>
+            <label style={styles.label}>Description <span style={{ color: '#64748B', fontWeight: '400' }}>(Optional)</span></label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleInputChange}
-              style={styles.textarea}
+              placeholder="Enter resource description (5-500 characters, optional)"
+              style={{
+                ...styles.textarea,
+                ...(formErrors.description ? styles.inputError : {})
+              }}
               onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
               onBlur={(e) => Object.assign(e.target.style, styles.textarea)}
             />
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginTop: '0.25rem'
+            }}>
+              <span style={{ 
+                fontSize: '0.75rem', 
+                color: '#64748B',
+                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+              }}>
+                {formData.description.trim().length === 0 
+                  ? 'Optional: Add a brief description of the resource'
+                  : formData.description.trim().length < 5
+                  ? 'Description must be at least 5 characters'
+                  : `${formData.description.trim().length}/500 characters used`
+                }
+              </span>
+              {formData.description.trim().length > 0 && (
+                <span style={{
+                  fontSize: '0.75rem',
+                  color: formData.description.trim().length > 500 ? '#e53e3e' : 
+                         formData.description.trim().length < 5 ? '#e53e3e' : '#38a169',
+                  fontWeight: '500'
+                }}>
+                  {formData.description.trim().length > 500 ? 'Too long' :
+                   formData.description.trim().length < 5 ? 'Too short' : 'Valid'}
+                </span>
+              )}
+            </div>
+            {formErrors.description && (
+              <div style={styles.error}>{formErrors.description}</div>
+            )}
           </div>
           
           <div style={styles.formGroup}>
@@ -569,6 +791,66 @@ const AdminDashboard = () => {
                 <option key={capacity} value={capacity}>{capacity === 'None' ? 'None' : `${capacity} persons`}</option>
               ))}
             </select>
+          </div>
+          
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Sort by Capacity</label>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={() => setCapacitySortOrder(capacitySortOrder === 'asc' ? '' : 'asc')}
+                style={{
+                  ...styles.button,
+                  ...styles.secondaryButton,
+                  ...(capacitySortOrder === 'asc' ? styles.primaryButton : {}),
+                  fontSize: '0.75rem',
+                  padding: '0.5rem 1rem'
+                }}
+                onMouseEnter={(e) => {
+                  if (capacitySortOrder !== 'asc') {
+                    Object.assign(e.target.style, styles.secondaryButtonHover);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButtonHover);
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (capacitySortOrder !== 'asc') {
+                    Object.assign(e.target.style, styles.secondaryButton);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButton);
+                  }
+                }}
+              >
+                {capacitySortOrder === 'asc' ? 'Ascending' : 'Ascending'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setCapacitySortOrder(capacitySortOrder === 'desc' ? '' : 'desc')}
+                style={{
+                  ...styles.button,
+                  ...styles.secondaryButton,
+                  ...(capacitySortOrder === 'desc' ? styles.primaryButton : {}),
+                  fontSize: '0.75rem',
+                  padding: '0.5rem 1rem'
+                }}
+                onMouseEnter={(e) => {
+                  if (capacitySortOrder !== 'desc') {
+                    Object.assign(e.target.style, styles.secondaryButtonHover);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButtonHover);
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (capacitySortOrder !== 'desc') {
+                    Object.assign(e.target.style, styles.secondaryButton);
+                  } else {
+                    Object.assign(e.target.style, styles.primaryButton);
+                  }
+                }}
+              >
+                {capacitySortOrder === 'desc' ? 'Descending' : 'Descending'}
+              </button>
+            </div>
           </div>
           
           <div style={styles.formGroup}>
