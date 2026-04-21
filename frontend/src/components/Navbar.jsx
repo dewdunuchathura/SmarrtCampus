@@ -9,7 +9,7 @@ export default function Navbar() {
       <Link to="/resources">Resources</Link>
       <Link to="/bookings">Bookings</Link>
       <Link to="/tickets">Tickets</Link>
-      <Link to="/login">Auth</Link>
+      <Link to="/notifications">Notifications</Link>
       <div style={{ marginLeft: 'auto' }}>
         <button type="button">{user ? 'Logout' : 'Login'}</button>
       </div>
