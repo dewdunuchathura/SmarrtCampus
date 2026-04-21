@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import AdminDashboard from "./AdminDashboard";
 
 export default function AuthPage() {
   const navigate = useNavigate();
-
   const [showAdmin, setShowAdmin] = useState(false);
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
+  const [adminUser, setAdminUser] = useState(null);
+  const [adminError, setAdminError] = useState("");
 
   const handleGoogleLogin = () => {
     window.location.href = "http://localhost:8080/oauth2/authorization/google";
@@ -15,13 +17,15 @@ export default function AuthPage() {
 
   const handleAdminLogin = async () => {
     try {
+      setAdminError("");
+
       const loginRes = await axios.post("http://localhost:8080/api/auth/login", {
         email: adminEmail,
         password: adminPassword,
       });
 
       if (!loginRes.data.success) {
-        alert("Invalid admin email or password");
+        setAdminError("Invalid admin email or password.");
         return;
       }
 
@@ -30,21 +34,37 @@ export default function AuthPage() {
       );
 
       if (!userRes.data.success) {
-        alert("Admin user not found");
+        setAdminError("Admin user not found.");
         return;
       }
 
       if (userRes.data.data.role !== "ADMIN") {
-        alert("You are not an admin");
+        setAdminError("This account does not have admin access.");
         return;
       }
 
-      navigate("/admin-dashboard");
+      setAdminUser(userRes.data.data);
     } catch (error) {
-      alert("Admin login failed");
+      setAdminError("Admin login failed. Please try again.");
       console.error(error);
     }
   };
+
+  const handleBackToLogin = () => {
+    setAdminUser(null);
+    setAdminPassword("");
+    setAdminError("");
+  };
+
+  if (adminUser) {
+    return (
+      <AdminDashboard
+        adminUser={adminUser}
+        onBackToLogin={handleBackToLogin}
+        onGoHome={() => navigate("/")}
+      />
+    );
+  }
 
   return (
     <div
@@ -54,7 +74,7 @@ export default function AuthPage() {
         justifyContent: "center",
         alignItems: "center",
         background:
-          "linear-gradient(90deg, rgba(240,232,255,1) 0%, rgba(245,245,245,1) 45%, rgba(214,231,255,1) 100%)",
+          "linear-gradient(135deg, #eef2ff 0%, #f8fafc 45%, #dbeafe 100%)",
         padding: "20px",
       }}
     >
@@ -64,7 +84,7 @@ export default function AuthPage() {
           maxWidth: "460px",
           background: "#ffffff",
           borderRadius: "28px",
-          boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
+          boxShadow: "0 18px 50px rgba(15, 23, 42, 0.12)",
           padding: "34px 32px",
           textAlign: "center",
         }}
@@ -92,6 +112,7 @@ export default function AuthPage() {
             fontSize: "28px",
             fontWeight: "800",
             color: "#111827",
+            fontFamily: "Georgia, serif",
           }}
         >
           Smart Campus
@@ -103,7 +124,7 @@ export default function AuthPage() {
             marginBottom: "28px",
             fontSize: "15px",
             fontWeight: "700",
-            color: "#5b4bff",
+            color: "#4f46e5",
           }}
         >
           Operations Hub
@@ -114,12 +135,13 @@ export default function AuthPage() {
             margin: "0 auto 22px",
             maxWidth: "340px",
             fontSize: "16px",
-            lineHeight: "1.6",
-            color: "#6b7280",
+            lineHeight: "1.7",
+            color: "#475569",
+            fontFamily: "Georgia, serif",
           }}
         >
           Sign in with your university Google account to access the campus
-          management system.
+          management system
         </p>
 
         <div
@@ -136,7 +158,7 @@ export default function AuthPage() {
               fontSize: "12px",
               fontWeight: "700",
               letterSpacing: "1px",
-              color: "#9ca3af",
+              color: "#94a3b8",
             }}
           >
             CONTINUE WITH
@@ -156,14 +178,7 @@ export default function AuthPage() {
             fontSize: "18px",
             fontWeight: "700",
             cursor: "pointer",
-            boxShadow: "0 8px 18px rgba(66,133,244,0.28)",
-            transition: "0.2s ease",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.opacity = "0.92";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.opacity = "1";
+            boxShadow: "0 12px 24px rgba(66,133,244,0.24)",
           }}
         >
           G Sign in with Google
@@ -180,7 +195,7 @@ export default function AuthPage() {
           <span
             onClick={() => setShowAdmin(!showAdmin)}
             style={{
-              color: "#5b4bff",
+              color: "#4f46e5",
               textDecoration: "underline",
               cursor: "pointer",
             }}
@@ -196,9 +211,9 @@ export default function AuthPage() {
               display: "flex",
               flexDirection: "column",
               gap: "12px",
-              padding: "14px",
+              padding: "16px",
               border: "1px solid #e5e7eb",
-              borderRadius: "12px",
+              borderRadius: "16px",
               textAlign: "left",
             }}
           >
@@ -213,13 +228,28 @@ export default function AuthPage() {
               Admin Access
             </h3>
 
+            {adminError ? (
+              <div
+                style={{
+                  padding: "10px 12px",
+                  borderRadius: "10px",
+                  background: "#fef2f2",
+                  color: "#b91c1c",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                }}
+              >
+                {adminError}
+              </div>
+            ) : null}
+
             <div>
               <label
                 style={{
                   display: "block",
                   marginBottom: "6px",
                   fontSize: "14px",
-                  color: "#6b7280",
+                  color: "#475569",
                 }}
               >
                 Email
@@ -231,11 +261,12 @@ export default function AuthPage() {
                 onChange={(e) => setAdminEmail(e.target.value)}
                 style={{
                   width: "100%",
-                  padding: "10px",
-                  borderRadius: "8px",
+                  padding: "11px 12px",
+                  borderRadius: "10px",
                   border: "1px solid #cbd5e1",
                   outline: "none",
                   boxSizing: "border-box",
+                  background: "#eff6ff",
                 }}
               />
             </div>
@@ -246,7 +277,7 @@ export default function AuthPage() {
                   display: "block",
                   marginBottom: "6px",
                   fontSize: "14px",
-                  color: "#6b7280",
+                  color: "#475569",
                 }}
               >
                 Password
@@ -258,11 +289,12 @@ export default function AuthPage() {
                 onChange={(e) => setAdminPassword(e.target.value)}
                 style={{
                   width: "100%",
-                  padding: "10px",
-                  borderRadius: "8px",
+                  padding: "11px 12px",
+                  borderRadius: "10px",
                   border: "1px solid #cbd5e1",
                   outline: "none",
                   boxSizing: "border-box",
+                  background: "#eff6ff",
                 }}
               />
             </div>
@@ -271,11 +303,12 @@ export default function AuthPage() {
               onClick={handleAdminLogin}
               style={{
                 padding: "12px",
-                borderRadius: "8px",
+                borderRadius: "10px",
                 border: "none",
                 background: "linear-gradient(135deg, #5b4bff, #4a3df0)",
                 color: "#fff",
                 fontWeight: "700",
+                fontSize: "17px",
                 cursor: "pointer",
               }}
             >
@@ -288,11 +321,12 @@ export default function AuthPage() {
           style={{
             marginTop: "28px",
             fontSize: "14px",
-            color: "#9ca3af",
+            color: "#94a3b8",
             lineHeight: "1.6",
+            fontFamily: "Georgia, serif",
           }}
         >
-          🔒 Secured with OAuth 2.0 & JWT - IT3030 PAF Assignment 2026
+          Secured with OAuth 2.0 & JWT - IT3030 PAF Assignment 2026
         </p>
       </div>
     </div>
