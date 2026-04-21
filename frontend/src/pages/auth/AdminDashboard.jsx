@@ -97,10 +97,6 @@ export default function AdminDashboard({ adminUser, onBackToLogin, onGoHome }) {
     return date.toLocaleString();
   };
 
-  const handleOpenCurrentUsers = () => {
-    usersSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   return (
     <div className="admin-shell">
       <div className="admin-workspace">
@@ -179,30 +175,23 @@ export default function AdminDashboard({ adminUser, onBackToLogin, onGoHome }) {
                 account summary from one workspace.
               </p>
             </div>
-          </section>
 
-          <section className="admin-hero-actions">
-            <button
-              type="button"
-              className="admin-secondary-btn admin-inline-btn"
-              onClick={onGoHome}
-            >
-              Go Home
-            </button>
-            <button
-              type="button"
-              className="admin-secondary-btn admin-inline-btn"
-              onClick={onBackToLogin}
-            >
-              Back to Login
-            </button>
-            <button
-              type="button"
-              className="admin-secondary-btn admin-inline-btn"
-              onClick={handleOpenCurrentUsers}
-            >
-              Current Users
-            </button>
+            <div className="admin-hero-actions">
+              <button
+                type="button"
+                className="admin-secondary-btn admin-inline-btn"
+                onClick={onGoHome}
+              >
+                Go Home
+              </button>
+              <button
+                type="button"
+                className="admin-secondary-btn admin-inline-btn"
+                onClick={onBackToLogin}
+              >
+                Back to Login
+              </button>
+            </div>
           </section>
 
           <section className="admin-stats-grid">
