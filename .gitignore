@@ -13,6 +13,9 @@ backend/.m2/
 .env.local
 .env.*.local
 
+# Application properties (contains secrets)
+backend/src/main/resources/application.properties
+
 # IDE and OS files
 .idea/
 .vscode/

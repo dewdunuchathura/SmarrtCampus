@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.fms.bookings.enums.BookingStatus;
+
 @Service
 public class NotificationService {
 
@@ -96,5 +98,23 @@ public class NotificationService {
         }
 
         return type.trim().toUpperCase(Locale.ROOT);
+    }
+
+    public void notifyBookingDecision(String bookingId, String userEmail, BookingStatus status, String reason) {
+        String title = status == BookingStatus.APPROVED ? "Booking Approved" : "Booking Rejected";
+        String message = String.format("Your booking %s has been %s.", bookingId, 
+            status == BookingStatus.APPROVED ? "approved" : "rejected");
+        
+        if (hasText(reason)) {
+            message += " Reason: " + reason;
+        }
+
+        NotificationRequest request = new NotificationRequest();
+        request.setUserEmail(userEmail);
+        request.setTitle(title);
+        request.setMessage(message);
+        request.setType("BOOKING");
+
+        createNotification(request);
     }
 }
