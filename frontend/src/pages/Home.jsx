@@ -75,21 +75,21 @@ const modules = [
 const activity = [
   {
     color: '#059669',
-    text: (<>Booking <strong>#B-041</strong> approved — Lab 3B, 9:00–11:00 AM</>),
+    text: (<>Booking <strong>#B-041</strong> approved - Lab 3B, 9:00-11:00 AM</>),
     badge: 'Approved',
     badgeStyle: { color: '#065F46', background: '#ECFDF5', border: '1px solid #A7F3D0' },
     time: '2m ago',
   },
   {
     color: '#D97706',
-    text: (<>Ticket <strong>#T-018</strong> assigned to technician — AC unit fault, Room 204</>),
+    text: (<>Ticket <strong>#T-018</strong> assigned to technician - AC unit fault, Room 204</>),
     badge: 'In progress',
     badgeStyle: { color: '#92400E', background: '#FFFBEB', border: '1px solid #FDE68A' },
     time: '15m ago',
   },
   {
     color: '#2563EB',
-    text: 'New booking request — Conference Hall A, 2:00–4:00 PM',
+    text: 'New booking request - Conference Hall A, 2:00-4:00 PM',
     badge: 'Pending',
     badgeStyle: { color: '#1D4ED8', background: '#EFF4FF', border: '1px solid #BFCFFE' },
     time: '34m ago',
@@ -122,14 +122,14 @@ export default function Home() {
           FMS
         </div>
         <div className="nav-links">
-          <button className="nav-link" onClick={() => navigate('/resources')}>Resources</button>
-          <button className="nav-link" onClick={() => navigate('/bookings')}>Bookings</button>
-          <button className="nav-link" onClick={() => navigate('/tickets')}>Tickets</button>
-          <button className="nav-link" onClick={() => navigate('/notifications')}>Notifications</button>
+          <button type="button" className="nav-link" onClick={() => navigate('/resources')}>Resources</button>
+          <button type="button" className="nav-link" onClick={() => navigate('/bookings')}>Bookings</button>
+          <button type="button" className="nav-link" onClick={() => navigate('/tickets')}>Tickets</button>
+          <button type="button" className="nav-link" onClick={() => navigate('/notifications')}>Notifications</button>
         </div>
         <div className="nav-right">
-          <button className="btn-ghost" onClick={() => navigate('/login')}>Sign in</button>
-          <button className="btn-primary" onClick={() => navigate('/login')}>Get started</button>
+          <button type="button" className="btn-ghost" onClick={() => navigate('/login')}>Sign in</button>
+          <button type="button" className="btn-primary" onClick={() => navigate('/login')}>Get started</button>
         </div>
       </nav>
 
@@ -140,7 +140,7 @@ export default function Home() {
 
         <div className="hero-badge">
           <span className="badge-dot" />
-          Now live — v1.0
+          Now live - v1.0
         </div>
 
         <h1 className="hero-title">
@@ -149,7 +149,7 @@ export default function Home() {
         </h1>
 
         <p className="hero-sub">
-          Book rooms, report incidents, and track resources — all in one place.
+          Book rooms, report incidents, and track resources - all in one place.
           Built for campus and facility teams.
         </p>
 
@@ -254,7 +254,7 @@ export default function Home() {
           FMS
         </div>
         <span className="footer-text">Facility Management System — Group Project 2025</span>
-        <span className="footer-text">Spring Boot · MongoDB · React</span>
+        <span className="footer-text">Spring Boot - MongoDB - React</span>
       </footer>
     </div>
   );
