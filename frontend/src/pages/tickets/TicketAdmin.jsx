@@ -471,21 +471,7 @@ export default function TicketAdmin() {
                         gap: '0.5rem',
                         flexWrap: 'wrap'
                       }}>
-                        <button
-                          onClick={() => handleEdit(ticket)}
-                          style={{
-                            backgroundColor: '#2563EB',
-                            color: '#FFFFFF',
-                            border: 'none',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '6px',
-                            fontSize: '0.875rem',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <button
+                                                <button
                           onClick={() => handleSolve(ticket)}
                           style={{
                             backgroundColor: '#059669',

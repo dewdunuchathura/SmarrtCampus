@@ -420,21 +420,38 @@ export default function TicketsPage() {
                         {new Date(ticket.createdAt).toLocaleDateString()}
                       </td>
                       <td style={{ padding: '1rem' }}>
-                        <button
-                          onClick={() => navigate(`/tickets/${ticket.id}`)}
-                          style={{
-                            backgroundColor: '#2563EB',
-                            color: '#FFFFFF',
-                            border: 'none',
-                            padding: '0.375rem 0.75rem',
-                            borderRadius: '6px',
-                            fontSize: '0.75rem',
-                            fontWeight: '600',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          View Details
-                        </button>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button
+                            onClick={() => navigate(`/tickets/edit/${ticket.id}`)}
+                            style={{
+                              backgroundColor: '#D97706',
+                              color: '#FFFFFF',
+                              border: 'none',
+                              padding: '0.375rem 0.75rem',
+                              borderRadius: '6px',
+                              fontSize: '0.75rem',
+                              fontWeight: '600',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => navigate(`/tickets/${ticket.id}`)}
+                            style={{
+                              backgroundColor: '#2563EB',
+                              color: '#FFFFFF',
+                              border: 'none',
+                              padding: '0.375rem 0.75rem',
+                              borderRadius: '6px',
+                              fontSize: '0.75rem',
+                              fontWeight: '600',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            View Details
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
