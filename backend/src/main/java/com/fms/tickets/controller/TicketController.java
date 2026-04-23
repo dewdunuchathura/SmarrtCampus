@@ -78,6 +78,48 @@ public class TicketController {
         }
     }
 
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<ApiResponse<Ticket>> updateTicketWithImages(
+            @PathVariable String id,
+            @RequestParam("title") @NotBlank @Size(min = 3, max = 100) String title,
+            @RequestParam("description") @NotBlank @Size(min = 10, max = 1000) String description,
+            @RequestParam("category") @NotBlank String category,
+            @RequestParam("priority") @Pattern(regexp = "^(LOW|MEDIUM|HIGH|URGENT)$") String priority,
+            @RequestParam("submittedBy") @Email @NotBlank String submittedBy,
+            @RequestParam("contactNumber") @Pattern(regexp = "^[+]?[0-9]{10,15}$") @NotBlank String contactNumber,
+            @RequestParam("location") @NotBlank String location,
+            @RequestParam("status") @Pattern(regexp = "^(OPEN|IN_PROGRESS|RESOLVED|CLOSED|REJECTED)$") String status,
+            @RequestParam(value = "assignedTo", required = false) String assignedTo,
+            @RequestParam(value = "rejectionReason", required = false) String rejectionReason,
+            @RequestParam(value = "resolutionNotes", required = false) String resolutionNotes,
+            @RequestPart(value = "images", required = false) MultipartFile[] images) {
+        
+        try {
+            // Create ticket object with all fields
+            Ticket ticket = new Ticket();
+            ticket.setTitle(title);
+            ticket.setDescription(description);
+            ticket.setCategory(category);
+            ticket.setPriority(priority);
+            ticket.setStatus(status);
+            ticket.setSubmittedBy(submittedBy);
+            ticket.setContactNumber(contactNumber);
+            ticket.setLocation(location);
+            ticket.setAssignedTo(assignedTo);
+            ticket.setRejectionReason(rejectionReason);
+            ticket.setResolutionNotes(resolutionNotes);
+            
+            ApiResponse<Ticket> response = ticketService.updateTicketWithImages(id, ticket, images);
+            if (response.isSuccess()) {
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Failed to update ticket: " + e.getMessage()));
+        }
+    }
+
     @PutMapping("/{id}/assign")
     public ResponseEntity<ApiResponse<Ticket>> assignTicket(
             @PathVariable String id,

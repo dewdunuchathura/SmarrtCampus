@@ -14,6 +14,9 @@ export default function TicketAdmin() {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [editImages, setEditImages] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -87,6 +90,7 @@ export default function TicketAdmin() {
       rejectionReason: ticket.rejectionReason || '',
       resolutionNotes: ticket.resolutionNotes || ''
     });
+    setEditImages([]);
     setShowEditModal(true);
   };
 
@@ -98,11 +102,37 @@ export default function TicketAdmin() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`/tickets/${selectedTicket.id}`, formData);
+      const formDataToSend = new FormData();
+      
+      // Append form fields
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('category', formData.category);
+      formDataToSend.append('priority', formData.priority);
+      formDataToSend.append('submittedBy', formData.submittedBy);
+      formDataToSend.append('contactNumber', formData.contactNumber);
+      formDataToSend.append('location', formData.location);
+      formDataToSend.append('status', formData.status);
+      formDataToSend.append('assignedTo', formData.assignedTo);
+      formDataToSend.append('rejectionReason', formData.rejectionReason);
+      formDataToSend.append('resolutionNotes', formData.resolutionNotes);
+      
+      // Append images
+      editImages.forEach((image) => {
+        formDataToSend.append('images', image);
+      });
+
+      const response = await axios.put(`/tickets/${selectedTicket.id}`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
       if (response.data.success) {
         fetchTickets();
         setShowEditModal(false);
         setSelectedTicket(null);
+        setEditImages([]);
       }
     } catch (err) {
       setError('Failed to update ticket');
@@ -324,6 +354,7 @@ export default function TicketAdmin() {
                   <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Status</th>
                   <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Submitted By</th>
                   <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Location</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Images</th>
                   <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Created</th>
                   <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Actions</th>
                 </tr>
@@ -376,6 +407,50 @@ export default function TicketAdmin() {
                     </td>
                     <td style={{ padding: '1rem', color: '#475569' }}>{ticket.submittedBy}</td>
                     <td style={{ padding: '1rem', color: '#475569' }}>{ticket.location}</td>
+                    <td style={{ padding: '1rem' }}>
+                      {ticket.imageAttachments && ticket.imageAttachments.length > 0 ? (
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
+                        }}>
+                          <span style={{
+                            backgroundColor: '#EEF2F7',
+                            color: '#475569',
+                            padding: '0.25rem 0.5rem',
+                            borderRadius: '4px',
+                            fontSize: '0.75rem',
+                            fontWeight: '500'
+                          }}>
+                            {ticket.imageAttachments.length} images
+                          </span>
+                          <button
+                            onClick={() => {
+                              setSelectedImages(ticket.imageAttachments);
+                              setShowImageModal(true);
+                            }}
+                            style={{
+                              backgroundColor: '#2563EB',
+                              color: '#FFFFFF',
+                              border: 'none',
+                              padding: '0.25rem 0.5rem',
+                              borderRadius: '4px',
+                              fontSize: '0.75rem',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            View
+                          </button>
+                        </div>
+                      ) : (
+                        <span style={{
+                          color: '#94A3B8',
+                          fontSize: '0.875rem'
+                        }}>
+                          No images
+                        </span>
+                      )}
+                    </td>
                     <td style={{ padding: '1rem', color: '#64748B' }}>
                       {new Date(ticket.createdAt).toLocaleDateString()}
                     </td>
@@ -624,6 +699,47 @@ export default function TicketAdmin() {
                       }}
                     />
                   )}
+                  
+                  {/* Image Upload Section */}
+                  <div style={{
+                    gridColumn: '1 / -1'
+                  }}>
+                    <label style={{
+                      display: 'block',
+                      color: '#0F172A',
+                      fontWeight: '600',
+                      marginBottom: '0.5rem',
+                      fontFamily: 'Sora, sans-serif'
+                    }}>
+                      Upload Images (Optional)
+                    </label>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files);
+                        setEditImages(files);
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        border: '1px solid #E3E8EF',
+                        borderRadius: '8px',
+                        fontSize: '1rem',
+                        fontFamily: 'Manrope, sans-serif'
+                      }}
+                    />
+                    {editImages.length > 0 && (
+                      <div style={{
+                        marginTop: '0.5rem',
+                        color: '#64748B',
+                        fontSize: '0.875rem'
+                      }}>
+                        {editImages.length} file(s) selected
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div style={{
                   display: 'flex',
@@ -752,6 +868,138 @@ export default function TicketAdmin() {
                 >
                   Delete
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Image View Modal */}
+        {showImageModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.95)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}>
+            <div style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '12px',
+              padding: '1rem',
+              width: '95%',
+              maxWidth: '1200px',
+              maxHeight: '95vh',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1rem',
+                padding: '0 0.5rem'
+              }}>
+                <h2 style={{
+                  fontFamily: 'Sora, sans-serif',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  color: '#0F172A',
+                  margin: 0
+                }}>
+                  Ticket Images ({selectedImages.length})
+                </h2>
+                <button
+                  onClick={() => setShowImageModal(false)}
+                  style={{
+                    backgroundColor: '#64748B',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '6px',
+                    fontSize: '0.875rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+              
+              <div style={{
+                flex: 1,
+                overflowY: 'auto',
+                padding: '0 0.5rem'
+              }}>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '1rem'
+                }}>
+                  {selectedImages.map((image, index) => (
+                    <div key={index} style={{
+                      border: '1px solid #E3E8EF',
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      backgroundColor: '#FFFFFF'
+                    }}>
+                      <div style={{
+                        position: 'relative',
+                        width: '100%',
+                        height: '250px',
+                        backgroundColor: '#F8FAFC',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}>
+                        <img
+                          src={`http://localhost:8095${image}`}
+                          alt={`Ticket image ${index + 1}`}
+                          style={{
+                            maxWidth: '100%',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            cursor: 'pointer',
+                            transition: 'transform 0.2s'
+                          }}
+                          onClick={(e) => {
+                            e.target.style.transform = e.target.style.transform === 'scale(2)' ? 'scale(1)' : 'scale(2)';
+                          }}
+                          onError={(e) => {
+                            e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGN0ZBIi8+CjxwYXRoIGQ9Ik04MCA4MEgxMjBWMTIwSDgwVjgwWiIgZmlsbD0iIzY0NzhiOCIvPgo8cGF0aCBkPSJNODAgMTAwSDEyMFYxMjBIODBWMTAwWiIgZmlsbD0iIzY0NzhiOCIvPgo8L3N2Zz4K';
+                          }}
+                        />
+                      </div>
+                      <div style={{
+                        padding: '1rem',
+                        backgroundColor: '#F8FAFC',
+                        textAlign: 'center',
+                        borderTop: '1px solid #E3E8EF'
+                      }}>
+                        <div style={{
+                          fontSize: '0.875rem',
+                          color: '#0F172A',
+                          fontWeight: '600',
+                          fontFamily: 'Sora, sans-serif',
+                          marginBottom: '0.25rem'
+                        }}>
+                          Image {index + 1}
+                        </div>
+                        <div style={{
+                          fontSize: '0.75rem',
+                          color: '#64748B',
+                          fontFamily: 'Manrope, sans-serif'
+                        }}>
+                          Click to zoom
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

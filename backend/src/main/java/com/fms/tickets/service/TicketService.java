@@ -92,6 +92,40 @@ public class TicketService {
         }
     }
 
+    public ApiResponse<Ticket> updateTicketWithImages(String id, Ticket ticketDetails, MultipartFile[] images) {
+        try {
+            Optional<Ticket> existingTicket = ticketRepository.findById(id);
+            if (existingTicket.isPresent()) {
+                Ticket ticket = existingTicket.get();
+                ticket.setTitle(ticketDetails.getTitle());
+                ticket.setDescription(ticketDetails.getDescription());
+                ticket.setCategory(ticketDetails.getCategory());
+                ticket.setPriority(ticketDetails.getPriority());
+                ticket.setStatus(ticketDetails.getStatus());
+                ticket.setSubmittedBy(ticketDetails.getSubmittedBy());
+                ticket.setContactNumber(ticketDetails.getContactNumber());
+                ticket.setLocation(ticketDetails.getLocation());
+                ticket.setAssignedTo(ticketDetails.getAssignedTo());
+                ticket.setRejectionReason(ticketDetails.getRejectionReason());
+                ticket.setResolutionNotes(ticketDetails.getResolutionNotes());
+                ticket.updateStatus(ticketDetails.getStatus());
+                
+                // Handle image uploads
+                if (images != null && images.length > 0) {
+                    List<String> imageUrls = uploadImages(images);
+                    ticket.setImageAttachments(imageUrls);
+                }
+                
+                Ticket updatedTicket = ticketRepository.save(ticket);
+                return ApiResponse.success("Ticket updated successfully with images", updatedTicket);
+            } else {
+                return ApiResponse.error("Ticket not found");
+            }
+        } catch (Exception e) {
+            return ApiResponse.error("Failed to update ticket with images: " + e.getMessage());
+        }
+    }
+
     public ApiResponse<Ticket> assignTicket(String id, String technicianEmail) {
         try {
             Optional<Ticket> ticket = ticketRepository.findById(id);
