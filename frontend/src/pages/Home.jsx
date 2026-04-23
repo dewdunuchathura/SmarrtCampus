@@ -163,6 +163,9 @@ export default function Home() {
           <button className="btn-hero-ghost" onClick={() => navigate('/bookings')}>
             View bookings
           </button>
+          <button className="btn-lg btn-lg-ghost" onClick={() => navigate('/tickets/createticket')}>
+            Create Ticket
+          </button>
         </div>
 
         <div className="stats">
