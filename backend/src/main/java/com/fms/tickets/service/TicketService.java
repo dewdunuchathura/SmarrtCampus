@@ -23,6 +23,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final NotificationService notificationService;
     public final EmailService emailService;
+    private final CommentService commentService;
     private final String UPLOAD_DIR = "uploads/tickets/";
 
     public ApiResponse<Ticket> createTicket(Ticket ticket, MultipartFile[] images) {
@@ -240,8 +241,12 @@ public class TicketService {
     public ApiResponse<Void> deleteTicket(String id) {
         try {
             if (ticketRepository.existsById(id)) {
+                // Delete all comments associated with this ticket
+                commentService.deleteCommentsByTicketId(id);
+                
+                // Delete the ticket
                 ticketRepository.deleteById(id);
-                return ApiResponse.success("Ticket deleted successfully");
+                return ApiResponse.success("Ticket and associated comments deleted successfully");
             } else {
                 return ApiResponse.error("Ticket not found");
             }

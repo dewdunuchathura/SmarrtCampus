@@ -10,6 +10,8 @@ import CreateTicket from './pages/tickets/CreateTicket';
 import EditTicket from './pages/tickets/EditTicket';
 import TicketTable from './pages/tickets/TicketTable';
 import TicketAdmin from './pages/tickets/TicketAdmin';
+import TicketDetail from './pages/tickets/TicketDetail';
+import TechnicianPanel from './pages/tickets/TechnicianPanel';
 import LoginPage from './pages/auth';
 import NotificationsPage from './pages/notifications';
 
@@ -96,6 +98,8 @@ function Shell() {
           <Route path="/tickets/index" element={<TicketsPage />} />
           <Route path="/tickets/admin" element={<TicketAdmin />} />
           <Route path="/tickets/createticket" element={<CreateTicket />} />
+          <Route path="/tickets/:id" element={<TicketDetail />} />
+          <Route path="/tickets/technician" element={<TechnicianPanel />} />
           <Route path="/tickets/edit/:id" element={<EditTicket />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/login" element={<LoginPage />} />

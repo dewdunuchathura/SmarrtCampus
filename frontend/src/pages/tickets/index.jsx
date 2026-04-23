@@ -83,19 +83,38 @@ export default function TicketsPage() {
           <button
             onClick={() => navigate('/tickets/admin')}
             style={{
-              backgroundColor: '#7C3AED',
+              backgroundColor: '#2563EB',
               color: '#FFFFFF',
               border: 'none',
-              padding: '1rem 1.5rem',
-              borderRadius: '8px',
+              padding: '1rem 2rem',
+              borderRadius: '12px',
               fontSize: '1rem',
               fontWeight: '600',
               fontFamily: 'Manrope, sans-serif',
               cursor: 'pointer',
-              transition: 'background-color 0.2s'
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 6px rgba(37, 99, 235, 0.1)'
             }}
           >
-            Admin Dashboard
+            🎛️ Admin Dashboard
+          </button>
+          <button
+            onClick={() => navigate('/tickets/technician')}
+            style={{
+              backgroundColor: '#059669',
+              color: '#FFFFFF',
+              border: 'none',
+              padding: '1rem 2rem',
+              borderRadius: '12px',
+              fontSize: '1rem',
+              fontWeight: '600',
+              fontFamily: 'Manrope, sans-serif',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 6px rgba(5, 150, 105, 0.1)'
+            }}
+          >
+            👨‍🔧 Technician Panel
           </button>
         </div>
 

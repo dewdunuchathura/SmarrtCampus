@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
 
 export default function TicketTable() {
+  const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [filteredTickets, setFilteredTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -199,9 +201,6 @@ export default function TicketTable() {
           marginBottom: '2rem'
         }}>
           <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
             marginBottom: '1.5rem'
           }}>
             <div>
@@ -217,28 +216,91 @@ export default function TicketTable() {
               <p style={{
                 color: '#64748B',
                 fontSize: '1rem',
-                margin: '0'
+                margin: '0 0 1rem 0'
               }}>
                 Total: {tickets.length} ticket{tickets.length !== 1 ? 's' : ''} | Showing: {filteredTickets.length}
               </p>
             </div>
-            <button
-              onClick={() => window.location.href = '/tickets/create'}
-              style={{
-                backgroundColor: '#D97706',
-                color: '#FFFFFF',
-                border: 'none',
-                padding: '0.75rem 1.5rem',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                fontWeight: '600',
-                fontFamily: 'Manrope, sans-serif',
-                cursor: 'pointer',
-                transition: 'background-color 0.2s'
-              }}
-            >
-              Create New Ticket
-            </button>
+            
+            {/* Navigation Buttons */}
+            <div style={{
+              display: 'flex',
+              gap: '1rem',
+              flexWrap: 'wrap',
+              marginBottom: '1rem'
+            }}>
+              <button
+                onClick={() => navigate('/tickets/createticket')}
+                style={{
+                  backgroundColor: '#D97706',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  fontWeight: '600',
+                  fontFamily: 'Manrope, sans-serif',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }}
+              >
+                ➕ Create New Ticket
+              </button>
+              
+              <button
+                onClick={() => navigate('/tickets/technician')}
+                style={{
+                  backgroundColor: '#059669',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  fontWeight: '600',
+                  fontFamily: 'Manrope, sans-serif',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }}
+              >
+                👨‍🔧 Technician Panel
+              </button>
+              
+              <button
+                onClick={() => navigate('/tickets/admin')}
+                style={{
+                  backgroundColor: '#2563EB',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  fontWeight: '600',
+                  fontFamily: 'Manrope, sans-serif',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }}
+              >
+                🎛️ Admin Dashboard
+              </button>
+              
+              <button
+                onClick={() => navigate('/tickets/index')}
+                style={{
+                  backgroundColor: '#64748B',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  fontWeight: '600',
+                  fontFamily: 'Manrope, sans-serif',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }}
+              >
+                🏠 Tickets Home
+              </button>
+            </div>
           </div>
 
           {/* Search and Filter Controls */}
@@ -637,6 +699,32 @@ export default function TicketTable() {
                       gap: '0.5rem',
                       flexWrap: 'wrap'
                     }}>
+                      <button
+                        onClick={() => navigate(`/tickets/${ticket.id}`)}
+                        style={{
+                          backgroundColor: '#EEF2F7',
+                          color: '#059669',
+                          border: '1px solid #E3E8EF',
+                          padding: '0.375rem 0.75rem',
+                          borderRadius: '6px',
+                          fontSize: '0.75rem',
+                          fontWeight: '500',
+                          fontFamily: 'Manrope, sans-serif',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.backgroundColor = '#059669';
+                          e.target.style.color = '#FFFFFF';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.backgroundColor = '#EEF2F7';
+                          e.target.style.color = '#059669';
+                        }}
+                      >
+                        Details
+                      </button>
+                      
                       <button
                         onClick={() => window.location.href = `/tickets/edit/${ticket.id}`}
                         style={{

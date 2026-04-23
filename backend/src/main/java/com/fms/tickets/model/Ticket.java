@@ -19,6 +19,9 @@ public class Ticket {
     @Id
     private String id;
 
+    @NotBlank(message = "Ticket ID is required")
+    private String ticketId;
+
     @NotBlank(message = "Title is required")
     @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
     private String title;
