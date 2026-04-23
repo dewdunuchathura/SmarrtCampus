@@ -22,6 +22,7 @@ public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final NotificationService notificationService;
+    public final EmailService emailService;
     private final String UPLOAD_DIR = "uploads/tickets/";
 
     public ApiResponse<Ticket> createTicket(Ticket ticket, MultipartFile[] images) {
@@ -175,19 +176,19 @@ public class TicketService {
         }
     }
 
-    public ApiResponse<Ticket> rejectTicket(String id, String rejectionReason) {
+    public ApiResponse<Ticket> rejectTicket(String id, String reason) {
         try {
             Optional<Ticket> ticket = ticketRepository.findById(id);
             if (ticket.isPresent()) {
                 Ticket existingTicket = ticket.get();
-                existingTicket.rejectTicket(rejectionReason);
+                existingTicket.rejectTicket(reason);
                 Ticket savedTicket = ticketRepository.save(existingTicket);
                 
                 // Create notification for ticket rejection
                 notificationService.createTicketRejectedNotification(
-                    savedTicket.getSubmittedBy(), 
-                    savedTicket.getId(), 
-                    savedTicket.getTitle()
+                    existingTicket.getSubmittedBy(),
+                    existingTicket.getId(),
+                    existingTicket.getTitle()
                 );
                 
                 return ApiResponse.success("Ticket rejected successfully", savedTicket);
@@ -196,6 +197,43 @@ public class TicketService {
             }
         } catch (Exception e) {
             return ApiResponse.error("Failed to reject ticket: " + e.getMessage());
+        }
+    }
+
+    public ApiResponse<Ticket> solveTicket(String id, String message, String resolvedBy) {
+        try {
+            Optional<Ticket> ticket = ticketRepository.findById(id);
+            if (ticket.isPresent()) {
+                Ticket existingTicket = ticket.get();
+                existingTicket.setResolutionNotes(message);
+                existingTicket.setStatus("RESOLVED");
+                existingTicket.setUpdatedAt(java.time.LocalDateTime.now());
+                existingTicket.setResolvedAt(java.time.LocalDateTime.now());
+                
+                Ticket savedTicket = ticketRepository.save(existingTicket);
+                
+                // Create notification for ticket resolution
+                notificationService.createTicketResolvedNotification(
+                    existingTicket.getSubmittedBy(),
+                    existingTicket.getId(),
+                    existingTicket.getTitle()
+                );
+                
+                // Send real email notification
+                emailService.sendTicketResolutionEmail(
+                    existingTicket.getSubmittedBy(),
+                    existingTicket.getTitle(),
+                    existingTicket.getId(),
+                    message,
+                    resolvedBy
+                );
+                
+                return ApiResponse.success("Ticket solved successfully and email sent", savedTicket);
+            } else {
+                return ApiResponse.error("Ticket not found");
+            }
+        } catch (Exception e) {
+            return ApiResponse.error("Failed to solve ticket: " + e.getMessage());
         }
     }
 
