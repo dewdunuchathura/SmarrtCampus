@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.fms.bookings.enums.BookingStatus;
 import com.fms.bookings.event.BookingDecisionEvent;
+import com.fms.notifications.service.NotificationService;
 
 @Component
 public class BookingNotificationListener {
