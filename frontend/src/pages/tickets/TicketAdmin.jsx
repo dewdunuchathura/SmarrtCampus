@@ -1,0 +1,762 @@
+import { useState, useEffect } from 'react';
+import axios from '../../api/axios';
+import { useNavigate } from 'react-router-dom';
+
+export default function TicketAdmin() {
+  const navigate = useNavigate();
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
+  const [filterPriority, setFilterPriority] = useState('');
+  const [filterCategory, setFilterCategory] = useState('');
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    category: '',
+    priority: '',
+    submittedBy: '',
+    contactNumber: '',
+    location: '',
+    status: '',
+    assignedTo: '',
+    rejectionReason: '',
+    resolutionNotes: ''
+  });
+
+  const categories = ['Maintenance', 'IT Support', 'Cleaning', 'Security', 'Facilities', 'Other'];
+  const priorities = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
+  const statuses = ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED', 'REJECTED'];
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  useEffect(() => {
+    let filtered = tickets;
+    if (searchTerm) {
+      filtered = filtered.filter(ticket =>
+        ticket.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.submittedBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.location.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    if (filterStatus) {
+      filtered = filtered.filter(ticket => ticket.status === filterStatus);
+    }
+    if (filterPriority) {
+      filtered = filtered.filter(ticket => ticket.priority === filterPriority);
+    }
+    if (filterCategory) {
+      filtered = filtered.filter(ticket => ticket.category === filterCategory);
+    }
+    setTickets(filtered);
+  }, [tickets, searchTerm, filterStatus, filterPriority, filterCategory]);
+
+  const fetchTickets = async () => {
+    try {
+      const response = await axios.get('/tickets');
+      if (response.data.success) {
+        setTickets(response.data.data);
+      }
+    } catch (err) {
+      setError('Failed to fetch tickets');
+      console.error('Error fetching tickets:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (ticket) => {
+    setSelectedTicket(ticket);
+    setFormData({
+      title: ticket.title,
+      description: ticket.description,
+      category: ticket.category,
+      priority: ticket.priority,
+      submittedBy: ticket.submittedBy,
+      contactNumber: ticket.contactNumber,
+      location: ticket.location,
+      status: ticket.status,
+      assignedTo: ticket.assignedTo || '',
+      rejectionReason: ticket.rejectionReason || '',
+      resolutionNotes: ticket.resolutionNotes || ''
+    });
+    setShowEditModal(true);
+  };
+
+  const handleDelete = (ticket) => {
+    setSelectedTicket(ticket);
+    setShowDeleteModal(true);
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.put(`/tickets/${selectedTicket.id}`, formData);
+      if (response.data.success) {
+        fetchTickets();
+        setShowEditModal(false);
+        setSelectedTicket(null);
+      }
+    } catch (err) {
+      setError('Failed to update ticket');
+      console.error('Error updating ticket:', err);
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      const response = await axios.delete(`/tickets/${selectedTicket.id}`);
+      if (response.data.success) {
+        fetchTickets();
+        setShowDeleteModal(false);
+        setSelectedTicket(null);
+      }
+    } catch (err) {
+      setError('Failed to delete ticket');
+      console.error('Error deleting ticket:', err);
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'OPEN': return '#D97706';
+      case 'IN_PROGRESS': return '#2563EB';
+      case 'RESOLVED': return '#059669';
+      case 'CLOSED': return '#64748B';
+      case 'REJECTED': return '#DC2626';
+      default: return '#64748B';
+    }
+  };
+
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'LOW': return '#059669';
+      case 'MEDIUM': return '#D97706';
+      case 'HIGH': return '#DC2626';
+      case 'URGENT': return '#7C3AED';
+      default: return '#64748B';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={{
+        fontFamily: 'Manrope, sans-serif',
+        backgroundColor: '#F5F7FA',
+        minHeight: '100vh',
+        padding: '2rem',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <div style={{ color: '#64748B' }}>Loading tickets...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{
+      fontFamily: 'Manrope, sans-serif',
+      backgroundColor: '#F5F7FA',
+      minHeight: '100vh',
+      padding: '2rem'
+    }}>
+      <div style={{
+        maxWidth: '1400px',
+        margin: '0 auto'
+      }}>
+        {/* Header */}
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: '12px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          padding: '2rem',
+          marginBottom: '1.5rem'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '1.5rem'
+          }}>
+            <h1 style={{
+              fontFamily: 'Sora, sans-serif',
+              fontSize: '2rem',
+              fontWeight: '700',
+              color: '#0F172A',
+              margin: 0
+            }}>
+              Ticket Admin Dashboard
+            </h1>
+            <button
+              onClick={() => navigate('/tickets/createticket')}
+              style={{
+                backgroundColor: '#2563EB',
+                color: '#FFFFFF',
+                border: 'none',
+                padding: '0.75rem 1.5rem',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: '600',
+                fontFamily: 'Manrope, sans-serif',
+                cursor: 'pointer'
+              }}
+            >
+              Create New Ticket
+            </button>
+          </div>
+
+          {/* Filters */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '1rem',
+            marginBottom: '1rem'
+          }}>
+            <input
+              type="text"
+              placeholder="Search tickets..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                padding: '0.75rem',
+                border: '1px solid #E3E8EF',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontFamily: 'Manrope, sans-serif'
+              }}
+            />
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              style={{
+                padding: '0.75rem',
+                border: '1px solid #E3E8EF',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontFamily: 'Manrope, sans-serif'
+              }}
+            >
+              <option value="">All Status</option>
+              {statuses.map(status => (
+                <option key={status} value={status}>{status}</option>
+              ))}
+            </select>
+            <select
+              value={filterPriority}
+              onChange={(e) => setFilterPriority(e.target.value)}
+              style={{
+                padding: '0.75rem',
+                border: '1px solid #E3E8EF',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontFamily: 'Manrope, sans-serif'
+              }}
+            >
+              <option value="">All Priority</option>
+              {priorities.map(priority => (
+                <option key={priority} value={priority}>{priority}</option>
+              ))}
+            </select>
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              style={{
+                padding: '0.75rem',
+                border: '1px solid #E3E8EF',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontFamily: 'Manrope, sans-serif'
+              }}
+            >
+              <option value="">All Categories</option>
+              {categories.map(category => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div style={{
+            backgroundColor: '#FEE2E2',
+            color: '#DC2626',
+            padding: '1rem',
+            borderRadius: '8px',
+            marginBottom: '1rem',
+            border: '1px solid #FCA5A5'
+          }}>
+            {error}
+          </div>
+        )}
+
+        {/* Tickets Table */}
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: '12px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            overflowX: 'auto'
+          }}>
+            <table style={{
+              width: '100%',
+              borderCollapse: 'collapse'
+            }}>
+              <thead style={{
+                backgroundColor: '#F8FAFC',
+                borderBottom: '1px solid #E3E8EF'
+              }}>
+                <tr>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>ID</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Title</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Category</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Priority</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Status</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Submitted By</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Location</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Created</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tickets.map((ticket) => (
+                  <tr key={ticket.id} style={{
+                    borderBottom: '1px solid #E3E8EF',
+                    '&:hover': {
+                      backgroundColor: '#F8FAFC'
+                    }
+                  }}>
+                    <td style={{ padding: '1rem', color: '#475569' }}>{ticket.id.substring(0, 8)}...</td>
+                    <td style={{ padding: '1rem', color: '#0F172A', fontWeight: '500' }}>{ticket.title}</td>
+                    <td style={{ padding: '1rem' }}>
+                      <span style={{
+                        backgroundColor: '#EEF2F7',
+                        color: '#475569',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '12px',
+                        fontSize: '0.875rem',
+                        fontWeight: '500'
+                      }}>
+                        {ticket.category}
+                      </span>
+                    </td>
+                    <td style={{ padding: '1rem' }}>
+                      <span style={{
+                        backgroundColor: `${getPriorityColor(ticket.priority)}20`,
+                        color: getPriorityColor(ticket.priority),
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '12px',
+                        fontSize: '0.875rem',
+                        fontWeight: '500'
+                      }}>
+                        {ticket.priority}
+                      </span>
+                    </td>
+                    <td style={{ padding: '1rem' }}>
+                      <span style={{
+                        backgroundColor: `${getStatusColor(ticket.status)}20`,
+                        color: getStatusColor(ticket.status),
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '12px',
+                        fontSize: '0.875rem',
+                        fontWeight: '500'
+                      }}>
+                        {ticket.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>{ticket.submittedBy}</td>
+                    <td style={{ padding: '1rem', color: '#475569' }}>{ticket.location}</td>
+                    <td style={{ padding: '1rem', color: '#64748B' }}>
+                      {new Date(ticket.createdAt).toLocaleDateString()}
+                    </td>
+                    <td style={{ padding: '1rem' }}>
+                      <div style={{
+                        display: 'flex',
+                        gap: '0.5rem'
+                      }}>
+                        <button
+                          onClick={() => handleEdit(ticket)}
+                          style={{
+                            backgroundColor: '#2563EB',
+                            color: '#FFFFFF',
+                            border: 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '6px',
+                            fontSize: '0.875rem',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(ticket)}
+                          style={{
+                            backgroundColor: '#DC2626',
+                            color: '#FFFFFF',
+                            border: 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '6px',
+                            fontSize: '0.875rem',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Edit Modal */}
+        {showEditModal && selectedTicket && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}>
+            <div style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '12px',
+              padding: '2rem',
+              width: '90%',
+              maxWidth: '600px',
+              maxHeight: '90vh',
+              overflowY: 'auto'
+            }}>
+              <h2 style={{
+                fontFamily: 'Sora, sans-serif',
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                color: '#0F172A',
+                marginBottom: '1.5rem'
+              }}>
+                Edit Ticket
+              </h2>
+              <form onSubmit={handleUpdate}>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                  gap: '1rem',
+                  marginBottom: '1rem'
+                }}>
+                  <input
+                    type="text"
+                    placeholder="Title"
+                    value={formData.title}
+                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    style={{
+                      padding: '0.75rem',
+                      border: '1px solid #E3E8EF',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontFamily: 'Manrope, sans-serif'
+                    }}
+                  />
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                    style={{
+                      padding: '0.75rem',
+                      border: '1px solid #E3E8EF',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontFamily: 'Manrope, sans-serif'
+                    }}
+                  >
+                    <option value="">Select Category</option>
+                    {categories.map(category => (
+                      <option key={category} value={category}>{category}</option>
+                    ))}
+                  </select>
+                  <select
+                    value={formData.priority}
+                    onChange={(e) => setFormData({...formData, priority: e.target.value})}
+                    style={{
+                      padding: '0.75rem',
+                      border: '1px solid #E3E8EF',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontFamily: 'Manrope, sans-serif'
+                    }}
+                  >
+                    <option value="">Select Priority</option>
+                    {priorities.map(priority => (
+                      <option key={priority} value={priority}>{priority}</option>
+                    ))}
+                  </select>
+                  <select
+                    value={formData.status}
+                    onChange={(e) => setFormData({...formData, status: e.target.value})}
+                    style={{
+                      padding: '0.75rem',
+                      border: '1px solid #E3E8EF',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontFamily: 'Manrope, sans-serif'
+                    }}
+                  >
+                    <option value="">Select Status</option>
+                    {statuses.map(status => (
+                      <option key={status} value={status}>{status}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={formData.submittedBy}
+                    onChange={(e) => setFormData({...formData, submittedBy: e.target.value})}
+                    style={{
+                      padding: '0.75rem',
+                      border: '1px solid #E3E8EF',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontFamily: 'Manrope, sans-serif'
+                    }}
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Contact Number"
+                    value={formData.contactNumber}
+                    onChange={(e) => setFormData({...formData, contactNumber: e.target.value})}
+                    style={{
+                      padding: '0.75rem',
+                      border: '1px solid #E3E8EF',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontFamily: 'Manrope, sans-serif'
+                    }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Location"
+                    value={formData.location}
+                    onChange={(e) => setFormData({...formData, location: e.target.value})}
+                    style={{
+                      padding: '0.75rem',
+                      border: '1px solid #E3E8EF',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontFamily: 'Manrope, sans-serif',
+                      gridColumn: '1 / -1'
+                    }}
+                  />
+                  <textarea
+                    placeholder="Description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    rows="4"
+                    style={{
+                      padding: '0.75rem',
+                      border: '1px solid #E3E8EF',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontFamily: 'Manrope, sans-serif',
+                      gridColumn: '1 / -1',
+                      resize: 'vertical'
+                    }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Assigned To"
+                    value={formData.assignedTo}
+                    onChange={(e) => setFormData({...formData, assignedTo: e.target.value})}
+                    style={{
+                      padding: '0.75rem',
+                      border: '1px solid #E3E8EF',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontFamily: 'Manrope, sans-serif',
+                      gridColumn: '1 / -1'
+                    }}
+                  />
+                  {formData.status === 'REJECTED' && (
+                    <textarea
+                      placeholder="Rejection Reason"
+                      value={formData.rejectionReason}
+                      onChange={(e) => setFormData({...formData, rejectionReason: e.target.value})}
+                      rows="3"
+                      style={{
+                        padding: '0.75rem',
+                        border: '1px solid #E3E8EF',
+                        borderRadius: '8px',
+                        fontSize: '1rem',
+                        fontFamily: 'Manrope, sans-serif',
+                        gridColumn: '1 / -1',
+                        resize: 'vertical'
+                      }}
+                    />
+                  )}
+                  {formData.status === 'RESOLVED' && (
+                    <textarea
+                      placeholder="Resolution Notes"
+                      value={formData.resolutionNotes}
+                      onChange={(e) => setFormData({...formData, resolutionNotes: e.target.value})}
+                      rows="3"
+                      style={{
+                        padding: '0.75rem',
+                        border: '1px solid #E3E8EF',
+                        borderRadius: '8px',
+                        fontSize: '1rem',
+                        fontFamily: 'Manrope, sans-serif',
+                        gridColumn: '1 / -1',
+                        resize: 'vertical'
+                      }}
+                    />
+                  )}
+                </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: '1rem'
+                }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowEditModal(false)}
+                    style={{
+                      backgroundColor: '#64748B',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      padding: '0.75rem 1.5rem',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      fontFamily: 'Manrope, sans-serif',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    style={{
+                      backgroundColor: '#2563EB',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      padding: '0.75rem 1.5rem',
+                      borderRadius: '8px',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      fontFamily: 'Manrope, sans-serif',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Update Ticket
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Modal */}
+        {showDeleteModal && selectedTicket && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}>
+            <div style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '12px',
+              padding: '2rem',
+              width: '90%',
+              maxWidth: '400px'
+            }}>
+              <h2 style={{
+                fontFamily: 'Sora, sans-serif',
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                color: '#0F172A',
+                marginBottom: '1rem'
+              }}>
+                Delete Ticket
+              </h2>
+              <p style={{
+                color: '#475569',
+                marginBottom: '1.5rem'
+              }}>
+                Are you sure you want to delete this ticket? This action cannot be undone.
+              </p>
+              <p style={{
+                backgroundColor: '#EEF2F7',
+                padding: '1rem',
+                borderRadius: '8px',
+                marginBottom: '1.5rem',
+                color: '#0F172A',
+                fontWeight: '500'
+              }}>
+                {selectedTicket.title}
+              </p>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '1rem'
+              }}>
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  style={{
+                    backgroundColor: '#64748B',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    fontFamily: 'Manrope, sans-serif',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  style={{
+                    backgroundColor: '#DC2626',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    fontFamily: 'Manrope, sans-serif',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

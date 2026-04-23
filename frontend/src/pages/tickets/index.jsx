@@ -79,6 +79,24 @@ export default function TicketsPage() {
           >
             Create New Ticket
           </button>
+
+          <button
+            onClick={() => navigate('/tickets/admin')}
+            style={{
+              backgroundColor: '#7C3AED',
+              color: '#FFFFFF',
+              border: 'none',
+              padding: '1rem 1.5rem',
+              borderRadius: '8px',
+              fontSize: '1rem',
+              fontWeight: '600',
+              fontFamily: 'Manrope, sans-serif',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s'
+            }}
+          >
+            Admin Dashboard
+          </button>
         </div>
 
         <div style={{
