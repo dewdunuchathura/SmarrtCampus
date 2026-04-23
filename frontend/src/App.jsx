@@ -5,7 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import ResourcesPage from './pages/resources';
 import BookingsPage from './pages/bookings';
-import TicketsPage from './pages/tickets';
+import TicketsPage from './pages/tickets/index';
 import CreateTicket from './pages/tickets/CreateTicket';
 import EditTicket from './pages/tickets/EditTicket';
 import TicketTable from './pages/tickets/TicketTable';

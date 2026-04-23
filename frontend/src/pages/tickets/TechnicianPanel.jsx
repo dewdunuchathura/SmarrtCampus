@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 const TechnicianPanel = () => {
+  const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
+  const [filteredTickets, setFilteredTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [filterPriority, setFilterPriority] = useState('');
+  const [filterCategory, setFilterCategory] = useState('');
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [updateData, setUpdateData] = useState({
@@ -16,9 +22,48 @@ const TechnicianPanel = () => {
   // Mock current technician - in real app, this would come from auth context
   const currentTechnician = { email: 'tech@example.com', name: 'John Technician' };
 
+  const categories = ['Maintenance', 'IT Support', 'Cleaning', 'Security', 'Facilities', 'Other'];
+  const priorities = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
+  const statuses = ['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
+
   useEffect(() => {
     fetchTechnicianTickets();
   }, []);
+
+  useEffect(() => {
+    fetchTechnicianTickets();
+  }, []);
+
+  useEffect(() => {
+    let filtered = tickets;
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(ticket =>
+        ticket.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.submittedBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ticket.location.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Filter by status
+    if (filterStatus) {
+      filtered = filtered.filter(ticket => ticket.status === filterStatus);
+    }
+
+    // Filter by priority
+    if (filterPriority) {
+      filtered = filtered.filter(ticket => ticket.priority === filterPriority);
+    }
+
+    // Filter by category
+    if (filterCategory) {
+      filtered = filtered.filter(ticket => ticket.category === filterCategory);
+    }
+
+    setFilteredTickets(filtered);
+  }, [tickets, searchTerm, filterStatus, filterPriority, filterCategory]);
 
   const fetchTechnicianTickets = async () => {
     try {
@@ -87,10 +132,6 @@ const TechnicianPanel = () => {
     const date = new Date(dateString);
     return date.toLocaleDateString();
   };
-
-  const filteredTickets = filterStatus 
-    ? tickets.filter(ticket => ticket.status === filterStatus)
-    : tickets;
 
   if (loading) {
     return (
@@ -239,49 +280,111 @@ const TechnicianPanel = () => {
           </div>
         </div>
 
-        {/* Filters */}
+        {/* Search and Filter Controls */}
         <div style={{
           backgroundColor: '#FFFFFF',
           padding: '1.5rem',
           borderRadius: '12px',
-          marginBottom: '2rem',
-          border: '1px solid #E3E8EF'
+          border: '1px solid #E3E8EF',
+          marginBottom: '1.5rem'
         }}>
           <div style={{
-            display: 'flex',
+            display: 'grid',
+            gridTemplateColumns: '2fr repeat(auto-fit, minmax(150px, 1fr))',
             gap: '1rem',
-            alignItems: 'center',
-            flexWrap: 'wrap'
+            alignItems: 'center'
           }}>
-            <label style={{
-              fontSize: '0.875rem',
-              fontWeight: '600',
-              color: '#0F172A',
-              fontFamily: 'Manrope, sans-serif'
-            }}>
-              Filter by Status:
-            </label>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              style={{
-                padding: '0.5rem 1rem',
-                border: '1px solid #E3E8EF',
-                borderRadius: '8px',
-                fontSize: '0.875rem',
-                fontFamily: 'Manrope, sans-serif'
-              }}
-            >
-              <option value="">All Status</option>
-              <option value="OPEN">Open</option>
-              <option value="IN_PROGRESS">In Progress</option>
-              <option value="RESOLVED">Resolved</option>
-              <option value="CLOSED">Closed</option>
-            </select>
+            {/* Search */}
+            <div>
+              <input
+                type="text"
+                placeholder="Search tickets..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '1px solid #E3E8EF',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  fontFamily: 'Manrope, sans-serif',
+                  outline: 'none'
+                }}
+              />
+            </div>
+
+            {/* Status Filter */}
+            <div>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '1px solid #E3E8EF',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  fontFamily: 'Manrope, sans-serif',
+                  outline: 'none'
+                }}
+              >
+                <option value="">All Status</option>
+                {statuses.map(status => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Priority Filter */}
+            <div>
+              <select
+                value={filterPriority}
+                onChange={(e) => setFilterPriority(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '1px solid #E3E8EF',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  fontFamily: 'Manrope, sans-serif',
+                  outline: 'none'
+                }}
+              >
+                <option value="">All Priority</option>
+                {priorities.map(priority => (
+                  <option key={priority} value={priority}>{priority}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Category Filter */}
+            <div>
+              <select
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '1px solid #E3E8EF',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  fontFamily: 'Manrope, sans-serif',
+                  outline: 'none'
+                }}
+              >
+                <option value="">All Categories</option>
+                {categories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Results Count */}
             <div style={{
               fontSize: '0.875rem',
               color: '#64748B',
-              fontFamily: 'Manrope, sans-serif'
+              fontFamily: 'Manrope, sans-serif',
+              textAlign: 'right'
             }}>
               Showing {filteredTickets.length} of {tickets.length} tickets
             </div>
@@ -318,74 +421,18 @@ const TechnicianPanel = () => {
           ) : (
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead style={{ backgroundColor: '#F8FAFC' }}>
+                <thead style={{ backgroundColor: '#F8FAFC', borderBottom: '1px solid #E3E8EF' }}>
                   <tr>
-                    <th style={{ 
-                      padding: '1rem', 
-                      textAlign: 'left', 
-                      borderBottom: '1px solid #E3E8EF',
-                      fontFamily: 'Sora, sans-serif',
-                      fontWeight: '600',
-                      color: '#0F172A',
-                      fontSize: '0.875rem'
-                    }}>
-                      Title
-                    </th>
-                    <th style={{ 
-                      padding: '1rem', 
-                      textAlign: 'left', 
-                      borderBottom: '1px solid #E3E8EF',
-                      fontFamily: 'Sora, sans-serif',
-                      fontWeight: '600',
-                      color: '#0F172A',
-                      fontSize: '0.875rem'
-                    }}>
-                      Priority
-                    </th>
-                    <th style={{ 
-                      padding: '1rem', 
-                      textAlign: 'left', 
-                      borderBottom: '1px solid #E3E8EF',
-                      fontFamily: 'Sora, sans-serif',
-                      fontWeight: '600',
-                      color: '#0F172A',
-                      fontSize: '0.875rem'
-                    }}>
-                      Status
-                    </th>
-                    <th style={{ 
-                      padding: '1rem', 
-                      textAlign: 'left', 
-                      borderBottom: '1px solid #E3E8EF',
-                      fontFamily: 'Sora, sans-serif',
-                      fontWeight: '600',
-                      color: '#0F172A',
-                      fontSize: '0.875rem'
-                    }}>
-                      Location
-                    </th>
-                    <th style={{ 
-                      padding: '1rem', 
-                      textAlign: 'left', 
-                      borderBottom: '1px solid #E3E8EF',
-                      fontFamily: 'Sora, sans-serif',
-                      fontWeight: '600',
-                      color: '#0F172A',
-                      fontSize: '0.875rem'
-                    }}>
-                      Created
-                    </th>
-                    <th style={{ 
-                      padding: '1rem', 
-                      textAlign: 'left', 
-                      borderBottom: '1px solid #E3E8EF',
-                      fontFamily: 'Sora, sans-serif',
-                      fontWeight: '600',
-                      color: '#0F172A',
-                      fontSize: '0.875rem'
-                    }}>
-                      Actions
-                    </th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>ID</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Title</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Category</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Priority</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Status</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Submitted By</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Location</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Images</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Created</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -414,59 +461,69 @@ const TechnicianPanel = () => {
                           padding: '0.25rem 0.75rem',
                           backgroundColor: getPriorityColor(ticket.priority),
                           color: '#FFFFFF',
+                          padding: '0.25rem 0.75rem',
                           borderRadius: '12px',
                           fontSize: '0.75rem',
-                          fontWeight: '600',
-                          fontFamily: 'Manrope, sans-serif'
+                          fontWeight: '600'
                         }}>
                           {ticket.priority}
                         </span>
                       </td>
                       <td style={{ padding: '1rem' }}>
                         <span style={{
-                          padding: '0.25rem 0.75rem',
                           backgroundColor: getStatusColor(ticket.status),
                           color: '#FFFFFF',
+                          padding: '0.25rem 0.75rem',
                           borderRadius: '12px',
                           fontSize: '0.75rem',
-                          fontWeight: '600',
-                          fontFamily: 'Manrope, sans-serif'
+                          fontWeight: '600'
                         }}>
                           {ticket.status}
                         </span>
                       </td>
-                      <td style={{ 
-                        padding: '1rem', 
-                        color: '#64748B',
-                        fontFamily: 'Manrope, sans-serif',
-                        fontSize: '0.875rem'
-                      }}>
-                        {ticket.location}
-                      </td>
-                      <td style={{ 
-                        padding: '1rem', 
-                        color: '#64748B',
-                        fontFamily: 'Manrope, sans-serif',
-                        fontSize: '0.875rem'
-                      }}>
-                        {formatDate(ticket.createdAt)}
-                      </td>
+                      <td style={{ padding: '1rem', color: '#475569' }}>{ticket.submittedBy}</td>
+                      <td style={{ padding: '1rem', color: '#475569' }}>{ticket.location}</td>
                       <td style={{ padding: '1rem' }}>
-                        <button
-                          onClick={() => handleUpdateTicket(ticket)}
-                          style={{
-                            backgroundColor: '#2563EB',
-                            color: '#FFFFFF',
-                            border: 'none',
-                            padding: '0.5rem 1rem',
-                            borderRadius: '6px',
-                            fontSize: '0.875rem',
-                            cursor: 'pointer',
-                            fontFamily: 'Manrope, sans-serif'
-                          }}
-                        >
-                          Update
-                        </button>
+                        {ticket.imageAttachments && ticket.imageAttachments.length > 0 ? (
+                          <span style={{ color: '#059669', fontWeight: '600' }}>
+                            📎 {ticket.imageAttachments.length}
+                          </span>
+                        ) : (
+                          <span style={{ color: '#94A3B8' }}>-</span>
+                        )}
+                      </td>
+                      <td style={{ padding: '1rem', color: '#475569' }}>{formatDate(ticket.createdAt)}</td>
+                      <td style={{ padding: '1rem' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button
+                            onClick={() => navigate(`/tickets/${ticket.id}`)}
+                            style={{
+                              backgroundColor: '#059669',
+                              color: '#FFFFFF',
+                              border: 'none',
+                              padding: '0.375rem 0.75rem',
+                              borderRadius: '6px',
+                              fontSize: '0.75rem',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Details
+                          </button>
+                          <button
+                            onClick={() => handleUpdateTicket(ticket)}
+                            style={{
+                              backgroundColor: '#2563EB',
+                              color: '#FFFFFF',
+                              border: 'none',
+                              padding: '0.375rem 0.75rem',
+                              borderRadius: '6px',
+                              fontSize: '0.75rem',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Update
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
