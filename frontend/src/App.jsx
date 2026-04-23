@@ -91,8 +91,8 @@ function Shell() {
           <Route path="/" element={<Home />} />
           <Route path="/resources" element={<ResourcesPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
-          <Route path="/tickets" element={<TicketTable />} />
-          <Route path="/tickets/create" element={<CreateTicket />} />
+          <Route path="/tickets" element={<TicketsPage />} />
+          <Route path="/tickets/createticket" element={<CreateTicket />} />
           <Route path="/tickets/edit/:id" element={<EditTicket />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/login" element={<LoginPage />} />
