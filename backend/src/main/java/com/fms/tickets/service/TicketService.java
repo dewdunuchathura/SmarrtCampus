@@ -4,7 +4,7 @@ import com.fms.common.ApiResponse;
 import com.fms.tickets.model.Ticket;
 import com.fms.tickets.repository.TicketRepository;
 import com.fms.notifications.service.NotificationService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,14 +17,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final NotificationService notificationService;
-    public final EmailService emailService;
     private final CommentService commentService;
     private final String UPLOAD_DIR = "uploads/tickets/";
+
+    public TicketService(TicketRepository ticketRepository, 
+                        NotificationService notificationService, 
+                        CommentService commentService) {
+        this.ticketRepository = ticketRepository;
+        this.notificationService = notificationService;
+        this.commentService = commentService;
+    }
 
     public ApiResponse<Ticket> createTicket(Ticket ticket, MultipartFile[] images) {
         try {
@@ -220,14 +226,7 @@ public class TicketService {
                     existingTicket.getTitle()
                 );
                 
-                // Send real email notification
-                emailService.sendTicketResolutionEmail(
-                    existingTicket.getSubmittedBy(),
-                    existingTicket.getTitle(),
-                    existingTicket.getId(),
-                    message,
-                    resolvedBy
-                );
+                // Email functionality disabled - notifications sent through system
                 
                 return ApiResponse.success("Ticket solved successfully and email sent", savedTicket);
             } else {

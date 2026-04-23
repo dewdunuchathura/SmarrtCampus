@@ -5,7 +5,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-@Service
+// @Service - Temporarily disabled due to mail configuration issues
 public class EmailService {
 
     @Autowired

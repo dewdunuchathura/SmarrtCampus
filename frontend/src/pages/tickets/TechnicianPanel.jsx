@@ -458,7 +458,6 @@ const TechnicianPanel = () => {
                       </td>
                       <td style={{ padding: '1rem' }}>
                         <span style={{
-                          padding: '0.25rem 0.75rem',
                           backgroundColor: getPriorityColor(ticket.priority),
                           color: '#FFFFFF',
                           padding: '0.25rem 0.75rem',

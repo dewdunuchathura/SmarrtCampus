@@ -188,4 +188,24 @@ public class NotificationService {
         );
         createNotification(notification);
     }
+
+    public void notifyBookingDecision(String bookingId, String userEmail, com.fms.bookings.enums.BookingStatus status, String reason) {
+        String title = status == com.fms.bookings.enums.BookingStatus.APPROVED ? "Booking Approved" : "Booking Rejected";
+        String message = String.format("Your booking %s has been %s.", bookingId, 
+            status == com.fms.bookings.enums.BookingStatus.APPROVED ? "approved" : "rejected");
+        
+        if (reason != null && !reason.trim().isEmpty()) {
+            message += " Reason: " + reason;
+        }
+
+        Notification notification = new Notification(
+            title,
+            message,
+            "BOOKING_DECISION",
+            userEmail,
+            bookingId,
+            "BOOKING"
+        );
+        createNotification(notification);
+    }
 }

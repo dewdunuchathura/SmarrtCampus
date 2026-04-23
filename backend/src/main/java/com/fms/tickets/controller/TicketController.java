@@ -192,23 +192,7 @@ public class TicketController {
         }
     }
 
-    @PostMapping("/test-email")
-    public ResponseEntity<String> testEmail() {
-        try {
-            // Test email sending with hardcoded values
-            ticketService.emailService.sendTicketResolutionEmail(
-                "test@example.com",
-                "Test Ticket",
-                "test-123",
-                "This is a test email from Smart Campus system",
-                "Admin"
-            );
-            return ResponseEntity.ok("Email sent successfully! Check your inbox.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Email failed: " + e.getMessage());
-        }
-    }
-
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteTicket(@PathVariable String id) {
         ApiResponse<Void> response = ticketService.deleteTicket(id);

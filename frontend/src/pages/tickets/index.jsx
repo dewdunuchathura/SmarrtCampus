@@ -62,9 +62,8 @@ export default function TicketsPage() {
         <p style={{
           color: '#64748B',
           fontSize: '1.25rem',
-          margin: '0 0 2rem 0',
-          maxWidth: '600px',
-          margin: '0 auto 2rem auto'
+          margin: '0 auto 2rem auto',
+          maxWidth: '600px'
         }}>
           Create, track, and manage your support tickets with ease
         </p>
