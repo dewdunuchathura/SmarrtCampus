@@ -10,7 +10,7 @@ export default function CreateTicket() {
     description: '',
     category: '',
     priority: '',
-    submittedBy: '',
+    submittedBy: 'user@example.com',
     contactNumber: '',
     location: ''
   });
@@ -83,13 +83,7 @@ export default function CreateTicket() {
       newErrors.priority = 'Priority is required';
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.submittedBy.trim()) {
-      newErrors.submittedBy = 'Email is required';
-    } else if (!emailRegex.test(formData.submittedBy)) {
-      newErrors.submittedBy = 'Invalid email format';
-    }
+    // Email is pre-filled and read-only, no validation needed
 
     // Contact number validation
     const phoneRegex = /^[+]?[0-9]{10,15}$/;
@@ -710,31 +704,30 @@ export default function CreateTicket() {
             {/* Email */}
             <div>
               <label style={{
-                display: 'block',
-                fontFamily: 'Sora, sans-serif',
+                fontFamily: 'Manrope, sans-serif',
                 fontWeight: '600',
                 color: '#0F172A',
+                fontSize: '0.875rem',
                 marginBottom: '0.5rem',
-                fontSize: '0.875rem'
+                display: 'block'
               }}>
-                Email *
+                Email (Auto-filled)
               </label>
               <input
                 type="email"
                 name="submittedBy"
                 value={formData.submittedBy}
-                onChange={handleChange}
+                readOnly
                 style={{
                   width: '100%',
                   padding: '0.75rem',
-                  border: errors.submittedBy ? '2px solid #EF4444' : '1px solid #E3E8EF',
+                  border: '1px solid #E3E8EF',
                   borderRadius: '8px',
                   fontSize: '1rem',
                   fontFamily: 'Manrope, sans-serif',
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: '#F8FAFC',
                   outline: 'none'
                 }}
-                placeholder="your.email@example.com"
               />
               {errors.submittedBy && (
                 <div style={{

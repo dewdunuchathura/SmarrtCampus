@@ -252,22 +252,6 @@ export default function TicketAdmin() {
             }}>
               Ticket Admin Dashboard
             </h1>
-            <button
-              onClick={() => navigate('/tickets/createticket')}
-              style={{
-                backgroundColor: '#2563EB',
-                color: '#FFFFFF',
-                border: 'none',
-                padding: '0.75rem 1.5rem',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                fontWeight: '600',
-                fontFamily: 'Manrope, sans-serif',
-                cursor: 'pointer'
-              }}
-            >
-              Create New Ticket
-            </button>
           </div>
 
           {/* Filters */}
