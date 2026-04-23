@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function CreateTicket() {
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -14,11 +15,31 @@ export default function CreateTicket() {
     location: ''
   });
 
+  const [ticketId, setTicketId] = useState('');
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  // Fetch next ticket ID from backend
+  const fetchNextTicketId = async () => {
+    try {
+      const response = await axios.get('/api/tickets/next-id');
+      if (response.data.success) {
+        setTicketId(response.data.ticketId);
+      }
+    } catch (err) {
+      console.error('Error fetching next ticket ID:', err);
+      // Fallback to simple sequential ID
+      setTicketId('1001');
+    }
+  };
+
+  // Fetch ticket ID on component mount
+  useEffect(() => {
+    fetchNextTicketId();
+  }, []);
 
   const categories = [
     'Maintenance',
@@ -170,6 +191,7 @@ export default function CreateTicket() {
       const formDataToSend = new FormData();
       
       // Append individual form fields
+      formDataToSend.append('ticketId', ticketId);
       formDataToSend.append('title', formData.title);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('category', formData.category);
@@ -276,6 +298,44 @@ export default function CreateTicket() {
         )}
 
         <form onSubmit={handleSubmit}>
+          {/* Ticket ID Input Field */}
+          <div style={{
+            backgroundColor: '#F0FDF4',
+            border: '2px solid #059669',
+            borderRadius: '8px',
+            padding: '1rem',
+            marginBottom: '1.5rem'
+          }}>
+            <label style={{
+              fontFamily: 'Sora, sans-serif',
+              fontWeight: '600',
+              color: '#059669',
+              fontSize: '0.875rem',
+              marginBottom: '0.5rem',
+              display: 'block'
+            }}>
+              🎫 Ticket ID (Auto-Generated)
+            </label>
+            <input
+                type="text"
+                value={ticketId}
+                readOnly
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '1px solid #059669',
+                  borderRadius: '8px',
+                  fontSize: '1.25rem',
+                  fontWeight: '700',
+                  fontFamily: 'Sora, sans-serif',
+                  color: '#0F172A',
+                  backgroundColor: '#FFFFFF',
+                  letterSpacing: '0.05em',
+                  outline: 'none'
+                }}
+              />
+          </div>
+
           {/* Two Column Layout */}
           <div style={{
             display: 'grid',

@@ -2,6 +2,7 @@ package com.fms.tickets.controller;
 
 import com.fms.common.ApiResponse;
 import com.fms.tickets.model.Ticket;
+import com.fms.tickets.service.TicketIdService;
 import com.fms.tickets.service.TicketService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
-
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -21,9 +22,27 @@ import java.util.List;
 public class TicketController {
 
     private final TicketService ticketService;
+    private final TicketIdService ticketIdService;
+
+    @GetMapping("/next-id")
+    public ResponseEntity<Map<String, String>> getNextTicketId() {
+        try {
+            String nextId = ticketIdService.generateNextTicketId();
+            Map<String, String> response = new HashMap<>();
+            response.put("ticketId", nextId);
+            response.put("success", "true");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("ticketId", "1001");
+            response.put("success", "true");
+            return ResponseEntity.ok(response);
+        }
+    }
 
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<ApiResponse<Ticket>> createTicket(
+            @RequestParam("ticketId") @NotBlank String ticketId,
             @RequestParam("title") @NotBlank @Size(min = 3, max = 100) String title,
             @RequestParam("description") @NotBlank @Size(min = 10, max = 1000) String description,
             @RequestParam("category") @NotBlank String category,
@@ -35,6 +54,7 @@ public class TicketController {
         
         // Create ticket object with default status
         Ticket ticket = new Ticket();
+        ticket.setTicketId(ticketId);
         ticket.setTitle(title);
         ticket.setDescription(description);
         ticket.setCategory(category);
