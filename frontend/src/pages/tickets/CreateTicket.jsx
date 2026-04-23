@@ -168,12 +168,19 @@ export default function CreateTicket() {
     setIsSubmitting(true);
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('ticket', new Blob([JSON.stringify(formData)], {
-        type: 'application/json'
-      }));
       
+      // Append individual form fields
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('category', formData.category);
+      formDataToSend.append('priority', formData.priority);
+      formDataToSend.append('submittedBy', formData.submittedBy);
+      formDataToSend.append('contactNumber', formData.contactNumber);
+      formDataToSend.append('location', formData.location);
+      
+      // Append images
       images.forEach((image, index) => {
-        formDataToSend.append(`images`, image);
+        formDataToSend.append('images', image);
       });
 
       const response = await axios.post('/tickets', formDataToSend, {

@@ -4,6 +4,7 @@ import com.fms.common.ApiResponse;
 import com.fms.tickets.model.Ticket;
 import com.fms.tickets.service.TicketService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,26 @@ public class TicketController {
 
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<ApiResponse<Ticket>> createTicket(
-            @Valid @RequestPart("ticket") Ticket ticket,
+            @RequestParam("title") @NotBlank @Size(min = 3, max = 100) String title,
+            @RequestParam("description") @NotBlank @Size(min = 10, max = 1000) String description,
+            @RequestParam("category") @NotBlank String category,
+            @RequestParam("priority") @Pattern(regexp = "^(LOW|MEDIUM|HIGH|URGENT)$") String priority,
+            @RequestParam("submittedBy") @Email @NotBlank String submittedBy,
+            @RequestParam("contactNumber") @Pattern(regexp = "^[+]?[0-9]{10,15}$") @NotBlank String contactNumber,
+            @RequestParam("location") @NotBlank String location,
             @RequestPart(value = "images", required = false) MultipartFile[] images) {
+        
+        // Create ticket object with default status
+        Ticket ticket = new Ticket();
+        ticket.setTitle(title);
+        ticket.setDescription(description);
+        ticket.setCategory(category);
+        ticket.setPriority(priority);
+        ticket.setStatus("OPEN"); // Set default status
+        ticket.setSubmittedBy(submittedBy);
+        ticket.setContactNumber(contactNumber);
+        ticket.setLocation(location);
+        
         ApiResponse<Ticket> response = ticketService.createTicket(ticket, images);
         if (response.isSuccess()) {
             return ResponseEntity.ok(response);
