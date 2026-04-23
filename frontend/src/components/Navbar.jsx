@@ -8,7 +8,7 @@ export default function Navbar() {
     <nav style={{ display: 'flex', gap: '1rem', padding: '1rem', borderBottom: '1px solid #ddd' }}>
       <Link to="/resources">Resources</Link>
       <Link to="/bookings">Bookings</Link>
-      <Link to="/tickets">Tickets</Link>
+      <Link to="/tickets/index">Tickets</Link>
       <Link to="/notifications">Notifications</Link>
       <div style={{ marginLeft: 'auto' }}>
         <button type="button">{user ? 'Logout' : 'Login'}</button>

@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function TicketsPage() {
   const navigate = useNavigate();
+  const [userTickets, setUserTickets] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   return (
     <div style={{
@@ -10,180 +13,444 @@ export default function TicketsPage() {
       minHeight: '100vh',
       padding: '2rem'
     }}>
+      {/* Header Section */}
       <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        backgroundColor: '#FFFFFF',
-        borderRadius: '12px',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-        padding: '2rem'
+        textAlign: 'center',
+        marginBottom: '3rem'
       }}>
         <h1 style={{
           fontFamily: 'Sora, sans-serif',
-          fontSize: '2rem',
-          fontWeight: '700',
+          fontSize: '3rem',
+          fontWeight: '800',
           color: '#0F172A',
-          margin: '0 0 1.5rem 0',
-          textAlign: 'center'
+          margin: '0 0 1rem 0',
+          background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text'
         }}>
-          Tickets Module
+          🎫 Ticket Center
         </h1>
         
         <p style={{
           color: '#64748B',
-          fontSize: '1rem',
+          fontSize: '1.25rem',
           margin: '0 0 2rem 0',
-          textAlign: 'center'
+          maxWidth: '600px',
+          margin: '0 auto 2rem auto'
         }}>
-          Manage maintenance tickets, track issues, and monitor resolutions
+          Create, track, and manage your support tickets with ease
         </p>
+      </div>
 
+      {/* Main Options Grid */}
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+        gap: '2rem'
+      }}>
+        
+        {/* Create Ticket Card */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '1rem',
-          marginBottom: '2rem'
-        }}>
-          <button
-            onClick={() => navigate('/tickets')}
-            style={{
-              backgroundColor: '#2563EB',
-              color: '#FFFFFF',
-              border: 'none',
-              padding: '1rem 1.5rem',
-              borderRadius: '8px',
-              fontSize: '1rem',
-              fontWeight: '600',
-              fontFamily: 'Manrope, sans-serif',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s'
-            }}
-          >
-            View All Tickets
-          </button>
-
-          <button
-            onClick={() => navigate('/tickets/createticket')}
-            style={{
-              backgroundColor: '#D97706',
-              color: '#FFFFFF',
-              border: 'none',
-              padding: '1rem 1.5rem',
-              borderRadius: '8px',
-              fontSize: '1rem',
-              fontWeight: '600',
-              fontFamily: 'Manrope, sans-serif',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s'
-            }}
-          >
-            Create New Ticket
-          </button>
-
-          <button
-            onClick={() => navigate('/tickets/admin')}
-            style={{
-              backgroundColor: '#2563EB',
-              color: '#FFFFFF',
-              border: 'none',
-              padding: '1rem 2rem',
-              borderRadius: '12px',
-              fontSize: '1rem',
-              fontWeight: '600',
-              fontFamily: 'Manrope, sans-serif',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 4px 6px rgba(37, 99, 235, 0.1)'
-            }}
-          >
-            🎛️ Admin Dashboard
-          </button>
-          <button
-            onClick={() => navigate('/tickets/technician')}
-            style={{
-              backgroundColor: '#059669',
-              color: '#FFFFFF',
-              border: 'none',
-              padding: '1rem 2rem',
-              borderRadius: '12px',
-              fontSize: '1rem',
-              fontWeight: '600',
-              fontFamily: 'Manrope, sans-serif',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 4px 6px rgba(5, 150, 105, 0.1)'
-            }}
-          >
-            👨‍🔧 Technician Panel
-          </button>
-        </div>
-
-        <div style={{
-          backgroundColor: '#EEF2F7',
-          padding: '1.5rem',
-          borderRadius: '8px',
-          textAlign: 'center'
-        }}>
-          <h3 style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: '16px',
+          padding: '2rem',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
+          border: '1px solid #E3E8EF',
+          transition: 'all 0.3s ease',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-5px)';
+          e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.12)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.08)';
+        }}
+        onClick={() => navigate('/tickets/createticket')}
+        >
+          <div style={{
+            backgroundColor: '#FEF3C7',
+            width: '60px',
+            height: '60px',
+            borderRadius: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '1.5rem'
+          }}>
+            <span style={{ fontSize: '1.5rem' }}>➕</span>
+          </div>
+          
+          <h2 style={{
             fontFamily: 'Sora, sans-serif',
+            fontSize: '1.5rem',
+            fontWeight: '700',
             color: '#0F172A',
             margin: '0 0 1rem 0'
           }}>
-            Quick Actions
-          </h3>
+            Create New Ticket
+          </h2>
+          
+          <p style={{
+            color: '#64748B',
+            fontSize: '1rem',
+            lineHeight: '1.6',
+            margin: '0 0 1.5rem 0'
+          }}>
+            Submit a new support request for maintenance, IT issues, or any facility-related concerns
+          </p>
+          
           <div style={{
             display: 'flex',
-            gap: '1rem',
-            justifyContent: 'center',
-            flexWrap: 'wrap'
+            alignItems: 'center',
+            color: '#D97706',
+            fontWeight: '600',
+            fontSize: '0.9rem'
           }}>
-            <button
-              onClick={() => navigate('/tickets')}
-              style={{
-                backgroundColor: '#FFFFFF',
-                color: '#475569',
-                border: '1px solid #E3E8EF',
-                padding: '0.5rem 1rem',
-                borderRadius: '6px',
-                fontSize: '0.875rem',
-                fontFamily: 'Manrope, sans-serif',
-                cursor: 'pointer'
-              }}
-            >
-              📋 View Tickets
-            </button>
-            <button
-              onClick={() => navigate('/tickets/createticket')}
-              style={{
-                backgroundColor: '#FFFFFF',
-                color: '#475569',
-                border: '1px solid #E3E8EF',
-                padding: '0.5rem 1rem',
-                borderRadius: '6px',
-                fontSize: '0.875rem',
-                fontFamily: 'Manrope, sans-serif',
-                cursor: 'pointer'
-              }}
-            >
-              ➕ Create Ticket
-            </button>
-            <button
-              onClick={() => navigate('/')}
-              style={{
-                backgroundColor: '#FFFFFF',
-                color: '#475569',
-                border: '1px solid #E3E8EF',
-                padding: '0.5rem 1rem',
-                borderRadius: '6px',
-                fontSize: '0.875rem',
-                fontFamily: 'Manrope, sans-serif',
-                cursor: 'pointer'
-              }}
-            >
-              🏠 Home
-            </button>
+            <span>Get Started →</span>
           </div>
         </div>
+
+        {/* View Workflow Card */}
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: '16px',
+          padding: '2rem',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
+          border: '1px solid #E3E8EF',
+          transition: 'all 0.3s ease',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-5px)';
+          e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.12)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.08)';
+        }}
+        onClick={() => navigate('/tickets')}
+        >
+          <div style={{
+            backgroundColor: '#DBEAFE',
+            width: '60px',
+            height: '60px',
+            borderRadius: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '1.5rem'
+          }}>
+            <span style={{ fontSize: '1.5rem' }}>📋</span>
+          </div>
+          
+          <h2 style={{
+            fontFamily: 'Sora, sans-serif',
+            fontSize: '1.5rem',
+            fontWeight: '700',
+            color: '#0F172A',
+            margin: '0 0 1rem 0'
+          }}>
+            View Ticket Workflow
+          </h2>
+          
+          <p style={{
+            color: '#64748B',
+            fontSize: '1rem',
+            lineHeight: '1.6',
+            margin: '0 0 1.5rem 0'
+          }}>
+            Track the progress of your tickets, view status updates, and monitor resolution timelines
+          </p>
+          
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            color: '#2563EB',
+            fontWeight: '600',
+            fontSize: '0.9rem'
+          }}>
+            <span>View Progress →</span>
+          </div>
+        </div>
+
+        {/* Raise Ticket Card */}
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: '16px',
+          padding: '2rem',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
+          border: '1px solid #E3E8EF',
+          transition: 'all 0.3s ease',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-5px)';
+          e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.12)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.08)';
+        }}
+        onClick={() => navigate('/tickets/createticket')}
+        >
+          <div style={{
+            backgroundColor: '#D1FAE5',
+            width: '60px',
+            height: '60px',
+            borderRadius: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '1.5rem'
+          }}>
+            <span style={{ fontSize: '1.5rem' }}>🚨</span>
+          </div>
+          
+          <h2 style={{
+            fontFamily: 'Sora, sans-serif',
+            fontSize: '1.5rem',
+            fontWeight: '700',
+            color: '#0F172A',
+            margin: '0 0 1rem 0'
+          }}>
+            Raise Urgent Ticket
+          </h2>
+          
+          <p style={{
+            color: '#64748B',
+            fontSize: '1rem',
+            lineHeight: '1.6',
+            margin: '0 0 1.5rem 0'
+          }}>
+            For urgent issues requiring immediate attention - get priority support and faster resolution
+          </p>
+          
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            color: '#059669',
+            fontWeight: '600',
+            fontSize: '0.9rem'
+          }}>
+            <span>Raise Ticket →</span>
+          </div>
+        </div>
+
+        {/* My Tickets Card */}
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: '16px',
+          padding: '2rem',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08)',
+          border: '1px solid #E3E8EF',
+          transition: 'all 0.3s ease',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-5px)';
+          e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.12)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.08)';
+        }}
+        onClick={() => navigate('/tickets')}
+        >
+          <div style={{
+            backgroundColor: '#F3E8FF',
+            width: '60px',
+            height: '60px',
+            borderRadius: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '1.5rem'
+          }}>
+            <span style={{ fontSize: '1.5rem' }}>📂</span>
+          </div>
+          
+          <h2 style={{
+            fontFamily: 'Sora, sans-serif',
+            fontSize: '1.5rem',
+            fontWeight: '700',
+            color: '#0F172A',
+            margin: '0 0 1rem 0'
+          }}>
+            My Tickets
+          </h2>
+          
+          <p style={{
+            color: '#64748B',
+            fontSize: '1rem',
+            lineHeight: '1.6',
+            margin: '0 0 1.5rem 0'
+          }}>
+            View all your submitted tickets, check their status, and see your ticket history
+          </p>
+          
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            color: '#7C3AED',
+            fontWeight: '600',
+            fontSize: '0.9rem'
+          }}>
+            <span>My Tickets →</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Stats Section */}
+      <div style={{
+        maxWidth: '1200px',
+        margin: '3rem auto 0',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '1.5rem'
+      }}>
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          padding: '1.5rem',
+          borderRadius: '12px',
+          textAlign: 'center',
+          border: '1px solid #E3E8EF'
+        }}>
+          <div style={{
+            fontSize: '2rem',
+            fontWeight: '700',
+            color: '#2563EB',
+            fontFamily: 'Sora, sans-serif'
+          }}>
+            {userTickets.length}
+          </div>
+          <div style={{
+            color: '#64748B',
+            fontSize: '0.875rem',
+            fontFamily: 'Manrope, sans-serif'
+          }}>
+            Total Tickets
+          </div>
+        </div>
+
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          padding: '1.5rem',
+          borderRadius: '12px',
+          textAlign: 'center',
+          border: '1px solid #E3E8EF'
+        }}>
+          <div style={{
+            fontSize: '2rem',
+            fontWeight: '700',
+            color: '#D97706',
+            fontFamily: 'Sora, sans-serif'
+          }}>
+            0
+          </div>
+          <div style={{
+            color: '#64748B',
+            fontSize: '0.875rem',
+            fontFamily: 'Manrope, sans-serif'
+          }}>
+            Pending
+          </div>
+        </div>
+
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          padding: '1.5rem',
+          borderRadius: '12px',
+          textAlign: 'center',
+          border: '1px solid #E3E8EF'
+        }}>
+          <div style={{
+            fontSize: '2rem',
+            fontWeight: '700',
+            color: '#059669',
+            fontFamily: 'Sora, sans-serif'
+          }}>
+            0
+          </div>
+          <div style={{
+            color: '#64748B',
+            fontSize: '0.875rem',
+            fontFamily: 'Manrope, sans-serif'
+          }}>
+            Resolved
+          </div>
+        </div>
+
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          padding: '1.5rem',
+          borderRadius: '12px',
+          textAlign: 'center',
+          border: '1px solid #E3E8EF'
+        }}>
+          <div style={{
+            fontSize: '2rem',
+            fontWeight: '700',
+            color: '#DC2626',
+            fontFamily: 'Sora, sans-serif'
+          }}>
+            0
+          </div>
+          <div style={{
+            color: '#64748B',
+            fontSize: '0.875rem',
+            fontFamily: 'Manrope, sans-serif'
+          }}>
+            Urgent
+          </div>
+        </div>
+      </div>
+
+      {/* Help Section */}
+      <div style={{
+        maxWidth: '1200px',
+        margin: '3rem auto 0',
+        backgroundColor: '#F8FAFC',
+        padding: '2rem',
+        borderRadius: '12px',
+        border: '1px solid #E3E8EF',
+        textAlign: 'center'
+      }}>
+        <h3 style={{
+          fontFamily: 'Sora, sans-serif',
+          fontSize: '1.25rem',
+          fontWeight: '600',
+          color: '#0F172A',
+          margin: '0 0 1rem 0'
+        }}>
+          Need Help?
+        </h3>
+        <p style={{
+          color: '#64748B',
+          fontSize: '0.95rem',
+          margin: '0 0 1.5rem 0'
+        }}>
+          Our support team is here to help you with any questions or issues you may have.
+        </p>
+        <button
+          style={{
+            backgroundColor: '#2563EB',
+            color: '#FFFFFF',
+            border: 'none',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '8px',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            fontFamily: 'Manrope, sans-serif',
+            cursor: 'pointer'
+          }}
+        >
+          Contact Support
+        </button>
       </div>
     </div>
   );
