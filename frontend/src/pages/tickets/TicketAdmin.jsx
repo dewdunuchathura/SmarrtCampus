@@ -14,9 +14,11 @@ export default function TicketAdmin() {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSolveModal, setShowSolveModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [editImages, setEditImages] = useState([]);
+  const [solveMessage, setSolveMessage] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -99,6 +101,12 @@ export default function TicketAdmin() {
     setShowDeleteModal(true);
   };
 
+  const handleSolve = (ticket) => {
+    setSelectedTicket(ticket);
+    setSolveMessage(`Your ticket "${ticket.title}" has been resolved. The issue has been fixed and the problem is now solved.`);
+    setShowSolveModal(true);
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -151,6 +159,25 @@ export default function TicketAdmin() {
     } catch (err) {
       setError('Failed to delete ticket');
       console.error('Error deleting ticket:', err);
+    }
+  };
+
+  const handleSolveConfirm = async () => {
+    try {
+      const response = await axios.put(`/tickets/${selectedTicket.id}/solve`, {
+        message: solveMessage,
+        resolvedBy: 'Admin'
+      });
+      
+      if (response.data.success) {
+        fetchTickets();
+        setShowSolveModal(false);
+        setSelectedTicket(null);
+        setSolveMessage('');
+      }
+    } catch (err) {
+      setError('Failed to solve ticket');
+      console.error('Error solving ticket:', err);
     }
   };
 
@@ -457,7 +484,8 @@ export default function TicketAdmin() {
                     <td style={{ padding: '1rem' }}>
                       <div style={{
                         display: 'flex',
-                        gap: '0.5rem'
+                        gap: '0.5rem',
+                        flexWrap: 'wrap'
                       }}>
                         <button
                           onClick={() => handleEdit(ticket)}
@@ -472,6 +500,20 @@ export default function TicketAdmin() {
                           }}
                         >
                           Edit
+                        </button>
+                        <button
+                          onClick={() => handleSolve(ticket)}
+                          style={{
+                            backgroundColor: '#059669',
+                            color: '#FFFFFF',
+                            border: 'none',
+                            padding: '0.5rem 1rem',
+                            borderRadius: '6px',
+                            fontSize: '0.875rem',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Solve
                         </button>
                         <button
                           onClick={() => handleDelete(ticket)}
@@ -867,6 +909,141 @@ export default function TicketAdmin() {
                   }}
                 >
                   Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Solve Modal */}
+        {showSolveModal && selectedTicket && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}>
+            <div style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '12px',
+              padding: '2rem',
+              width: '90%',
+              maxWidth: '500px'
+            }}>
+              <h2 style={{
+                fontFamily: 'Sora, sans-serif',
+                fontSize: '1.5rem',
+                fontWeight: '700',
+                color: '#0F172A',
+                marginBottom: '1rem'
+              }}>
+                Solve Ticket
+              </h2>
+              <p style={{
+                color: '#475569',
+                marginBottom: '1.5rem'
+              }}>
+                This will mark the ticket as resolved and send an email notification to the ticket submitter.
+              </p>
+              <div style={{
+                backgroundColor: '#EEF2F7',
+                padding: '1rem',
+                borderRadius: '8px',
+                marginBottom: '1.5rem'
+              }}>
+                <div style={{
+                  fontSize: '0.875rem',
+                  color: '#64748B',
+                  marginBottom: '0.5rem',
+                  fontFamily: 'Manrope, sans-serif'
+                }}>
+                  Ticket: {selectedTicket.title}
+                </div>
+                <div style={{
+                  fontSize: '0.875rem',
+                  color: '#64748B',
+                  marginBottom: '0.5rem',
+                  fontFamily: 'Manrope, sans-serif'
+                }}>
+                  Submitted by: {selectedTicket.submittedBy}
+                </div>
+                <div style={{
+                  fontSize: '0.875rem',
+                  color: '#64748B',
+                  fontFamily: 'Manrope, sans-serif'
+                }}>
+                  Location: {selectedTicket.location}
+                </div>
+              </div>
+              <div style={{
+                marginBottom: '1.5rem'
+              }}>
+                <label style={{
+                  display: 'block',
+                  color: '#0F172A',
+                  fontWeight: '600',
+                  marginBottom: '0.5rem',
+                  fontFamily: 'Sora, sans-serif'
+                }}>
+                  Email Message:
+                </label>
+                <textarea
+                  value={solveMessage}
+                  onChange={(e) => setSolveMessage(e.target.value)}
+                  rows="4"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '1px solid #E3E8EF',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontFamily: 'Manrope, sans-serif',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '1rem'
+              }}>
+                <button
+                  onClick={() => setShowSolveModal(false)}
+                  style={{
+                    backgroundColor: '#64748B',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    fontFamily: 'Manrope, sans-serif',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSolveConfirm}
+                  style={{
+                    backgroundColor: '#059669',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    fontFamily: 'Manrope, sans-serif',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Send Email & Solve
                 </button>
               </div>
             </div>

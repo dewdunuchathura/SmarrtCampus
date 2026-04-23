@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 import java.util.List;
 
 @RestController
@@ -153,6 +155,37 @@ public class TicketController {
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PutMapping("/{id}/solve")
+    public ResponseEntity<ApiResponse<Ticket>> solveTicket(
+            @PathVariable String id,
+            @RequestBody Map<String, String> solveRequest) {
+        String message = solveRequest.get("message");
+        String resolvedBy = solveRequest.get("resolvedBy");
+        ApiResponse<Ticket> response = ticketService.solveTicket(id, message, resolvedBy);
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PostMapping("/test-email")
+    public ResponseEntity<String> testEmail() {
+        try {
+            // Test email sending with hardcoded values
+            ticketService.emailService.sendTicketResolutionEmail(
+                "test@example.com",
+                "Test Ticket",
+                "test-123",
+                "This is a test email from Smart Campus system",
+                "Admin"
+            );
+            return ResponseEntity.ok("Email sent successfully! Check your inbox.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Email failed: " + e.getMessage());
         }
     }
 
