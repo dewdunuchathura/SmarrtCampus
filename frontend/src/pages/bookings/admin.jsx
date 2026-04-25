@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { approveBooking, getBookings, rejectBooking } from '../../api/bookings';
+import { useAuth } from '../../context/AuthContext';
 import './bookings.css';
 
 const statusOrder = ['ALL', 'PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'];
@@ -18,6 +19,7 @@ function statusClass(status) {
 }
 
 export default function BookingAdminPage() {
+  const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [approvedBy, setApprovedBy] = useState('');
@@ -30,6 +32,11 @@ export default function BookingAdminPage() {
   useEffect(() => {
     loadBookings();
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    setApprovedBy(user.name || user.email || '');
+  }, [user]);
 
   async function loadBookings() {
     try {

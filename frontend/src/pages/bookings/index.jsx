@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { cancelBooking, createBooking, getBookings, updateBooking } from '../../api/bookings';
+import { useAuth } from '../../context/AuthContext';
 import './bookings.css';
 
 const initialForm = {
@@ -34,6 +35,7 @@ function statusClass(status) {
 }
 
 export default function BookingsPage() {
+  const { user } = useAuth();
   const [form, setForm] = useState(initialForm);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +49,15 @@ export default function BookingsPage() {
   useEffect(() => {
     loadBookings();
   }, []);
+
+  useEffect(() => {
+    if (!user?.email) return;
+
+    setForm((current) => ({
+      ...current,
+      requestedBy: current.requestedBy || user.email
+    }));
+  }, [user?.email]);
 
   async function loadBookings() {
     try {
@@ -201,7 +212,15 @@ export default function BookingsPage() {
                 </div>
                 <div className="field">
                   <label htmlFor="requestedBy">Requested by</label>
-                  <input id="requestedBy" name="requestedBy" value={form.requestedBy} onChange={handleFormChange} placeholder="student1" required />
+                  <input
+                    id="requestedBy"
+                    name="requestedBy"
+                    value={form.requestedBy}
+                    onChange={handleFormChange}
+                    placeholder="student@example.com"
+                    readOnly={Boolean(user?.email)}
+                    required
+                  />
                 </div>
                 <div className="field">
                   <label htmlFor="purpose">Purpose</label>

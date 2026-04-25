@@ -7,33 +7,40 @@ const BACKEND_URL = 'http://localhost:8080';
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    axios
-      .get(`${BACKEND_URL}/api/auth/google-user`, {
+  const refreshUser = async () => {
+    try {
+      const res = await axios.get(`${BACKEND_URL}/api/auth/google-user`, {
         withCredentials: true,
-      })
-      .then((res) => {
-        const googleUser = res.data.attributes;
-
-        return axios.get(
-          `${BACKEND_URL}/api/auth/me?email=${googleUser.email}`,
-          { withCredentials: true }
-        ).then((userRes) => ({
-          googleUser,
-          storedUser: userRes.data.data,
-        }));
-      })
-      .then(({ googleUser, storedUser }) => {
-        setUser({
-          ...storedUser,
-          name: storedUser?.name || googleUser?.name,
-          email: storedUser?.email || googleUser?.email,
-          picture: googleUser?.picture || '',
-        });
-      })
-      .catch(() => {
-        setUser(null);
       });
+
+      const googleUser = res.data?.attributes;
+      const googleEmail = googleUser?.email;
+
+      if (!googleEmail) {
+        setUser((current) => current ?? null);
+        return;
+      }
+
+      const userRes = await axios.get(
+        `${BACKEND_URL}/api/auth/me?email=${googleEmail}`,
+        { withCredentials: true }
+      );
+
+      const storedUser = userRes.data?.data;
+
+      setUser({
+        ...storedUser,
+        name: storedUser?.name || googleUser?.name,
+        email: storedUser?.email || googleUser?.email,
+        picture: googleUser?.picture || '',
+      });
+    } catch {
+      setUser((current) => current ?? null);
+    }
+  };
+
+  useEffect(() => {
+    refreshUser();
   }, []);
 
   const logout = async () => {
@@ -47,7 +54,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout }}>
+    <AuthContext.Provider value={{ user, setUser, refreshUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

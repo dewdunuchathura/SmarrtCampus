@@ -1,6 +1,7 @@
 package com.fms.config;
 
 import com.fms.auth.AuthService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -9,6 +10,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
+
+    @Value("${FRONTEND_URL:http://localhost:5173}")
+    private String frontendUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,11 +37,11 @@ public class SecurityConfig {
                     authService.saveGoogleUser(name, email);
 
                     // redirect to frontend home
-                    response.sendRedirect("http://localhost:5174/");
+                    response.sendRedirect(frontendUrl + "/");
                 })
             )
             .logout(logout -> logout
-                .logoutSuccessUrl("http://localhost:5174/")
+                .logoutSuccessUrl(frontendUrl + "/")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
             )

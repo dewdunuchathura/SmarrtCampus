@@ -6,7 +6,14 @@ import "./Notifications.css";
 const typeStyles = {
   GENERAL: "general",
   BOOKING: "booking",
+  BOOKING_APPROVED: "booking",
+  BOOKING_REJECTED: "booking",
+  BOOKING_DECISION: "booking",
   TICKET: "ticket",
+  TICKET_CREATED: "ticket",
+  TICKET_ASSIGNED: "ticket",
+  TICKET_RESOLVED: "ticket",
+  TICKET_REJECTED: "ticket",
   RESOURCE: "resource",
   AUTH: "auth",
 };
@@ -87,22 +94,22 @@ export default function NotificationsPage() {
 
     if (activeFilter === "ALL") return sortedNotifications;
     if (activeFilter === "UNREAD") {
-      return sortedNotifications.filter((item) => !item.read);
+      return sortedNotifications.filter((item) => !item.isRead);
     }
     if (activeFilter === "READ") {
-      return sortedNotifications.filter((item) => item.read);
+      return sortedNotifications.filter((item) => item.isRead);
     }
     return sortedNotifications;
   }, [notifications, activeFilter]);
 
-  const unreadCount = notifications.filter((item) => !item.read).length;
-  const readCount = notifications.filter((item) => item.read).length;
+  const unreadCount = notifications.filter((item) => !item.isRead).length;
+  const readCount = notifications.filter((item) => item.isRead).length;
 
   const handleMarkAsRead = async (id) => {
     try {
-      await api.patch(`/notifications/${id}/read`);
+      await api.put(`/notifications/${id}/read`);
       setNotifications((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, read: true } : item))
+        prev.map((item) => (item.id === id ? { ...item, isRead: true } : item))
       );
     } catch (error) {
       console.error("Error marking notification as read:", error);
@@ -112,8 +119,8 @@ export default function NotificationsPage() {
 
   const handleMarkAllAsRead = async () => {
     try {
-      await api.patch(`/notifications/user/${userEmail}/read-all`);
-      setNotifications((prev) => prev.map((item) => ({ ...item, read: true })));
+      await api.put(`/notifications/user/${userEmail}/read-all`);
+      setNotifications((prev) => prev.map((item) => ({ ...item, isRead: true })));
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
       setError("Unable to mark all notifications as read.");
@@ -221,7 +228,7 @@ export default function NotificationsPage() {
               {filteredNotifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`notification-card ${notification.read ? "read" : "unread"}`}
+                  className={`notification-card ${notification.isRead ? "read" : "unread"}`}
                 >
                   <div className="notification-main">
                     <div className="notification-meta">
@@ -237,14 +244,14 @@ export default function NotificationsPage() {
                       <div className="notification-description">{notification.message}</div>
                     ) : null}
                     <span
-                      className={`notification-status ${notification.read ? "read" : "unread"}`}
+                      className={`notification-status ${notification.isRead ? "read" : "unread"}`}
                     >
-                      {notification.read ? "Read" : "Unread"}
+                      {notification.isRead ? "Read" : "Unread"}
                     </span>
                   </div>
 
                   <div className="notification-actions">
-                    {!notification.read && (
+                    {!notification.isRead && (
                       <button
                         className="notification-action"
                         onClick={() => handleMarkAsRead(notification.id)}

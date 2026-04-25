@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AdminDashboard from "./AdminDashboard";
+import { useAuth } from "../../context/AuthContext";
 import "./AuthTheme.css";
 
 export default function AuthPage() {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
   const [showAdmin, setShowAdmin] = useState(false);
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
@@ -52,6 +54,7 @@ export default function AuthPage() {
         return;
       }
 
+      setUser(userRes.data.data);
       setAdminUser(userRes.data.data);
     } catch (error) {
       setAdminError("Admin login failed. Please try again.");
