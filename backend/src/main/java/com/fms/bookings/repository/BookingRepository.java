@@ -13,6 +13,11 @@ public interface BookingRepository extends MongoRepository<Booking, String> {
 
 	List<Booking> findByRequestedByOrderByCreatedAtDesc(String requestedBy);
 
+	List<Booking> findByRequestedByIgnoreCaseOrderByCreatedAtDesc(String requestedBy);
+
+	@Query(value = "{ 'requestedBy': { $regex: ?0, $options: 'i' } }", sort = "{ 'createdAt': -1 }")
+	List<Booking> findByRequestedByCaseInsensitive(String requestedByPattern);
+
 	List<Booking> findByStatusOrderByCreatedAtDesc(BookingStatus status);
 
 	List<Booking> findByResourceIdOrderByStartDateTimeAsc(String resourceId);

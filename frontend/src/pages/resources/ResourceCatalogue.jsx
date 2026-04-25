@@ -9,49 +9,49 @@ const ResourceCatalogue = () => {
       maxWidth: '1200px',
       margin: '0 auto',
       padding: '2rem',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      backgroundColor: '#F8FAFC',
+      fontFamily: 'Manrope, sans-serif',
+      background: 'var(--page-radial), var(--bg-page)',
       minHeight: '100vh'
     },
     header: {
       textAlign: 'center',
       marginBottom: '3rem',
       padding: '2rem',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%)',
       color: 'white',
-      borderRadius: '15px',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+      borderRadius: '28px',
+      boxShadow: 'var(--shadow-card)'
     },
     title: {
       fontSize: '2.5rem',
       fontWeight: '700',
       margin: '0 0 0.5rem 0',
       color: 'white',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Sora, sans-serif'
     },
     subtitle: {
       fontSize: '1rem',
       fontWeight: '400',
       color: 'rgba(255, 255, 255, 0.9)',
       margin: '0 0 1rem 0',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Manrope, sans-serif'
     },
     section: {
-      background: '#FFFFFF',
-      borderRadius: '16px',
+      background: 'rgba(255, 255, 255, 0.92)',
+      borderRadius: '24px',
       padding: '2rem',
       marginBottom: '2rem',
-      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
-      border: '1px solid #E5E7EB'
+      boxShadow: 'var(--shadow-soft)',
+      border: '1px solid var(--border)'
     },
     sectionTitle: {
       fontSize: '1.5rem',
       fontWeight: '600',
       marginBottom: '1.5rem',
-      color: '#2d3748',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      color: 'var(--text-heading)',
+      fontFamily: 'Sora, sans-serif',
       paddingBottom: '0.5rem',
-      borderBottom: '2px solid #667eea'
+      borderBottom: '2px solid rgba(29, 158, 117, 0.2)'
     },
     filterSection: {
       display: 'grid',
@@ -67,49 +67,52 @@ const ResourceCatalogue = () => {
     label: {
       fontWeight: '600',
       marginBottom: '0.5rem',
-      color: '#4a5568',
+      color: 'var(--text-body)',
       fontSize: '0.9rem'
     },
     input: {
       padding: '0.75rem',
-      border: '2px solid #e2e8f0',
-      borderRadius: '8px',
+      border: '1px solid var(--border)',
+      borderRadius: '14px',
       fontSize: '1rem',
       transition: 'all 0.3s ease',
-      outline: 'none'
+      outline: 'none',
+      background: 'var(--bg-soft)',
+      color: 'var(--text-heading)'
     },
     inputFocus: {
-      borderColor: '#667eea',
-      boxShadow: '0 0 0 3px rgba(102, 126, 234, 0.1)',
+      borderColor: 'rgba(29, 158, 117, 0.42)',
+      boxShadow: '0 0 0 3px rgba(29, 158, 117, 0.12)',
       transform: 'translateY(-1px)'
     },
     button: {
       padding: '0.75rem 1.5rem',
-      border: 'none',
-      borderRadius: '8px',
+      border: '1px solid transparent',
+      borderRadius: '14px',
       fontSize: '1rem',
       fontWeight: '600',
       cursor: 'pointer',
-      transition: 'all 0.3s ease'
+      transition: 'all 0.3s ease',
+      fontFamily: 'Manrope, sans-serif'
     },
     primaryButton: {
-      background: '#667eea',
+      background: 'linear-gradient(135deg, var(--blue), var(--pink))',
       color: '#FFFFFF',
-      boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)'
+      boxShadow: '0 12px 24px rgba(29, 158, 117, 0.18)'
     },
     primaryButtonHover: {
-      background: '#5a67d8',
+      background: 'linear-gradient(135deg, var(--blue-hover), #2f8f65)',
       transform: 'translateY(-2px)',
-      boxShadow: '0 6px 20px rgba(102, 126, 234, 0.4)'
+      boxShadow: '0 16px 28px rgba(29, 158, 117, 0.22)'
     },
     secondaryButton: {
-      background: '#f7fafc',
-      color: '#4a5568',
-      border: '2px solid #e2e8f0'
+      background: 'rgba(255, 255, 255, 0.82)',
+      color: 'var(--text-body)',
+      border: '1px solid var(--border)'
     },
     secondaryButtonHover: {
-      background: '#edf2f7',
-      borderColor: '#cbd5e0'
+      background: 'var(--bg-subtle)',
+      borderColor: 'var(--border-hover)'
     },
     resourceGrid: {
       display: 'grid',
@@ -117,19 +120,19 @@ const ResourceCatalogue = () => {
       gap: '1.5rem'
     },
     resourceCard: {
-      background: 'white',
-      borderRadius: '15px',
+      background: 'rgba(255, 255, 255, 0.92)',
+      borderRadius: '22px',
       padding: '1.5rem',
-      boxShadow: '0 5px 20px rgba(0,0,0,0.08)',
-      border: '1px solid #e5e7eb',
+      boxShadow: 'var(--shadow-soft)',
+      border: '1px solid var(--border)',
       transition: 'all 0.3s ease',
       position: 'relative',
       overflow: 'hidden'
     },
     resourceCardHover: {
       transform: 'translateY(-5px)',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-      borderColor: '#667eea'
+      boxShadow: 'var(--shadow-card)',
+      borderColor: 'var(--border-hover)'
     },
     resourceHeader: {
       display: 'flex',
@@ -140,8 +143,9 @@ const ResourceCatalogue = () => {
     resourceTitle: {
       fontSize: '1.25rem',
       fontWeight: 'bold',
-      color: '#2d3748',
-      margin: '0'
+      color: 'var(--text-heading)',
+      margin: '0',
+      fontFamily: 'Sora, sans-serif'
     },
     resourceDetails: {
       display: 'grid',
@@ -151,12 +155,13 @@ const ResourceCatalogue = () => {
     },
     resourceDetail: {
       fontSize: '0.9rem',
-      color: '#7A288A'
+      color: 'var(--text-body)',
+      lineHeight: 1.6
     },
     statusActive: {
-      color: '#38a169',
+      color: '#177a5d',
       fontWeight: 'bold',
-      background: '#c6f6d5',
+      background: 'rgba(29, 158, 117, 0.12)',
       padding: '0.25rem 0.5rem',
       borderRadius: '20px',
       fontSize: '0.8rem'
@@ -173,15 +178,15 @@ const ResourceCatalogue = () => {
       textAlign: 'center',
       padding: '3rem',
       fontSize: '1.2rem',
-      color: '#4a5568'
+      color: 'var(--text-muted)'
     },
     emptyState: {
       textAlign: 'center',
       padding: '3rem',
-      color: '#718096',
+      color: 'var(--text-muted)',
       fontSize: '1.1rem'
     },
-      };
+  };
   
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -218,11 +223,6 @@ const ResourceCatalogue = () => {
     try {
       setLoading(true);
       const response = await api.get('/resources');
-      console.log('API Response:', response);
-      console.log('Response data:', response.data);
-      console.log('Response data type:', typeof response.data);
-      console.log('Is array?', Array.isArray(response.data));
-      
       let sortedResources = response.data;
       
       // Apply capacity sorting if selected
@@ -242,7 +242,6 @@ const ResourceCatalogue = () => {
       }
       
       setResources(sortedResources);
-      console.log('Resources set:', sortedResources);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching resources:', error);
@@ -304,7 +303,7 @@ const ResourceCatalogue = () => {
       {/* Header */}
       <div style={styles.header}>
         <h1 style={styles.title}>Resource Catalogue</h1>
-        <p style={{ fontSize: '1.1rem', opacity: 0.9 }}>Browse and search available campus resources</p>
+        <p style={{ fontSize: '1.1rem', opacity: 0.9, fontFamily: 'Manrope, sans-serif' }}>Browse and search available campus resources</p>
       </div>
       
       {/* Search and Filter */}
@@ -465,9 +464,6 @@ const ResourceCatalogue = () => {
       {/* Resources List */}
       <div style={styles.section}>
         <h2 style={styles.sectionTitle}>Available Resources ({resources.length})</h2>
-        {console.log('Render - resources:', resources)}
-        {console.log('Render - loading:', loading)}
-        {console.log('Render - resources.length:', resources.length)}
         {loading ? (
           <div style={styles.loading}>
             <div>Loading resources...</div>

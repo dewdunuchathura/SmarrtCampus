@@ -50,6 +50,11 @@ public class BookingController {
 		return ResponseEntity.ok(ApiResponse.success("Bookings fetched successfully.", bookingService.getAllBookings()));
 	}
 
+	@GetMapping("/user/{email}")
+	public ResponseEntity<ApiResponse<java.util.List<BookingResponse>>> getBookingsByRequester(@PathVariable String email) {
+		return ResponseEntity.ok(ApiResponse.success("User bookings fetched successfully.", bookingService.getBookingsByRequester(email)));
+	}
+
 	@PutMapping("/{id}")
 	public ResponseEntity<ApiResponse<BookingResponse>> updateBooking(@PathVariable String id,
 		@Valid @RequestBody BookingUpdateRequest request) {

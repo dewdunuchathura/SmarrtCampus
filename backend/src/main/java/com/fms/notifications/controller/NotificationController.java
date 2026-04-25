@@ -28,6 +28,18 @@ public class NotificationController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<Notification>>> getAllNotifications() {
+        ApiResponse<List<Notification>> response = notificationService.getAllNotifications();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/count-unread")
+    public ResponseEntity<ApiResponse<Long>> getUnreadCountAll() {
+        ApiResponse<Long> response = notificationService.getUnreadCountAll();
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/user/{userEmail}")
     public ResponseEntity<ApiResponse<List<Notification>>> getUserNotifications(@PathVariable String userEmail) {
         ApiResponse<List<Notification>> response = notificationService.getUserNotifications(userEmail);

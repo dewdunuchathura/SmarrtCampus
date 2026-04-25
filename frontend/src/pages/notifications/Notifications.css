@@ -1,19 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap");
 
 :root {
-  --notify-bg: #f5f7fa;
-  --notify-surface: #ffffff;
+  --notify-bg: #eff7f1;
+  --notify-surface: rgba(255, 255, 255, 0.94);
   --notify-fill: #eef7f2;
-  --notify-border: #dde7e1;
-  --notify-border-strong: #c9d8cf;
+  --notify-border: #d7e6dc;
+  --notify-border-strong: #bfd6c8;
   --notify-primary: #1d9e75;
   --notify-primary-dark: #16785a;
   --notify-secondary: #0f766e;
   --notify-amber: #d97706;
-  --notify-heading: #0f172a;
-  --notify-body: #475569;
-  --notify-muted: #6b7280;
-  --notify-soft: #94a3b8;
+  --notify-heading: #123126;
+  --notify-body: #406154;
+  --notify-muted: #6b8a7c;
+  --notify-soft: #98b3a6;
 }
 
 .notifications-page {
@@ -364,6 +364,20 @@
   color: var(--notify-body);
   line-height: 1.6;
   margin-bottom: 12px;
+}
+
+.notification-entity-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  background: rgba(29, 158, 117, 0.10);
+  color: var(--notify-primary-dark);
 }
 
 .notification-status {

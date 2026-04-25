@@ -231,8 +231,8 @@ export default function AdminDashboard({ adminUser, onBackToLogin, onGoHome }) {
                           <div className="admin-activity-subtext">{item.message}</div>
                         ) : null}
                         <div className="admin-activity-meta">
-                          <span className={`admin-activity-pill ${item.read ? "read" : "unread"}`}>
-                            {item.read ? "Read" : "Unread"}
+                          <span className={`admin-activity-pill ${(item.read ?? item.isRead) ? "read" : "unread"}`}>
+                            {(item.read ?? item.isRead) ? "Read" : "Unread"}
                           </span>
                           <span>{formatTime(item.createdAt)}</span>
                         </div>

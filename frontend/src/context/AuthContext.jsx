@@ -1,39 +1,54 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { BACKEND_URL } from '../config/api';
 
 const AuthContext = createContext(null);
-const BACKEND_URL = 'http://localhost:8080';
+const AUTH_STORAGE_KEY = 'fms_auth_user';
+
+function mergeUserData(storedUser, googleUser) {
+  if (!storedUser && !googleUser) {
+    return null;
+  }
+
+  return {
+    ...storedUser,
+    name: storedUser?.name || googleUser?.name || '',
+    email: storedUser?.email || googleUser?.email || '',
+    role: storedUser?.role || 'USER',
+    provider: storedUser?.provider || 'GOOGLE',
+    picture: googleUser?.picture || storedUser?.picture || '',
+  };
+}
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    try {
+      const storedValue = window.localStorage.getItem(AUTH_STORAGE_KEY);
+      return storedValue ? JSON.parse(storedValue) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const refreshUser = async () => {
     try {
-      const res = await axios.get(`${BACKEND_URL}/api/auth/google-user`, {
+      const authRes = await axios.get(`${BACKEND_URL}/api/auth/google-user`, {
         withCredentials: true,
       });
 
-      const googleUser = res.data?.attributes;
-      const googleEmail = googleUser?.email;
+      const googleUser = authRes.data?.data;
+      const googleEmail = googleUser?.email?.trim()?.toLowerCase();
 
       if (!googleEmail) {
-        setUser((current) => current ?? null);
         return;
       }
 
-      const userRes = await axios.get(
-        `${BACKEND_URL}/api/auth/me?email=${googleEmail}`,
-        { withCredentials: true }
-      );
-
-      const storedUser = userRes.data?.data;
-
-      setUser({
-        ...storedUser,
-        name: storedUser?.name || googleUser?.name,
-        email: storedUser?.email || googleUser?.email,
-        picture: googleUser?.picture || '',
+      const userRes = await axios.get(`${BACKEND_URL}/api/auth/me`, {
+        params: { email: googleEmail },
+        withCredentials: true,
       });
+
+      setUser(mergeUserData(userRes.data?.data, googleUser));
     } catch {
       setUser((current) => current ?? null);
     }
@@ -43,8 +58,25 @@ export function AuthProvider({ children }) {
     refreshUser();
   }, []);
 
-  const logout = async () => {
+  useEffect(() => {
+    try {
+      if (user) {
+        window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+      } else {
+        window.localStorage.removeItem(AUTH_STORAGE_KEY);
+      }
+    } catch {
+      // Ignore storage errors and continue with in-memory auth state.
+    }
+  }, [user]);
+
+  const logout = () => {
     setUser(null);
+    try {
+      window.localStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch {
+      // Ignore storage errors during logout.
+    }
 
     const form = document.createElement('form');
     form.method = 'POST';

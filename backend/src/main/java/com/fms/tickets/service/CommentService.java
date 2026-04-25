@@ -1,14 +1,19 @@
 package com.fms.tickets.service;
 
 import com.fms.common.ApiResponse;
+import com.fms.notifications.service.NotificationService;
 import com.fms.tickets.model.Comment;
+import com.fms.tickets.model.Ticket;
 import com.fms.tickets.repository.CommentRepository;
 import com.fms.tickets.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -16,20 +21,44 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final TicketRepository ticketRepository;
+    private final NotificationService notificationService;
+
+    private String normalizeEmail(String email) {
+        return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
+    }
 
     public ApiResponse<Comment> createComment(String ticketId, String authorEmail, String authorName, String content, String authorRole) {
         try {
             // Verify ticket exists
-            if (!ticketRepository.existsById(ticketId)) {
+            Optional<Ticket> ticketOpt = ticketRepository.findById(ticketId);
+            if (ticketOpt.isEmpty()) {
                 return ApiResponse.error("Ticket not found");
             }
 
+            Ticket ticket = ticketOpt.get();
+
             // Create new comment
-            Comment comment = new Comment(ticketId, authorEmail, authorName, content, authorRole);
+            String normalizedAuthorEmail = normalizeEmail(authorEmail);
+            Comment comment = new Comment(ticketId, normalizedAuthorEmail, authorName, content, authorRole);
             Comment savedComment = commentRepository.save(comment);
 
-            // Create notification for new comment (if not author's own ticket)
-            // This could be enhanced to notify ticket owner/assigned technician
+            Set<String> recipientEmails = new LinkedHashSet<>();
+            recipientEmails.add(normalizeEmail(ticket.getSubmittedBy()));
+            if (ticket.getAssignedTo() != null && !ticket.getAssignedTo().trim().isEmpty()) {
+                recipientEmails.add(normalizeEmail(ticket.getAssignedTo()));
+            }
+            recipientEmails.remove(normalizedAuthorEmail);
+
+            for (String recipientEmail : recipientEmails) {
+                if (!recipientEmail.isEmpty()) {
+                    notificationService.createTicketCommentNotification(
+                        recipientEmail,
+                        ticket.getId(),
+                        ticket.getTitle(),
+                        authorName
+                    );
+                }
+            }
 
             return ApiResponse.success("Comment created successfully", savedComment);
         } catch (Exception e) {

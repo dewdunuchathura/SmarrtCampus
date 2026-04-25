@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { cancelBooking, createBooking, getBookings, updateBooking } from '../../api/bookings';
+import { cancelBooking, createBooking, getUserBookings, updateBooking } from '../../api/bookings';
 import { useAuth } from '../../context/AuthContext';
 import './bookings.css';
 
@@ -47,8 +47,34 @@ export default function BookingsPage() {
   const [successBanner, setSuccessBanner] = useState('');
 
   useEffect(() => {
-    loadBookings();
-  }, []);
+    if (!user?.email) {
+      setBookings([]);
+      setLoading(false);
+      return;
+    }
+
+    loadBookings(user.email);
+  }, [user?.email]);
+
+  useEffect(() => {
+    if (!user?.email) {
+      return undefined;
+    }
+
+    const refreshBookings = () => {
+      loadBookings(user.email);
+    };
+
+    const intervalId = window.setInterval(refreshBookings, 5000);
+    window.addEventListener('focus', refreshBookings);
+    document.addEventListener('visibilitychange', refreshBookings);
+
+    return () => {
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', refreshBookings);
+      document.removeEventListener('visibilitychange', refreshBookings);
+    };
+  }, [user?.email]);
 
   useEffect(() => {
     if (!user?.email) return;
@@ -59,10 +85,16 @@ export default function BookingsPage() {
     }));
   }, [user?.email]);
 
-  async function loadBookings() {
+  async function loadBookings(userEmail = user?.email) {
+    if (!userEmail) {
+      setBookings([]);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
-      const { data } = await getBookings();
+      const { data } = await getUserBookings(userEmail.trim().toLowerCase());
       setBookings(data?.data ?? []);
       setErrorBanner('');
     } catch (error) {
@@ -90,7 +122,7 @@ export default function BookingsPage() {
 
     const payload = {
       ...form,
-      requestedBy: form.requestedBy.trim(),
+      requestedBy: (user?.email || form.requestedBy).trim().toLowerCase(),
       resourceId: form.resourceId.trim(),
       resourceName: form.resourceName.trim(),
       purpose: form.purpose.trim()
@@ -108,7 +140,7 @@ export default function BookingsPage() {
       }
 
       resetForm();
-      await loadBookings();
+      await loadBookings(payload.requestedBy);
     } catch (error) {
       const message = error?.response?.data?.message || 'Unable to save booking.';
       setErrorBanner(message);
@@ -197,7 +229,7 @@ export default function BookingsPage() {
           <div className="form-card form-card-wide">
             <div className="section-title">{editingId ? 'Update booking' : 'Create booking'}</div>
             <div className="section-subtitle">
-              Step 1: choose a resource. Step 2: pick the start and end time. Step 3: submit.
+              Step 1: choose a resource. Step 2: pick the start and end time. Step 3: submit as the logged-in user.
             </div>
 
             <form onSubmit={handleSubmit}>
@@ -218,7 +250,7 @@ export default function BookingsPage() {
                     value={form.requestedBy}
                     onChange={handleFormChange}
                     placeholder="student@example.com"
-                    readOnly={Boolean(user?.email)}
+                    readOnly
                     required
                   />
                 </div>
@@ -278,10 +310,12 @@ export default function BookingsPage() {
 
           <div className="section-title">Bookings</div>
           <div className="section-subtitle">
-            View your requests and edit or cancel only the ones that are still pending.
+            View only your own requests and edit or cancel the ones that are still pending.
           </div>
 
-          {loading ? (
+          {!user?.email ? (
+            <div className="empty-state">Sign in to view your bookings.</div>
+          ) : loading ? (
             <div className="empty-state">Loading bookings...</div>
           ) : filteredBookings.length === 0 ? (
             <div className="empty-state">

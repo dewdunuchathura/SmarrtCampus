@@ -2,6 +2,8 @@ package com.fms.bookings.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,10 @@ public class BookingService {
 		this.eventPublisher = eventPublisher;
 	}
 
+	private String normalizeEmail(String value) {
+		return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+	}
+
 	public BookingResponse createBooking(BookingCreateRequest request) {
 		validateDateRange(request.getStartDateTime(), request.getEndDateTime());
 		checkConflict(request.getResourceId(), request.getStartDateTime(), request.getEndDateTime(), null);
@@ -39,7 +45,7 @@ public class BookingService {
 		Booking booking = Booking.builder()
 			.resourceId(request.getResourceId())
 			.resourceName(request.getResourceName())
-			.requestedBy(request.getRequestedBy())
+			.requestedBy(normalizeEmail(request.getRequestedBy()))
 			.purpose(request.getPurpose())
 			.startDateTime(request.getStartDateTime())
 			.endDateTime(request.getEndDateTime())
@@ -131,7 +137,12 @@ public class BookingService {
 	}
 
 	public List<BookingResponse> getBookingsByRequester(String requestedBy) {
-		return bookingRepository.findByRequestedByOrderByCreatedAtDesc(requestedBy).stream().map(this::toResponse).toList();
+		String normalizedEmail = normalizeEmail(requestedBy);
+		String exactEmailPattern = "^" + Pattern.quote(normalizedEmail) + "$";
+		return bookingRepository.findByRequestedByCaseInsensitive(exactEmailPattern)
+			.stream()
+			.map(this::toResponse)
+			.toList();
 	}
 
 	public List<BookingResponse> getBookingsByStatus(BookingStatus status) {

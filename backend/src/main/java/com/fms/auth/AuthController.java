@@ -3,23 +3,20 @@ package com.fms.auth;
 import com.fms.common.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(
-    origins = {
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:5175",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174",
-        "http://127.0.0.1:5175"
-    },
-    allowCredentials = "true"
-)
 public class AuthController {
 
     @Autowired
@@ -59,12 +56,12 @@ public class AuthController {
     }
 
     @GetMapping("/google-user")
-    public Object getGoogleUser(Authentication authentication) {
-        if (authentication == null) {
-            return "User not authenticated";
+    public ApiResponse<Map<String, Object>> getGoogleUser(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User oauth2User)) {
+            return ApiResponse.success("User not authenticated", Collections.emptyMap());
         }
 
-        return authentication.getPrincipal();
+        return ApiResponse.success("Google user fetched successfully", oauth2User.getAttributes());
     }
 
     @GetMapping("/admin/users")

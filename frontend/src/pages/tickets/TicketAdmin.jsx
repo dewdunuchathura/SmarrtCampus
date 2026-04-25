@@ -206,14 +206,14 @@ export default function TicketAdmin() {
     return (
       <div style={{
         fontFamily: 'Manrope, sans-serif',
-        backgroundColor: '#F5F7FA',
+        background: 'var(--page-radial), var(--bg-page)',
         minHeight: '100vh',
         padding: '2rem',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
       }}>
-        <div style={{ color: '#64748B' }}>Loading tickets...</div>
+        <div style={{ color: 'var(--text-muted)' }}>Loading tickets...</div>
       </div>
     );
   }
@@ -221,7 +221,7 @@ export default function TicketAdmin() {
   return (
     <div style={{
       fontFamily: 'Manrope, sans-serif',
-      backgroundColor: '#F5F7FA',
+      background: 'var(--page-radial), var(--bg-page)',
       minHeight: '100vh',
       padding: '2rem'
     }}>
@@ -231,9 +231,10 @@ export default function TicketAdmin() {
       }}>
         {/* Header */}
         <div style={{
-          backgroundColor: '#FFFFFF',
-          borderRadius: '12px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          backgroundColor: 'rgba(255, 255, 255, 0.92)',
+          borderRadius: '24px',
+          boxShadow: 'var(--shadow-soft)',
+          border: '1px solid var(--border)',
           padding: '2rem',
           marginBottom: '1.5rem'
         }}>
@@ -247,7 +248,7 @@ export default function TicketAdmin() {
               fontFamily: 'Sora, sans-serif',
               fontSize: '2rem',
               fontWeight: '700',
-              color: '#0F172A',
+              color: 'var(--text-heading)',
               margin: 0
             }}>
               Ticket Admin Dashboard
@@ -268,10 +269,11 @@ export default function TicketAdmin() {
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
                 padding: '0.75rem',
-                border: '1px solid #E3E8EF',
-                borderRadius: '8px',
+                border: '1px solid var(--border)',
+                borderRadius: '14px',
                 fontSize: '1rem',
-                fontFamily: 'Manrope, sans-serif'
+                fontFamily: 'Manrope, sans-serif',
+                backgroundColor: 'var(--bg-soft)'
               }}
             />
             <select
@@ -279,10 +281,11 @@ export default function TicketAdmin() {
               onChange={(e) => setFilterStatus(e.target.value)}
               style={{
                 padding: '0.75rem',
-                border: '1px solid #E3E8EF',
-                borderRadius: '8px',
+                border: '1px solid var(--border)',
+                borderRadius: '14px',
                 fontSize: '1rem',
-                fontFamily: 'Manrope, sans-serif'
+                fontFamily: 'Manrope, sans-serif',
+                backgroundColor: 'var(--bg-soft)'
               }}
             >
               <option value="">All Status</option>
@@ -295,10 +298,11 @@ export default function TicketAdmin() {
               onChange={(e) => setFilterPriority(e.target.value)}
               style={{
                 padding: '0.75rem',
-                border: '1px solid #E3E8EF',
-                borderRadius: '8px',
+                border: '1px solid var(--border)',
+                borderRadius: '14px',
                 fontSize: '1rem',
-                fontFamily: 'Manrope, sans-serif'
+                fontFamily: 'Manrope, sans-serif',
+                backgroundColor: 'var(--bg-soft)'
               }}
             >
               <option value="">All Priority</option>
@@ -311,10 +315,11 @@ export default function TicketAdmin() {
               onChange={(e) => setFilterCategory(e.target.value)}
               style={{
                 padding: '0.75rem',
-                border: '1px solid #E3E8EF',
-                borderRadius: '8px',
+                border: '1px solid var(--border)',
+                borderRadius: '14px',
                 fontSize: '1rem',
-                fontFamily: 'Manrope, sans-serif'
+                fontFamily: 'Manrope, sans-serif',
+                backgroundColor: 'var(--bg-soft)'
               }}
             >
               <option value="">All Categories</option>
@@ -328,12 +333,12 @@ export default function TicketAdmin() {
         {/* Error Message */}
         {error && (
           <div style={{
-            backgroundColor: '#FEE2E2',
-            color: '#DC2626',
+            backgroundColor: '#fff4f4',
+            color: '#b42318',
             padding: '1rem',
-            borderRadius: '8px',
+            borderRadius: '14px',
             marginBottom: '1rem',
-            border: '1px solid #FCA5A5'
+            border: '1px solid #f4c5c5'
           }}>
             {error}
           </div>
@@ -341,9 +346,10 @@ export default function TicketAdmin() {
 
         {/* Tickets Table */}
         <div style={{
-          backgroundColor: '#FFFFFF',
-          borderRadius: '12px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+          backgroundColor: 'rgba(255, 255, 255, 0.92)',
+          borderRadius: '24px',
+          boxShadow: 'var(--shadow-soft)',
+          border: '1px solid var(--border)',
           overflow: 'hidden'
         }}>
           <div style={{
@@ -354,36 +360,36 @@ export default function TicketAdmin() {
               borderCollapse: 'collapse'
             }}>
               <thead style={{
-                backgroundColor: '#F8FAFC',
-                borderBottom: '1px solid #E3E8EF'
+                backgroundColor: 'rgba(247, 252, 248, 0.94)',
+                borderBottom: '1px solid var(--border)'
               }}>
                 <tr>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>ID</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Title</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Category</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Priority</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Status</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Submitted By</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Location</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Images</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Created</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600' }}>Actions</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600' }}>ID</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600' }}>Title</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600' }}>Category</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600' }}>Priority</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600' }}>Status</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600' }}>Submitted By</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600' }}>Location</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600' }}>Images</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600' }}>Created</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {tickets.map((ticket) => (
                   <tr key={ticket.id} style={{
-                    borderBottom: '1px solid #E3E8EF',
+                    borderBottom: '1px solid var(--border)',
                     '&:hover': {
-                      backgroundColor: '#F8FAFC'
+                      backgroundColor: 'rgba(237, 247, 241, 0.72)'
                     }
                   }}>
-                    <td style={{ padding: '1rem', color: '#475569' }}>{ticket.id.substring(0, 8)}...</td>
-                    <td style={{ padding: '1rem', color: '#0F172A', fontWeight: '500' }}>{ticket.title}</td>
+                    <td style={{ padding: '1rem', color: 'var(--text-body)' }}>{ticket.id.substring(0, 8)}...</td>
+                    <td style={{ padding: '1rem', color: 'var(--text-heading)', fontWeight: '500' }}>{ticket.title}</td>
                     <td style={{ padding: '1rem' }}>
                       <span style={{
-                        backgroundColor: '#EEF2F7',
-                        color: '#475569',
+                        backgroundColor: 'var(--bg-subtle)',
+                        color: 'var(--text-body)',
                         padding: '0.25rem 0.75rem',
                         borderRadius: '12px',
                         fontSize: '0.875rem',
@@ -416,8 +422,8 @@ export default function TicketAdmin() {
                         {ticket.status}
                       </span>
                     </td>
-                    <td style={{ padding: '1rem', color: '#475569' }}>{ticket.submittedBy}</td>
-                    <td style={{ padding: '1rem', color: '#475569' }}>{ticket.location}</td>
+                    <td style={{ padding: '1rem', color: 'var(--text-body)' }}>{ticket.submittedBy}</td>
+                    <td style={{ padding: '1rem', color: 'var(--text-body)' }}>{ticket.location}</td>
                     <td style={{ padding: '1rem' }}>
                       {ticket.imageAttachments && ticket.imageAttachments.length > 0 ? (
                         <div style={{
@@ -426,8 +432,8 @@ export default function TicketAdmin() {
                           gap: '0.5rem'
                         }}>
                           <span style={{
-                            backgroundColor: '#EEF2F7',
-                            color: '#475569',
+                            backgroundColor: 'var(--bg-subtle)',
+                            color: 'var(--text-body)',
                             padding: '0.25rem 0.5rem',
                             borderRadius: '4px',
                             fontSize: '0.75rem',
@@ -441,7 +447,7 @@ export default function TicketAdmin() {
                               setShowImageModal(true);
                             }}
                             style={{
-                              backgroundColor: '#2563EB',
+                              background: 'linear-gradient(135deg, var(--purple), var(--blue))',
                               color: '#FFFFFF',
                               border: 'none',
                               padding: '0.25rem 0.5rem',
@@ -462,7 +468,7 @@ export default function TicketAdmin() {
                         </span>
                       )}
                     </td>
-                    <td style={{ padding: '1rem', color: '#64748B' }}>
+                    <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>
                       {new Date(ticket.createdAt).toLocaleDateString()}
                     </td>
                     <td style={{ padding: '1rem' }}>
@@ -474,7 +480,7 @@ export default function TicketAdmin() {
                                                 <button
                           onClick={() => handleSolve(ticket)}
                           style={{
-                            backgroundColor: '#059669',
+                            background: 'linear-gradient(135deg, var(--blue), var(--pink))',
                             color: '#FFFFFF',
                             border: 'none',
                             padding: '0.5rem 1rem',
@@ -488,7 +494,7 @@ export default function TicketAdmin() {
                         <button
                           onClick={() => handleDelete(ticket)}
                           style={{
-                            backgroundColor: '#DC2626',
+                            backgroundColor: 'var(--danger)',
                             color: '#FFFFFF',
                             border: 'none',
                             padding: '0.5rem 1rem',

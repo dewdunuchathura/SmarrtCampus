@@ -1,7 +1,15 @@
 import api from './axios';
 
 export function getBookings() {
-  return api.get('/bookings');
+  return api.get('/bookings', {
+    params: { _t: Date.now() }
+  });
+}
+
+export function getUserBookings(email) {
+  return api.get(`/bookings/user/${encodeURIComponent(email)}`, {
+    params: { _t: Date.now() }
+  });
 }
 
 export function createBooking(payload) {

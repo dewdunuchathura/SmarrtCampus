@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +24,53 @@ public class TicketService {
     private final NotificationService notificationService;
     private final CommentService commentService;
     private final String UPLOAD_DIR = "uploads/tickets/";
+
+    private String normalizeEmail(String email) {
+        return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private void notifyTicketUpdateChanges(Ticket originalTicket, Ticket updatedTicket) {
+        String ownerEmail = normalizeEmail(updatedTicket.getSubmittedBy());
+        String previousStatus = originalTicket.getStatus();
+        String nextStatus = updatedTicket.getStatus();
+        String previousAssignee = normalizeEmail(originalTicket.getAssignedTo());
+        String nextAssignee = normalizeEmail(updatedTicket.getAssignedTo());
+
+        boolean statusChanged = previousStatus != null && !previousStatus.equals(nextStatus);
+        boolean assigneeChanged = !previousAssignee.equals(nextAssignee);
+
+        if (assigneeChanged && !nextAssignee.isEmpty()) {
+            notificationService.createTicketAssignedNotification(
+                nextAssignee,
+                updatedTicket.getId(),
+                updatedTicket.getTitle(),
+                "System"
+            );
+        }
+
+        if (statusChanged && !ownerEmail.isEmpty()) {
+            if ("RESOLVED".equals(nextStatus)) {
+                notificationService.createTicketResolvedNotification(
+                    ownerEmail,
+                    updatedTicket.getId(),
+                    updatedTicket.getTitle()
+                );
+            } else if ("REJECTED".equals(nextStatus)) {
+                notificationService.createTicketRejectedNotification(
+                    ownerEmail,
+                    updatedTicket.getId(),
+                    updatedTicket.getTitle()
+                );
+            } else {
+                notificationService.createTicketStatusChangedNotification(
+                    ownerEmail,
+                    updatedTicket.getId(),
+                    updatedTicket.getTitle(),
+                    nextStatus
+                );
+            }
+        }
+    }
 
     public TicketService(TicketRepository ticketRepository, 
                         NotificationService notificationService, 
@@ -81,7 +129,12 @@ public class TicketService {
         try {
             Optional<Ticket> existingTicket = ticketRepository.findById(id);
             if (existingTicket.isPresent()) {
-                Ticket ticket = existingTicket.get();
+                Ticket existingValue = existingTicket.get();
+                Ticket originalTicket = new Ticket();
+                originalTicket.setStatus(existingValue.getStatus());
+                originalTicket.setAssignedTo(existingValue.getAssignedTo());
+
+                Ticket ticket = existingValue;
                 ticket.setTitle(ticketDetails.getTitle());
                 ticket.setDescription(ticketDetails.getDescription());
                 ticket.setCategory(ticketDetails.getCategory());
@@ -91,6 +144,7 @@ public class TicketService {
                 ticket.updateStatus(ticketDetails.getStatus());
                 
                 Ticket updatedTicket = ticketRepository.save(ticket);
+                notifyTicketUpdateChanges(originalTicket, updatedTicket);
                 return ApiResponse.success("Ticket updated successfully", updatedTicket);
             } else {
                 return ApiResponse.error("Ticket not found");
@@ -104,7 +158,12 @@ public class TicketService {
         try {
             Optional<Ticket> existingTicket = ticketRepository.findById(id);
             if (existingTicket.isPresent()) {
-                Ticket ticket = existingTicket.get();
+                Ticket existingValue = existingTicket.get();
+                Ticket originalTicket = new Ticket();
+                originalTicket.setStatus(existingValue.getStatus());
+                originalTicket.setAssignedTo(existingValue.getAssignedTo());
+
+                Ticket ticket = existingValue;
                 ticket.setTitle(ticketDetails.getTitle());
                 ticket.setDescription(ticketDetails.getDescription());
                 ticket.setCategory(ticketDetails.getCategory());
@@ -125,6 +184,7 @@ public class TicketService {
                 }
                 
                 Ticket updatedTicket = ticketRepository.save(ticket);
+                notifyTicketUpdateChanges(originalTicket, updatedTicket);
                 return ApiResponse.success("Ticket updated successfully with images", updatedTicket);
             } else {
                 return ApiResponse.error("Ticket not found");
@@ -148,6 +208,13 @@ public class TicketService {
                     savedTicket.getId(), 
                     savedTicket.getTitle(),
                     "System"
+                );
+
+                notificationService.createTicketStatusChangedNotification(
+                    savedTicket.getSubmittedBy(),
+                    savedTicket.getId(),
+                    savedTicket.getTitle(),
+                    savedTicket.getStatus()
                 );
                 
                 return ApiResponse.success("Ticket assigned successfully", savedTicket);

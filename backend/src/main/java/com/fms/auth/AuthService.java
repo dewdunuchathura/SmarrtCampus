@@ -12,10 +12,9 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
-    // REGISTER
     public String register(RegisterRequest request) {
-
-        Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
+        String normalizedEmail = normalizeEmail(request.getEmail());
+        Optional<User> existingUser = userRepository.findByEmail(normalizedEmail);
 
         if (existingUser.isPresent()) {
             return "User already exists";
@@ -23,7 +22,7 @@ public class AuthService {
 
         User user = new User();
         user.setName(request.getName());
-        user.setEmail(request.getEmail());
+        user.setEmail(normalizedEmail);
         user.setPassword(request.getPassword());
         user.setRole(request.getRole());
         user.setProvider("LOCAL");
@@ -33,10 +32,8 @@ public class AuthService {
         return "User registered successfully";
     }
 
-    // LOGIN
     public String login(LoginRequest request) {
-
-        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
+        Optional<User> userOpt = userRepository.findByEmail(normalizeEmail(request.getEmail()));
 
         if (userOpt.isEmpty()) {
             return "User not found";
@@ -52,7 +49,7 @@ public class AuthService {
     }
 
     public User getUserByEmail(String email) {
-             return userRepository.findByEmail(email).orElse(null);
+        return userRepository.findByEmail(normalizeEmail(email)).orElse(null);
     }
 
     public long getUserCount() {
@@ -64,22 +61,24 @@ public class AuthService {
     }
 
     public User saveGoogleUser(String name, String email) {
+        String normalizedEmail = normalizeEmail(email);
+        Optional<User> existingUser = userRepository.findByEmail(normalizedEmail);
 
-    Optional<User> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        }
 
-    // already exist → return it
-    if (existingUser.isPresent()) {
-        return existingUser.get();
+        User user = new User();
+        user.setName(name);
+        user.setEmail(normalizedEmail);
+        user.setPassword("");
+        user.setRole("USER");
+        user.setProvider("GOOGLE");
+
+        return userRepository.save(user);
     }
 
-    // new user → create
-    User user = new User();
-    user.setName(name);
-    user.setEmail(email);
-    user.setPassword(""); // Google user → no password
-    user.setRole("USER");
-    user.setProvider("GOOGLE");
-
-    return userRepository.save(user);
-}
+    private String normalizeEmail(String email) {
+        return email == null ? null : email.trim().toLowerCase();
+    }
 }

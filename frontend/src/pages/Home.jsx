@@ -1,4 +1,5 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
+import AuthNavActions from '../components/AuthNavActions';
 import './Home.css';
 
 const modules = [
@@ -128,8 +129,7 @@ export default function Home() {
           <button type="button" className="nav-link" onClick={() => navigate('/notifications')}>Notifications</button>
         </div>
         <div className="nav-right">
-          <button type="button" className="btn-ghost" onClick={() => navigate('/login')}>Sign in</button>
-          <button type="button" className="btn-primary" onClick={() => navigate('/login')}>Get started</button>
+          <AuthNavActions variant="home" />
         </div>
       </nav>
 
@@ -256,9 +256,10 @@ export default function Home() {
           </div>
           FMS
         </div>
-        <span className="footer-text">Facility Management System � Group Project 2025</span>
+        <span className="footer-text">Facility Management System — Group Project 2025</span>
         <span className="footer-text">Spring Boot - MongoDB - React</span>
       </footer>
     </div>
   );
 }
+

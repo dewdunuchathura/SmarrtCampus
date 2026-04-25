@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap");
 
 :root {
   --auth-bg: #f4fbf7;
@@ -271,6 +271,35 @@ body.auth-page-active nav {
 
 .auth-input:hover {
   border-color: var(--auth-border-hover);
+}
+
+.auth-password-wrap {
+  position: relative;
+}
+
+.auth-password-input {
+  padding-right: 76px;
+}
+
+.auth-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #177a5d;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 6px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.auth-password-toggle:hover {
+  background: rgba(29, 158, 117, 0.10);
+  color: #0f6b51;
 }
 
 .auth-admin-btn {
@@ -855,3 +884,4 @@ body.auth-page-active nav {
     justify-items: start;
   }
 }
+

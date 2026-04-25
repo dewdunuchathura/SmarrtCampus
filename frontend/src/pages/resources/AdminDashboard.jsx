@@ -9,49 +9,49 @@ const AdminDashboard = () => {
       maxWidth: '1400px',
       margin: '0 auto',
       padding: '2rem',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      backgroundColor: '#F8FAFC',
+      fontFamily: 'Manrope, sans-serif',
+      background: 'var(--page-radial), var(--bg-page)',
       minHeight: '100vh'
     },
     header: {
       textAlign: 'center',
       marginBottom: '3rem',
       padding: '2rem',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%)',
       color: 'white',
-      borderRadius: '15px',
-      boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
+      borderRadius: '28px',
+      boxShadow: 'var(--shadow-card)'
     },
     title: {
       fontSize: '2.5rem',
       fontWeight: '700',
       margin: '0 0 0.5rem 0',
       color: 'white',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Sora, sans-serif'
     },
     subtitle: {
       fontSize: '1rem',
       fontWeight: '400',
       color: 'rgba(255, 255, 255, 0.9)',
       margin: '0 0 1rem 0',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Manrope, sans-serif'
     },
     section: {
-      background: '#FFFFFF',
-      borderRadius: '16px',
+      background: 'rgba(255, 255, 255, 0.92)',
+      borderRadius: '24px',
       padding: '2rem',
       marginBottom: '2rem',
-      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
-      border: '1px solid #E5E7EB'
+      boxShadow: 'var(--shadow-soft)',
+      border: '1px solid var(--border)'
     },
     sectionTitle: {
       fontSize: '1.5rem',
       fontWeight: '600',
       marginBottom: '1.5rem',
-      color: '#2d3748',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      color: 'var(--text-heading)',
+      fontFamily: 'Sora, sans-serif',
       paddingBottom: '0.5rem',
-      borderBottom: '2px solid #667eea'
+      borderBottom: '2px solid rgba(29, 158, 117, 0.2)'
     },
     form: {
       display: 'grid',
@@ -66,36 +66,36 @@ const AdminDashboard = () => {
     label: {
       fontWeight: '500',
       marginBottom: '0.5rem',
-      color: '#374151',
+      color: 'var(--text-body)',
       fontSize: '0.875rem',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Manrope, sans-serif'
     },
     input: {
       padding: '0.75rem 1rem',
-      border: '1px solid #E5E7EB',
-      borderRadius: '8px',
+      border: '1px solid var(--border)',
+      borderRadius: '14px',
       fontSize: '0.875rem',
       transition: 'all 0.2s ease',
       outline: 'none',
-      backgroundColor: '#FFFFFF',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      backgroundColor: 'var(--bg-soft)',
+      fontFamily: 'Manrope, sans-serif'
     },
     inputFocus: {
-      borderColor: '#667eea',
-      boxShadow: '0 0 0 3px rgba(102, 126, 234, 0.1)',
+      borderColor: 'rgba(29, 158, 117, 0.42)',
+      boxShadow: '0 0 0 3px rgba(29, 158, 117, 0.12)',
       transform: 'translateY(-1px)'
     },
     textarea: {
       padding: '0.75rem 1rem',
-      border: '1px solid #E5E7EB',
-      borderRadius: '8px',
+      border: '1px solid var(--border)',
+      borderRadius: '14px',
       fontSize: '0.875rem',
       transition: 'all 0.2s ease',
       outline: 'none',
       minHeight: '100px',
       resize: 'vertical',
-      backgroundColor: '#FFFFFF',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      backgroundColor: 'var(--bg-soft)',
+      fontFamily: 'Manrope, sans-serif'
     },
     textareaFocus: {
       borderColor: '#667eea',
@@ -104,32 +104,32 @@ const AdminDashboard = () => {
     },
     button: {
       padding: '0.75rem 1.5rem',
-      border: '1px solid #E5E7EB',
-      borderRadius: '8px',
+      border: '1px solid var(--border)',
+      borderRadius: '14px',
       fontSize: '0.875rem',
       fontWeight: '500',
       cursor: 'pointer',
       transition: 'all 0.2s ease',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Manrope, sans-serif'
     },
     primaryButton: {
-      background: '#667eea',
+      background: 'linear-gradient(135deg, var(--blue), var(--pink))',
       color: '#FFFFFF',
-      border: '1px solid #667eea'
+      border: '1px solid transparent'
     },
     primaryButtonHover: {
-      background: '#5a67d8',
+      background: 'linear-gradient(135deg, var(--blue-hover), #2f8f65)',
       transform: 'translateY(-1px)',
-      boxShadow: '0 4px 12px rgba(102, 126, 234, 0.15)'
+      boxShadow: '0 10px 24px rgba(29, 158, 117, 0.18)'
     },
     secondaryButton: {
-      background: '#FFFFFF',
-      color: '#374151',
-      border: '1px solid #E5E7EB'
+      background: 'rgba(255, 255, 255, 0.84)',
+      color: 'var(--text-body)',
+      border: '1px solid var(--border)'
     },
     secondaryButtonHover: {
-      background: '#edf2f7',
-      borderColor: '#cbd5e0'
+      background: 'var(--bg-subtle)',
+      borderColor: 'var(--border-hover)'
     },
     dangerButton: {
       background: 'linear-gradient(135deg, #f56565 0%, #e53e3e 100%)',
@@ -152,19 +152,19 @@ const AdminDashboard = () => {
       gap: '1.5rem'
     },
     resourceCard: {
-      background: '#FFFFFF',
-      borderRadius: '16px',
+      background: 'rgba(255, 255, 255, 0.92)',
+      borderRadius: '22px',
       padding: '1.5rem',
-      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
-      border: '1px solid #E5E7EB',
+      boxShadow: 'var(--shadow-soft)',
+      border: '1px solid var(--border)',
       transition: 'all 0.2s ease',
       position: 'relative',
       overflow: 'hidden'
     },
     resourceCardHover: {
       transform: 'translateY(-2px)',
-      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-      borderColor: '#667eea'
+      boxShadow: 'var(--shadow-card)',
+      borderColor: 'var(--border-hover)'
     },
     resourceHeader: {
       display: 'flex',
@@ -175,9 +175,9 @@ const AdminDashboard = () => {
     resourceTitle: {
       fontSize: '1.125rem',
       fontWeight: '600',
-      color: '#2d3748',
+      color: 'var(--text-heading)',
       margin: '0',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Sora, sans-serif'
     },
     resourceDetails: {
       display: 'flex',
@@ -187,17 +187,17 @@ const AdminDashboard = () => {
     },
     resourceDetail: {
       fontSize: '0.875rem',
-      color: '#64748B',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      color: 'var(--text-body)',
+      fontFamily: 'Manrope, sans-serif'
     },
     statusActive: {
-      color: '#38a169',
+      color: '#177a5d',
       fontWeight: '600',
-      background: '#c6f6d5',
+      background: 'rgba(29, 158, 117, 0.12)',
       padding: '0.25rem 0.75rem',
       borderRadius: '20px',
       fontSize: '0.75rem',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Manrope, sans-serif'
     },
     statusOutOfService: {
       color: '#e53e3e',
@@ -206,7 +206,7 @@ const AdminDashboard = () => {
       padding: '0.25rem 0.75rem',
       borderRadius: '20px',
       fontSize: '0.75rem',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Manrope, sans-serif'
     },
     resourceActions: {
       display: 'flex',
@@ -226,8 +226,8 @@ const AdminDashboard = () => {
       zIndex: '1000'
     },
     modalContent: {
-      background: 'white',
-      borderRadius: '15px',
+      background: 'rgba(255,255,255,0.96)',
+      borderRadius: '24px',
       padding: '2rem',
       maxWidth: '500px',
       width: '90%',
@@ -239,24 +239,24 @@ const AdminDashboard = () => {
       textAlign: 'center',
       padding: '3rem',
       fontSize: '1rem',
-      color: '#64748B',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      color: 'var(--text-muted)',
+      fontFamily: 'Manrope, sans-serif'
     },
     emptyState: {
       textAlign: 'center',
       padding: '3rem',
-      color: '#64748B',
+      color: 'var(--text-muted)',
       fontSize: '1rem',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Manrope, sans-serif'
     },
     error: {
-      color: '#e53e3e',
+      color: '#b42318',
       fontSize: '0.875rem',
       marginTop: '0.5rem',
       padding: '0.5rem',
       borderRadius: '8px',
-      background: '#fed7d7',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      background: '#fff4f4',
+      fontFamily: 'Manrope, sans-serif'
     },
     statsContainer: {
       display: 'flex',
@@ -266,21 +266,21 @@ const AdminDashboard = () => {
     statItem: {
       textAlign: 'center',
       padding: '1rem',
-      background: '#F8FAFC',
-      borderRadius: '12px',
-      border: '1px solid #E5E7EB'
+      background: 'rgba(247, 252, 248, 0.9)',
+      borderRadius: '18px',
+      border: '1px solid var(--border)'
     },
     statNumber: {
       fontSize: '2rem',
       fontWeight: '700',
-      color: '#667eea',
+      color: 'var(--blue)',
       marginBottom: '0.5rem',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      fontFamily: 'Sora, sans-serif'
     },
     statLabel: {
       fontSize: '0.875rem',
-      color: '#64748B',
-      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      color: 'var(--text-muted)',
+      fontFamily: 'Manrope, sans-serif'
     }
   };
   const [resources, setResources] = useState([]);

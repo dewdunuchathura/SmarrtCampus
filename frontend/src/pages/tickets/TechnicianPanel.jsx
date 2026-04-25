@@ -137,7 +137,7 @@ const TechnicianPanel = () => {
     return (
       <div style={{ 
         minHeight: '100vh', 
-        backgroundColor: '#F5F7FA',
+        background: 'var(--page-radial), var(--bg-page)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -151,7 +151,7 @@ const TechnicianPanel = () => {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      backgroundColor: '#F5F7FA',
+      background: 'var(--page-radial), var(--bg-page)',
       padding: '2rem'
     }}>
       <div style={{
@@ -166,13 +166,13 @@ const TechnicianPanel = () => {
             fontFamily: 'Sora, sans-serif',
             fontSize: '2rem',
             fontWeight: '700',
-            color: '#0F172A',
+            color: 'var(--text-heading)',
             marginBottom: '0.5rem'
           }}>
             👨‍🔧 Technician Dashboard
           </h1>
           <p style={{
-            color: '#64748B',
+            color: 'var(--text-muted)',
             fontFamily: 'Manrope, sans-serif',
             fontSize: '1rem'
           }}>
@@ -188,21 +188,22 @@ const TechnicianPanel = () => {
           marginBottom: '2rem'
         }}>
           <div style={{
-            backgroundColor: '#FFFFFF',
+            backgroundColor: 'rgba(255, 255, 255, 0.92)',
             padding: '1.5rem',
-            borderRadius: '12px',
-            border: '1px solid #E3E8EF'
+            borderRadius: '22px',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-soft)'
           }}>
             <div style={{
               fontSize: '2rem',
               fontWeight: '700',
-              color: '#2563EB',
+              color: 'var(--blue)',
               fontFamily: 'Sora, sans-serif'
             }}>
               {tickets.length}
             </div>
             <div style={{
-              color: '#64748B',
+              color: 'var(--text-muted)',
               fontFamily: 'Manrope, sans-serif',
               fontSize: '0.875rem'
             }}>
@@ -211,21 +212,22 @@ const TechnicianPanel = () => {
           </div>
 
           <div style={{
-            backgroundColor: '#FFFFFF',
+            backgroundColor: 'rgba(255, 255, 255, 0.92)',
             padding: '1.5rem',
-            borderRadius: '12px',
-            border: '1px solid #E3E8EF'
+            borderRadius: '22px',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-soft)'
           }}>
             <div style={{
               fontSize: '2rem',
               fontWeight: '700',
-              color: '#D97706',
+              color: '#b45309',
               fontFamily: 'Sora, sans-serif'
             }}>
               {tickets.filter(t => t.status === 'IN_PROGRESS').length}
             </div>
             <div style={{
-              color: '#64748B',
+              color: 'var(--text-muted)',
               fontFamily: 'Manrope, sans-serif',
               fontSize: '0.875rem'
             }}>
@@ -234,21 +236,22 @@ const TechnicianPanel = () => {
           </div>
 
           <div style={{
-            backgroundColor: '#FFFFFF',
+            backgroundColor: 'rgba(255, 255, 255, 0.92)',
             padding: '1.5rem',
-            borderRadius: '12px',
-            border: '1px solid #E3E8EF'
+            borderRadius: '22px',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-soft)'
           }}>
             <div style={{
               fontSize: '2rem',
               fontWeight: '700',
-              color: '#059669',
+              color: 'var(--blue)',
               fontFamily: 'Sora, sans-serif'
             }}>
               {tickets.filter(t => t.status === 'RESOLVED').length}
             </div>
             <div style={{
-              color: '#64748B',
+              color: 'var(--text-muted)',
               fontFamily: 'Manrope, sans-serif',
               fontSize: '0.875rem'
             }}>
@@ -257,21 +260,22 @@ const TechnicianPanel = () => {
           </div>
 
           <div style={{
-            backgroundColor: '#FFFFFF',
+            backgroundColor: 'rgba(255, 255, 255, 0.92)',
             padding: '1.5rem',
-            borderRadius: '12px',
-            border: '1px solid #E3E8EF'
+            borderRadius: '22px',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-soft)'
           }}>
             <div style={{
               fontSize: '2rem',
               fontWeight: '700',
-              color: '#DC2626',
+              color: 'var(--danger)',
               fontFamily: 'Sora, sans-serif'
             }}>
               {tickets.filter(t => t.priority === 'URGENT' || t.priority === 'HIGH').length}
             </div>
             <div style={{
-              color: '#64748B',
+              color: 'var(--text-muted)',
               fontFamily: 'Manrope, sans-serif',
               fontSize: '0.875rem'
             }}>
@@ -282,10 +286,10 @@ const TechnicianPanel = () => {
 
         {/* Search and Filter Controls */}
         <div style={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: 'rgba(255, 255, 255, 0.92)',
           padding: '1.5rem',
-          borderRadius: '12px',
-          border: '1px solid #E3E8EF',
+          borderRadius: '24px',
+          border: '1px solid var(--border)',
           marginBottom: '1.5rem'
         }}>
           <div style={{
@@ -304,8 +308,8 @@ const TechnicianPanel = () => {
                 style={{
                   width: '100%',
                   padding: '0.75rem',
-                  border: '1px solid #E3E8EF',
-                  borderRadius: '8px',
+                  border: '1px solid var(--border)',
+                  borderRadius: '14px',
                   fontSize: '0.875rem',
                   fontFamily: 'Manrope, sans-serif',
                   outline: 'none'
@@ -321,8 +325,8 @@ const TechnicianPanel = () => {
                 style={{
                   width: '100%',
                   padding: '0.75rem',
-                  border: '1px solid #E3E8EF',
-                  borderRadius: '8px',
+                  border: '1px solid var(--border)',
+                  borderRadius: '14px',
                   fontSize: '0.875rem',
                   fontFamily: 'Manrope, sans-serif',
                   outline: 'none'
@@ -343,8 +347,8 @@ const TechnicianPanel = () => {
                 style={{
                   width: '100%',
                   padding: '0.75rem',
-                  border: '1px solid #E3E8EF',
-                  borderRadius: '8px',
+                  border: '1px solid var(--border)',
+                  borderRadius: '14px',
                   fontSize: '0.875rem',
                   fontFamily: 'Manrope, sans-serif',
                   outline: 'none'
@@ -365,8 +369,8 @@ const TechnicianPanel = () => {
                 style={{
                   width: '100%',
                   padding: '0.75rem',
-                  border: '1px solid #E3E8EF',
-                  borderRadius: '8px',
+                  border: '1px solid var(--border)',
+                  borderRadius: '14px',
                   fontSize: '0.875rem',
                   fontFamily: 'Manrope, sans-serif',
                   outline: 'none'
@@ -382,7 +386,7 @@ const TechnicianPanel = () => {
             {/* Results Count */}
             <div style={{
               fontSize: '0.875rem',
-              color: '#64748B',
+              color: 'var(--text-muted)',
               fontFamily: 'Manrope, sans-serif',
               textAlign: 'right'
             }}>
@@ -393,15 +397,16 @@ const TechnicianPanel = () => {
 
         {/* Tickets Table */}
         <div style={{
-          backgroundColor: '#FFFFFF',
-          borderRadius: '12px',
+          backgroundColor: 'rgba(255, 255, 255, 0.92)',
+          borderRadius: '24px',
           overflow: 'hidden',
-          border: '1px solid #E3E8EF'
+          border: '1px solid var(--border)',
+          boxShadow: 'var(--shadow-soft)'
         }}>
           {error && (
             <div style={{
-              backgroundColor: '#FEE2E2',
-              color: '#DC2626',
+              backgroundColor: '#fff4f4',
+              color: '#b42318',
               padding: '1rem',
               fontFamily: 'Manrope, sans-serif'
             }}>
@@ -413,7 +418,7 @@ const TechnicianPanel = () => {
             <div style={{
               padding: '3rem',
               textAlign: 'center',
-              color: '#64748B',
+              color: 'var(--text-muted)',
               fontFamily: 'Manrope, sans-serif'
             }}>
               {filterStatus ? 'No tickets found with this status.' : 'No tickets assigned to you yet.'}
@@ -421,27 +426,27 @@ const TechnicianPanel = () => {
           ) : (
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead style={{ backgroundColor: '#F8FAFC', borderBottom: '1px solid #E3E8EF' }}>
+                <thead style={{ backgroundColor: 'rgba(247, 252, 248, 0.94)', borderBottom: '1px solid var(--border)' }}>
                   <tr>
-                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>ID</th>
-                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Title</th>
-                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Category</th>
-                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Priority</th>
-                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Status</th>
-                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Submitted By</th>
-                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Location</th>
-                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Images</th>
-                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Created</th>
-                    <th style={{ padding: '1rem', textAlign: 'left', color: '#475569', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Actions</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>ID</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Title</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Category</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Priority</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Status</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Submitted By</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Location</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Images</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Created</th>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: 'var(--text-body)', fontWeight: '600', fontFamily: 'Sora, sans-serif', fontSize: '0.875rem' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredTickets.map((ticket) => (
-                    <tr key={ticket.id} style={{ borderBottom: '1px solid #E3E8EF' }}>
+                    <tr key={ticket.id} style={{ borderBottom: '1px solid var(--border)' }}>
                       <td style={{ padding: '1rem' }}>
                         <div style={{
                           fontWeight: '600',
-                          color: '#0F172A',
+                          color: 'var(--text-heading)',
                           fontFamily: 'Sora, sans-serif',
                           fontSize: '0.875rem'
                         }}>
@@ -449,7 +454,7 @@ const TechnicianPanel = () => {
                         </div>
                         <div style={{
                           fontSize: '0.75rem',
-                          color: '#64748B',
+                          color: 'var(--text-muted)',
                           fontFamily: 'Manrope, sans-serif',
                           marginTop: '0.25rem'
                         }}>
@@ -458,8 +463,8 @@ const TechnicianPanel = () => {
                       </td>
                       <td style={{ padding: '1rem' }}>
                         <span style={{
-                          backgroundColor: getPriorityColor(ticket.priority),
-                          color: '#FFFFFF',
+                          backgroundColor: `${getPriorityColor(ticket.priority)}22`,
+                          color: getPriorityColor(ticket.priority),
                           padding: '0.25rem 0.75rem',
                           borderRadius: '12px',
                           fontSize: '0.75rem',
@@ -470,8 +475,8 @@ const TechnicianPanel = () => {
                       </td>
                       <td style={{ padding: '1rem' }}>
                         <span style={{
-                          backgroundColor: getStatusColor(ticket.status),
-                          color: '#FFFFFF',
+                          backgroundColor: `${getStatusColor(ticket.status)}22`,
+                          color: getStatusColor(ticket.status),
                           padding: '0.25rem 0.75rem',
                           borderRadius: '12px',
                           fontSize: '0.75rem',
@@ -480,8 +485,8 @@ const TechnicianPanel = () => {
                           {ticket.status}
                         </span>
                       </td>
-                      <td style={{ padding: '1rem', color: '#475569' }}>{ticket.submittedBy}</td>
-                      <td style={{ padding: '1rem', color: '#475569' }}>{ticket.location}</td>
+                      <td style={{ padding: '1rem', color: 'var(--text-body)' }}>{ticket.submittedBy}</td>
+                      <td style={{ padding: '1rem', color: 'var(--text-body)' }}>{ticket.location}</td>
                       <td style={{ padding: '1rem' }}>
                         {ticket.imageAttachments && ticket.imageAttachments.length > 0 ? (
                           <span style={{ color: '#059669', fontWeight: '600' }}>
@@ -491,13 +496,13 @@ const TechnicianPanel = () => {
                           <span style={{ color: '#94A3B8' }}>-</span>
                         )}
                       </td>
-                      <td style={{ padding: '1rem', color: '#475569' }}>{formatDate(ticket.createdAt)}</td>
+                      <td style={{ padding: '1rem', color: 'var(--text-body)' }}>{formatDate(ticket.createdAt)}</td>
                       <td style={{ padding: '1rem' }}>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                           <button
                             onClick={() => navigate(`/tickets/${ticket.id}`)}
                             style={{
-                              backgroundColor: '#059669',
+                              background: 'linear-gradient(135deg, var(--blue), var(--pink))',
                               color: '#FFFFFF',
                               border: 'none',
                               padding: '0.375rem 0.75rem',
@@ -511,7 +516,7 @@ const TechnicianPanel = () => {
                           <button
                             onClick={() => handleUpdateTicket(ticket)}
                             style={{
-                              backgroundColor: '#2563EB',
+                              background: 'linear-gradient(135deg, var(--purple), var(--blue))',
                               color: '#FFFFFF',
                               border: 'none',
                               padding: '0.375rem 0.75rem',

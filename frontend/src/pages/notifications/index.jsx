@@ -14,9 +14,15 @@ const typeStyles = {
   TICKET_ASSIGNED: "ticket",
   TICKET_RESOLVED: "ticket",
   TICKET_REJECTED: "ticket",
+  TICKET_STATUS_CHANGED: "ticket",
+  TICKET_COMMENT: "ticket",
   RESOURCE: "resource",
   AUTH: "auth",
 };
+
+function normalizeEmail(email) {
+  return email?.trim()?.toLowerCase?.() || "";
+}
 
 export default function NotificationsPage() {
   const { user } = useAuth();
@@ -27,7 +33,7 @@ export default function NotificationsPage() {
   const cacheRef = useRef(new Map());
   const requestIdRef = useRef(0);
 
-  const userEmail = user?.email?.trim() || "";
+  const userEmail = normalizeEmail(user?.email);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,7 +58,7 @@ export default function NotificationsPage() {
 
       const getNotificationsForUser = async (email) => {
         const response = await api.get(`/notifications/user/${encodeURIComponent(email)}`);
-        return response.data.data || [];
+        return response.data?.data || [];
       };
 
       try {
@@ -94,23 +100,25 @@ export default function NotificationsPage() {
 
     if (activeFilter === "ALL") return sortedNotifications;
     if (activeFilter === "UNREAD") {
-      return sortedNotifications.filter((item) => !item.isRead);
+      return sortedNotifications.filter((item) => !(item.isRead ?? item.read));
     }
     if (activeFilter === "READ") {
-      return sortedNotifications.filter((item) => item.isRead);
+      return sortedNotifications.filter((item) => item.isRead ?? item.read);
     }
     return sortedNotifications;
   }, [notifications, activeFilter]);
 
-  const unreadCount = notifications.filter((item) => !item.isRead).length;
-  const readCount = notifications.filter((item) => item.isRead).length;
+  const unreadCount = notifications.filter((item) => !(item.isRead ?? item.read)).length;
+  const readCount = notifications.filter((item) => item.isRead ?? item.read).length;
 
   const handleMarkAsRead = async (id) => {
     try {
       await api.put(`/notifications/${id}/read`);
-      setNotifications((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, isRead: true } : item))
-      );
+      setNotifications((prev) => {
+        const nextItems = prev.map((item) => (item.id === id ? { ...item, isRead: true, read: true } : item));
+        cacheRef.current.set(userEmail, nextItems);
+        return nextItems;
+      });
     } catch (error) {
       console.error("Error marking notification as read:", error);
       setError("Unable to mark notification as read.");
@@ -120,7 +128,11 @@ export default function NotificationsPage() {
   const handleMarkAllAsRead = async () => {
     try {
       await api.put(`/notifications/user/${userEmail}/read-all`);
-      setNotifications((prev) => prev.map((item) => ({ ...item, isRead: true })));
+      setNotifications((prev) => {
+        const nextItems = prev.map((item) => ({ ...item, isRead: true, read: true }));
+        cacheRef.current.set(userEmail, nextItems);
+        return nextItems;
+      });
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
       setError("Unable to mark all notifications as read.");
@@ -130,7 +142,11 @@ export default function NotificationsPage() {
   const handleDeleteNotification = async (id) => {
     try {
       await api.delete(`/notifications/${id}`);
-      setNotifications((prev) => prev.filter((item) => item.id !== id));
+      setNotifications((prev) => {
+        const nextItems = prev.filter((item) => item.id !== id);
+        cacheRef.current.set(userEmail, nextItems);
+        return nextItems;
+      });
     } catch (error) {
       console.error("Error deleting notification:", error);
       setError("Unable to delete notification.");
@@ -149,6 +165,16 @@ export default function NotificationsPage() {
     }
 
     return date.toLocaleString();
+  };
+
+  const getEntityLabel = (notification) => {
+    if (!notification.relatedEntityType && !notification.relatedEntityId) {
+      return "";
+    }
+
+    const entityType = notification.relatedEntityType || "UPDATE";
+    const entityId = notification.relatedEntityId || "";
+    return `${entityType}${entityId ? ` • ${entityId}` : ""}`;
   };
 
   return (
@@ -228,7 +254,7 @@ export default function NotificationsPage() {
               {filteredNotifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`notification-card ${notification.isRead ? "read" : "unread"}`}
+                  className={`notification-card ${(notification.isRead ?? notification.read) ? "read" : "unread"}`}
                 >
                   <div className="notification-main">
                     <div className="notification-meta">
@@ -243,15 +269,18 @@ export default function NotificationsPage() {
                     {notification.title ? (
                       <div className="notification-description">{notification.message}</div>
                     ) : null}
+                    {getEntityLabel(notification) ? (
+                      <div className="notification-entity-tag">{getEntityLabel(notification)}</div>
+                    ) : null}
                     <span
-                      className={`notification-status ${notification.isRead ? "read" : "unread"}`}
+                      className={`notification-status ${(notification.isRead ?? notification.read) ? "read" : "unread"}`}
                     >
-                      {notification.isRead ? "Read" : "Unread"}
+                      {(notification.isRead ?? notification.read) ? "Read" : "Unread"}
                     </span>
                   </div>
 
                   <div className="notification-actions">
-                    {!notification.isRead && (
+                    {!(notification.isRead ?? notification.read) && (
                       <button
                         className="notification-action"
                         onClick={() => handleMarkAsRead(notification.id)}

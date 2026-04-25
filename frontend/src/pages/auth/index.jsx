@@ -3,12 +3,25 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import AdminDashboard from "./AdminDashboard";
 import { useAuth } from "../../context/AuthContext";
+import { BACKEND_URL } from "../../config/api";
 import "./AuthTheme.css";
+
+const ADMIN_ROUTE_MAP = {
+  "dewdunuc1990@gmail.com": "/bookings/admin",
+  "nethmimindula@gmail.com": "/admin",
+  "pamudithajayasena@gmail.com": "/tickets/admin",
+  "pamudithajayasena@gmail.comm": "/tickets/admin",
+};
+
+function normalizeEmail(email) {
+  return email.trim().toLowerCase();
+}
 
 export default function AuthPage() {
   const navigate = useNavigate();
   const { setUser } = useAuth();
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
   const [adminUser, setAdminUser] = useState(null);
@@ -23,15 +36,17 @@ export default function AuthPage() {
   }, []);
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    window.location.href = `${BACKEND_URL}/oauth2/authorization/google`;
   };
 
   const handleAdminLogin = async () => {
     try {
       setAdminError("");
 
-      const loginRes = await axios.post("http://localhost:8080/api/auth/login", {
-        email: adminEmail,
+      const normalizedEmail = normalizeEmail(adminEmail);
+
+      const loginRes = await axios.post(`${BACKEND_URL}/api/auth/login`, {
+        email: normalizedEmail,
         password: adminPassword,
       });
 
@@ -40,9 +55,9 @@ export default function AuthPage() {
         return;
       }
 
-      const userRes = await axios.get(
-        `http://localhost:8080/api/auth/me?email=${adminEmail}`
-      );
+      const userRes = await axios.get(`${BACKEND_URL}/api/auth/me`, {
+        params: { email: normalizedEmail },
+      });
 
       if (!userRes.data.success) {
         setAdminError("Admin user not found.");
@@ -54,8 +69,16 @@ export default function AuthPage() {
         return;
       }
 
-      setUser(userRes.data.data);
-      setAdminUser(userRes.data.data);
+      const nextAdminUser = userRes.data.data;
+      setUser(nextAdminUser);
+
+      const mappedRoute = ADMIN_ROUTE_MAP[normalizedEmail];
+      if (mappedRoute) {
+        navigate(mappedRoute);
+        return;
+      }
+
+      setAdminUser(nextAdminUser);
     } catch (error) {
       setAdminError("Admin login failed. Please try again.");
       console.error(error);
@@ -66,6 +89,7 @@ export default function AuthPage() {
     setAdminUser(null);
     setAdminPassword("");
     setAdminError("");
+    setShowPassword(false);
   };
 
   if (adminUser) {
@@ -129,13 +153,23 @@ export default function AuthPage() {
 
             <div className="auth-field">
               <label className="auth-label">Password</label>
-              <input
-                className="auth-input"
-                type="password"
-                placeholder="Password"
-                value={adminPassword}
-                onChange={(e) => setAdminPassword(e.target.value)}
-              />
+              <div className="auth-password-wrap">
+                <input
+                  className="auth-input auth-password-input"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="auth-password-toggle"
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
             </div>
 
             <button className="auth-admin-btn" onClick={handleAdminLogin}>

@@ -24,9 +24,9 @@ function Shell() {
   return (
     <div style={{
       fontFamily: 'Manrope, sans-serif',
-      backgroundColor: '#F5F7FA',
+      background: 'var(--page-radial), var(--bg-page)',
       minHeight: '100vh',
-      color: '#0F172A',
+      color: 'var(--text-heading)',
       display: 'flex',
       flexDirection: 'column'
     }}>
@@ -35,8 +35,9 @@ function Shell() {
           position: 'sticky',
           top: 0,
           zIndex: 50,
-          backgroundColor: '#FFFFFF',
-          borderBottom: '1px solid #E3E8EF'
+          backgroundColor: 'rgba(255, 255, 255, 0.92)',
+          borderBottom: '1px solid var(--border)',
+          backdropFilter: 'blur(14px)'
         }}>
           <Navbar />
         </header>
@@ -47,21 +48,21 @@ function Shell() {
         toastOptions={{
           style: {
             fontFamily: 'Manrope, sans-serif',
-            backgroundColor: '#FFFFFF',
-            color: '#0F172A',
-            border: '1px solid #E3E8EF',
-            borderRadius: '8px',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+            backgroundColor: 'rgba(255, 255, 255, 0.96)',
+            color: 'var(--text-heading)',
+            border: '1px solid var(--border)',
+            borderRadius: '14px',
+            boxShadow: 'var(--shadow-soft)',
             fontSize: '0.875rem',
             maxWidth: '400px'
           },
           success: {
             iconTheme: {
-              primary: '#10B981',
+              primary: '#1D9E75',
               secondary: '#FFFFFF'
             },
             style: {
-              borderLeft: '4px solid #10B981'
+              borderLeft: '4px solid #1D9E75'
             }
           },
           error: {
@@ -87,9 +88,9 @@ function Shell() {
         width: '100%',
         ...(showSharedNavbar ? { 
           paddingTop: '0',
-          backgroundColor: '#F5F7FA'
+          background: 'transparent'
         } : {
-          backgroundColor: '#F5F7FA'
+          background: 'transparent'
         })
       }}>
         <Routes>
@@ -115,13 +116,14 @@ function Shell() {
       
       {showSharedNavbar && (
         <footer style={{
-          backgroundColor: '#FFFFFF',
-          borderTop: '1px solid #E3E8EF',
+          backgroundColor: 'rgba(255, 255, 255, 0.88)',
+          borderTop: '1px solid var(--border)',
           padding: '1rem 2rem',
           textAlign: 'center',
-          color: '#64748B',
+          color: 'var(--text-muted)',
           fontSize: '0.875rem',
-          fontFamily: 'Manrope, sans-serif'
+          fontFamily: 'Manrope, sans-serif',
+          backdropFilter: 'blur(14px)'
         }}>
           <div style={{
             maxWidth: '1200px',

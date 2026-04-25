@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -15,8 +16,13 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
+    private String normalizeEmail(String email) {
+        return email == null ? "" : email.trim().toLowerCase(Locale.ROOT);
+    }
+
     public ApiResponse<Notification> createNotification(Notification notification) {
         try {
+            notification.setRecipientEmail(normalizeEmail(notification.getRecipientEmail()));
             Notification savedNotification = notificationRepository.save(notification);
             return ApiResponse.success("Notification created successfully", savedNotification);
         } catch (Exception e) {
@@ -26,7 +32,16 @@ public class NotificationService {
 
     public ApiResponse<List<Notification>> getUserNotifications(String userEmail) {
         try {
-            List<Notification> notifications = notificationRepository.findByRecipientEmailOrderByCreatedAtDesc(userEmail);
+            List<Notification> notifications = notificationRepository.findByRecipientEmailOrderByCreatedAtDesc(normalizeEmail(userEmail));
+            return ApiResponse.success("Notifications retrieved successfully", notifications);
+        } catch (Exception e) {
+            return ApiResponse.error("Failed to retrieve notifications: " + e.getMessage());
+        }
+    }
+
+    public ApiResponse<List<Notification>> getAllNotifications() {
+        try {
+            List<Notification> notifications = notificationRepository.findAllByOrderByCreatedAtDesc();
             return ApiResponse.success("Notifications retrieved successfully", notifications);
         } catch (Exception e) {
             return ApiResponse.error("Failed to retrieve notifications: " + e.getMessage());
@@ -35,7 +50,7 @@ public class NotificationService {
 
     public ApiResponse<List<Notification>> getUnreadNotifications(String userEmail) {
         try {
-            List<Notification> notifications = notificationRepository.findByRecipientEmailAndIsReadFalseOrderByCreatedAtDesc(userEmail);
+            List<Notification> notifications = notificationRepository.findByRecipientEmailAndIsReadFalseOrderByCreatedAtDesc(normalizeEmail(userEmail));
             return ApiResponse.success("Unread notifications retrieved successfully", notifications);
         } catch (Exception e) {
             return ApiResponse.error("Failed to retrieve unread notifications: " + e.getMessage());
@@ -76,7 +91,16 @@ public class NotificationService {
 
     public ApiResponse<Long> getUnreadCount(String userEmail) {
         try {
-            long count = notificationRepository.countByRecipientEmailAndIsReadFalse(userEmail);
+            long count = notificationRepository.countByRecipientEmailAndIsReadFalse(normalizeEmail(userEmail));
+            return ApiResponse.success("Unread count retrieved successfully", count);
+        } catch (Exception e) {
+            return ApiResponse.error("Failed to get unread count: " + e.getMessage());
+        }
+    }
+
+    public ApiResponse<Long> getUnreadCountAll() {
+        try {
+            long count = notificationRepository.countByIsReadFalse();
             return ApiResponse.success("Unread count retrieved successfully", count);
         } catch (Exception e) {
             return ApiResponse.error("Failed to get unread count: " + e.getMessage());
@@ -85,7 +109,7 @@ public class NotificationService {
 
     public ApiResponse<Void> markAllAsRead(String userEmail) {
         try {
-            List<Notification> unreadNotifications = notificationRepository.findByRecipientEmailAndIsReadFalseOrderByCreatedAtDesc(userEmail);
+            List<Notification> unreadNotifications = notificationRepository.findByRecipientEmailAndIsReadFalseOrderByCreatedAtDesc(normalizeEmail(userEmail));
             unreadNotifications.forEach(Notification::markAsRead);
             notificationRepository.saveAll(unreadNotifications);
             return ApiResponse.success("All notifications marked as read");
@@ -109,7 +133,7 @@ public class NotificationService {
 
     public ApiResponse<Void> deleteReadNotifications(String userEmail) {
         try {
-            notificationRepository.deleteByRecipientEmailAndIsReadTrue(userEmail);
+            notificationRepository.deleteByRecipientEmailAndIsReadTrue(normalizeEmail(userEmail));
             return ApiResponse.success("Read notifications deleted successfully");
         } catch (Exception e) {
             return ApiResponse.error("Failed to delete read notifications: " + e.getMessage());
@@ -122,6 +146,19 @@ public class NotificationService {
             "New Ticket Created",
             "Your ticket '" + ticketTitle + "' has been created successfully.",
             "TICKET_CREATED",
+            userEmail,
+            ticketId,
+            "TICKET"
+        );
+        createNotification(notification);
+    }
+
+    public void createTicketStatusChangedNotification(String userEmail, String ticketId, String ticketTitle, String status) {
+        String statusLabel = status == null ? "updated" : status.replace('_', ' ').toLowerCase(Locale.ROOT);
+        Notification notification = new Notification(
+            "Ticket Status Updated",
+            "Your ticket '" + ticketTitle + "' is now " + statusLabel + ".",
+            "TICKET_STATUS_CHANGED",
             userEmail,
             ticketId,
             "TICKET"
@@ -158,6 +195,22 @@ public class NotificationService {
             "Ticket Rejected",
             "Your ticket '" + ticketTitle + "' has been rejected.",
             "TICKET_REJECTED",
+            userEmail,
+            ticketId,
+            "TICKET"
+        );
+        createNotification(notification);
+    }
+
+    public void createTicketCommentNotification(String userEmail, String ticketId, String ticketTitle, String commentAuthorName) {
+        String authorName = (commentAuthorName == null || commentAuthorName.trim().isEmpty())
+            ? "Someone"
+            : commentAuthorName.trim();
+
+        Notification notification = new Notification(
+            "New Ticket Comment",
+            authorName + " added a new comment on ticket '" + ticketTitle + "'.",
+            "TICKET_COMMENT",
             userEmail,
             ticketId,
             "TICKET"
