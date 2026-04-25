@@ -88,7 +88,7 @@ const TicketDetail = () => {
           margin: '0 auto'
         }}>
           <button
-            onClick={() => navigate('/tickets')}
+            onClick={() => navigate('/tickets/workflow')}
             style={{
               backgroundColor: '#2563EB',
               color: '#FFFFFF',
@@ -136,7 +136,7 @@ const TicketDetail = () => {
           marginBottom: '2rem'
         }}>
           <button
-            onClick={() => navigate('/tickets')}
+            onClick={() => navigate('/tickets/workflow')}
             style={{
               backgroundColor: '#2563EB',
               color: '#FFFFFF',

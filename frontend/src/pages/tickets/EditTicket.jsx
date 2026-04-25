@@ -144,7 +144,7 @@ export default function EditTicket() {
       if (response.data.success) {
         setSubmitSuccess(true);
         setTimeout(() => {
-          navigate('/tickets');
+          navigate('/tickets/workflow');
         }, 2000);
       }
     } catch (error) {
@@ -677,7 +677,7 @@ export default function EditTicket() {
           <div style={{ textAlign: 'center', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
             <button
               type="button"
-              onClick={() => navigate('/tickets')}
+              onClick={() => navigate('/tickets/workflow')}
               style={{
                 backgroundColor: '#EEF2F7',
                 color: '#64748B',

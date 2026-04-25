@@ -25,7 +25,7 @@ export default function CreateTicket() {
   // Fetch next ticket ID from backend
   const fetchNextTicketId = async () => {
     try {
-      const response = await axios.get('/api/tickets/next-id');
+      const response = await axios.get('/tickets/next-id');
       if (response.data.success) {
         setTicketId(response.data.ticketId);
       }
@@ -208,7 +208,7 @@ export default function CreateTicket() {
       if (response.data.success) {
         setSubmitSuccess(true);
         setTimeout(() => {
-          navigate('/tickets');
+          navigate('/tickets/workflow');
         }, 2000);
       }
     } catch (error) {

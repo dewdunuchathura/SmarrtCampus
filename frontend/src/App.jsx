@@ -4,7 +4,9 @@ import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import ResourcesPage from './pages/resources';
+import AdminDashboard from './pages/resources/AdminDashboard';
 import BookingsPage from './pages/bookings';
+import BookingAdminPage from './pages/bookings/admin';
 import TicketsPage from './pages/tickets/index';
 import CreateTicket from './pages/tickets/CreateTicket';
 import EditTicket from './pages/tickets/EditTicket';
@@ -93,10 +95,14 @@ function Shell() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/bookings" element={<BookingsPage />} />
-          <Route path="/tickets" element={<TicketTable />} />
+          <Route path="/bookings/admin" element={<BookingAdminPage />} />
+          <Route path="/tickets" element={<TicketsPage />} />
           <Route path="/tickets/index" element={<TicketsPage />} />
+          <Route path="/tickets/workflow" element={<TicketTable />} />
           <Route path="/tickets/admin" element={<TicketAdmin />} />
+          <Route path="/tickets/create" element={<CreateTicket />} />
           <Route path="/tickets/createticket" element={<CreateTicket />} />
           <Route path="/tickets/:id" element={<TicketDetail />} />
           <Route path="/tickets/technician" element={<TechnicianPanel />} />
@@ -121,7 +127,7 @@ function Shell() {
             maxWidth: '1200px',
             margin: '0 auto'
           }}>
-            © 2024 Smart Campus Facility Management System. All rights reserved.
+            Copyright 2024 Smart Campus Facility Management System. All rights reserved.
           </div>
         </footer>
       )}

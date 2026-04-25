@@ -137,7 +137,7 @@ export default function TicketsPage() {
             fontWeight: '600',
             fontSize: '0.9rem'
           }}>
-            <span>Get Started →</span>
+            <span>Get Started</span>
           </div>
         </div>
 
@@ -159,7 +159,7 @@ export default function TicketsPage() {
           e.currentTarget.style.transform = 'translateY(0)';
           e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.08)';
         }}
-        onClick={() => navigate('/tickets')}
+        onClick={() => navigate('/tickets/workflow')}
         >
           <div style={{
             backgroundColor: '#DBEAFE',
@@ -200,7 +200,7 @@ export default function TicketsPage() {
             fontWeight: '600',
             fontSize: '0.9rem'
           }}>
-            <span>View Progress →</span>
+            <span>View Progress</span>
           </div>
         </div>
 
@@ -264,7 +264,7 @@ export default function TicketsPage() {
             fontWeight: '600',
             fontSize: '0.9rem'
           }}>
-            <span>My Tickets →</span>
+            <span>My Tickets</span>
           </div>
         </div>
       </div>
