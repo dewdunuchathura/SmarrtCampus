@@ -25,7 +25,7 @@ function normalizeEmail(email) {
 }
 
 export default function NotificationsPage() {
-  const { user } = useAuth();
+  const { user, refreshUnreadNotificationCount } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [activeFilter, setActiveFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
@@ -43,6 +43,7 @@ export default function NotificationsPage() {
       if (!userEmail) {
         setNotifications([]);
         setLoading(false);
+        refreshUnreadNotificationCount('');
         return;
       }
 
@@ -69,6 +70,7 @@ export default function NotificationsPage() {
         }
         cacheRef.current.set(userEmail, primaryNotifications);
         setNotifications(primaryNotifications);
+        refreshUnreadNotificationCount(userEmail);
       } catch (err) {
         if (!isMounted || requestIdRef.current !== currentRequestId) {
           return;
@@ -119,6 +121,7 @@ export default function NotificationsPage() {
         cacheRef.current.set(userEmail, nextItems);
         return nextItems;
       });
+      refreshUnreadNotificationCount(userEmail);
     } catch (error) {
       console.error("Error marking notification as read:", error);
       setError("Unable to mark notification as read.");
@@ -133,6 +136,7 @@ export default function NotificationsPage() {
         cacheRef.current.set(userEmail, nextItems);
         return nextItems;
       });
+      refreshUnreadNotificationCount(userEmail);
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
       setError("Unable to mark all notifications as read.");
@@ -147,6 +151,7 @@ export default function NotificationsPage() {
         cacheRef.current.set(userEmail, nextItems);
         return nextItems;
       });
+      refreshUnreadNotificationCount(userEmail);
     } catch (error) {
       console.error("Error deleting notification:", error);
       setError("Unable to delete notification.");

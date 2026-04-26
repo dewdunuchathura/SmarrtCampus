@@ -40,7 +40,7 @@ function LogoutIcon() {
 
 export default function AuthNavActions({ variant = 'app' }) {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, unreadNotificationCount } = useAuth();
 
   if (!user) {
     const ghostClass = variant === 'home' ? 'btn-ghost' : 'app-btn-ghost';
@@ -56,8 +56,13 @@ export default function AuthNavActions({ variant = 'app' }) {
 
   return (
     <div className="auth-nav-cluster">
-      <Link className="auth-nav-icon-btn" to="/notifications" aria-label="View notifications">
+      <Link className="auth-nav-icon-btn auth-nav-notification-btn" to="/notifications" aria-label="View notifications">
         <NotificationIcon />
+        {unreadNotificationCount > 0 ? (
+          <span className="auth-nav-notification-badge" aria-label={`${unreadNotificationCount} unread notifications`}>
+            {unreadNotificationCount > 99 ? '99+' : unreadNotificationCount}
+          </span>
+        ) : null}
       </Link>
 
       <div className="auth-nav-profile" aria-label="Current user">

@@ -29,6 +29,26 @@ export function AuthProvider({ children }) {
       return null;
     }
   });
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
+
+  const refreshUnreadNotificationCount = async (emailOverride) => {
+    const nextEmail = (emailOverride || user?.email || '').trim().toLowerCase();
+
+    if (!nextEmail) {
+      setUnreadNotificationCount(0);
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/api/notifications/user/${encodeURIComponent(nextEmail)}/count`,
+        { withCredentials: true }
+      );
+      setUnreadNotificationCount(response.data?.data ?? 0);
+    } catch {
+      setUnreadNotificationCount(0);
+    }
+  };
 
   const refreshUser = async () => {
     try {
@@ -49,8 +69,10 @@ export function AuthProvider({ children }) {
       });
 
       setUser(mergeUserData(userRes.data?.data, googleUser));
+      await refreshUnreadNotificationCount(googleEmail);
     } catch {
       setUser((current) => current ?? null);
+      setUnreadNotificationCount(0);
     }
   };
 
@@ -70,8 +92,13 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
+  useEffect(() => {
+    refreshUnreadNotificationCount();
+  }, [user?.email]);
+
   const logout = () => {
     setUser(null);
+    setUnreadNotificationCount(0);
     try {
       window.localStorage.removeItem(AUTH_STORAGE_KEY);
     } catch {
@@ -86,7 +113,9 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, refreshUser, logout }}>
+    <AuthContext.Provider
+      value={{ user, setUser, refreshUser, logout, unreadNotificationCount, refreshUnreadNotificationCount }}
+    >
       {children}
     </AuthContext.Provider>
   );
