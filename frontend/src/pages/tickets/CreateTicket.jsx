@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
 
 export default function CreateTicket() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     category: '',
     priority: '',
-    submittedBy: 'user@example.com',
+    submittedBy: '',
     contactNumber: '',
     location: ''
   });
@@ -40,6 +43,13 @@ export default function CreateTicket() {
   useEffect(() => {
     fetchNextTicketId();
   }, []);
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      submittedBy: user?.email?.trim?.().toLowerCase?.() || ''
+    }));
+  }, [user]);
 
   const categories = [
     'Maintenance',

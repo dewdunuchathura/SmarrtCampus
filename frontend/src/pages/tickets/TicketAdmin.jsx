@@ -1110,7 +1110,7 @@ export default function TicketAdmin() {
                         alignItems: 'center'
                       }}>
                         <img
-                          src={`http://localhost:8095${image}`}
+                          src={`http://localhost:8080${image}`}
                           alt={`Ticket image ${index + 1}`}
                           style={{
                             maxWidth: '100%',
