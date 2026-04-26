@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { approveBooking, getBookings, rejectBooking } from '../../api/bookings';
+import { approveBooking, deleteBooking, getBookings, rejectBooking } from '../../api/bookings';
 import { useAuth } from '../../context/AuthContext';
 import './bookings.css';
 
@@ -101,6 +101,24 @@ export default function BookingAdminPage() {
       await loadBookings();
     } catch (error) {
       const message = error?.response?.data?.message || 'Unable to reject booking.';
+      setErrorBanner(message);
+      toast.error(message);
+    }
+  }
+
+  async function handleDelete(id) {
+    const confirmed = window.confirm('Delete this booking permanently?');
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await deleteBooking(id);
+      toast.success('Booking deleted.');
+      setSuccessBanner('Booking deleted.');
+      await loadBookings();
+    } catch (error) {
+      const message = error?.response?.data?.message || 'Unable to delete booking.';
       setErrorBanner(message);
       toast.error(message);
     }
@@ -246,10 +264,13 @@ export default function BookingAdminPage() {
                           <button type="button" className="btn btn-secondary" onClick={() => handleReject(booking.id)}>
                             Reject
                           </button>
+                          <button type="button" className="btn btn-secondary" onClick={() => handleDelete(booking.id)}>
+                            Delete
+                          </button>
                         </>
                       ) : (
-                        <button type="button" className="btn btn-secondary">
-                          View only
+                        <button type="button" className="btn btn-secondary" onClick={() => handleDelete(booking.id)}>
+                          Delete
                         </button>
                       )}
                     </div>

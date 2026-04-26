@@ -33,3 +33,7 @@ export function approveBooking(id, approvedBy) {
 export function rejectBooking(id, reason) {
   return api.patch(`/bookings/${id}/reject`, { reason });
 }
+
+export function deleteBooking(id) {
+  return api.delete(`/bookings/${id}`);
+}

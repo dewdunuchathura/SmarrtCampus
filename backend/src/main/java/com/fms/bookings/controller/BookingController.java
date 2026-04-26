@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -80,5 +81,11 @@ public class BookingController {
 		@Valid @RequestBody BookingDecisionRequest request) {
 		BookingResponse response = bookingService.rejectBooking(id, request.getReason());
 		return ResponseEntity.ok(ApiResponse.success("Booking rejected successfully.", response));
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<ApiResponse<Void>> deleteBooking(@PathVariable String id) {
+		bookingService.deleteBooking(id);
+		return ResponseEntity.ok(ApiResponse.success("Booking deleted successfully."));
 	}
 }

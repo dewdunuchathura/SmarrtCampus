@@ -132,6 +132,11 @@ public class BookingService {
 		return toResponse(getBookingEntityOrThrow(bookingId));
 	}
 
+	public void deleteBooking(String bookingId) {
+		Booking booking = getBookingEntityOrThrow(bookingId);
+		bookingRepository.delete(booking);
+	}
+
 	public List<BookingResponse> getAllBookings() {
 		return bookingRepository.findAll().stream().map(this::toResponse).toList();
 	}
