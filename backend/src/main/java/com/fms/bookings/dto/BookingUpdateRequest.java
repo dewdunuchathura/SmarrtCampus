@@ -16,6 +16,8 @@ public class BookingUpdateRequest {
 	@Size(max = 100, message = "Resource name must be 100 characters or less")
 	private String resourceName;
 
+	private Integer capacity;
+
 	@NotBlank(message = "Purpose is required")
 	@Size(max = 255, message = "Purpose must be 255 characters or less")
 	private String purpose;

@@ -16,6 +16,8 @@ public class BookingCreateRequest {
 	@Size(max = 100, message = "Resource name must be 100 characters or less")
 	private String resourceName;
 
+	private Integer capacity;
+
 	@NotBlank(message = "Requested by is required")
 	private String requestedBy;
 

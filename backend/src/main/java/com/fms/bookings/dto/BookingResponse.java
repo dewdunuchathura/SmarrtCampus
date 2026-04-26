@@ -14,6 +14,7 @@ public class BookingResponse {
 	private String id;
 	private String resourceId;
 	private String resourceName;
+	private Integer capacity;
 	private String requestedBy;
 	private String purpose;
 	private LocalDateTime startDateTime;

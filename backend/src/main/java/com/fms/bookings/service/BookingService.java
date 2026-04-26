@@ -45,6 +45,7 @@ public class BookingService {
 		Booking booking = Booking.builder()
 			.resourceId(request.getResourceId())
 			.resourceName(request.getResourceName())
+			.capacity(request.getCapacity())
 			.requestedBy(normalizeEmail(request.getRequestedBy()))
 			.purpose(request.getPurpose())
 			.startDateTime(request.getStartDateTime())
@@ -69,6 +70,7 @@ public class BookingService {
 
 		booking.setResourceId(request.getResourceId());
 		booking.setResourceName(request.getResourceName());
+		booking.setCapacity(request.getCapacity());
 		booking.setPurpose(request.getPurpose());
 		booking.setStartDateTime(request.getStartDateTime());
 		booking.setEndDateTime(request.getEndDateTime());
@@ -184,6 +186,7 @@ public class BookingService {
 			.id(booking.getId())
 			.resourceId(booking.getResourceId())
 			.resourceName(booking.getResourceName())
+			.capacity(booking.getCapacity())
 			.requestedBy(booking.getRequestedBy())
 			.purpose(booking.getPurpose())
 			.startDateTime(booking.getStartDateTime())
