@@ -7,6 +7,7 @@ import './bookings.css';
 const initialForm = {
   resourceId: '',
   resourceName: '',
+  capacity: '',
   requestedBy: '',
   purpose: '',
   startDateTime: '',
@@ -14,6 +15,7 @@ const initialForm = {
 };
 
 const statusOrder = ['ALL', 'PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'];
+const resourceTypes = ['Lecture Hall', 'Lab', 'Meeting Room', 'Equipment'];
 
 function toDatetimeLocal(value) {
   if (!value) return '';
@@ -122,6 +124,7 @@ export default function BookingsPage() {
 
     const payload = {
       ...form,
+      capacity: form.capacity === '' ? null : Number(form.capacity),
       requestedBy: (user?.email || form.requestedBy).trim().toLowerCase(),
       resourceId: form.resourceId.trim(),
       resourceName: form.resourceName.trim(),
@@ -229,18 +232,37 @@ export default function BookingsPage() {
           <div className="form-card form-card-wide">
             <div className="section-title">{editingId ? 'Update booking' : 'Create booking'}</div>
             <div className="section-subtitle">
-              Step 1: choose a resource. Step 2: pick the start and end time. Step 3: submit as the logged-in user.
+              Step 1: choose a resource type. Step 2: pick the start and end time. Step 3: submit as the logged-in user.
             </div>
 
             <form onSubmit={handleSubmit}>
               <div className="grid-form">
                 <div className="field">
-                  <label htmlFor="resourceId">Resource ID</label>
-                  <input id="resourceId" name="resourceId" value={form.resourceId} onChange={handleFormChange} placeholder="LAB-101" required />
+                  <label htmlFor="resourceId">Type</label>
+                  <select id="resourceId" name="resourceId" value={form.resourceId} onChange={handleFormChange} required>
+                    <option value="">All Types</option>
+                    {resourceTypes.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="field">
                   <label htmlFor="resourceName">Resource name</label>
                   <input id="resourceName" name="resourceName" value={form.resourceName} onChange={handleFormChange} placeholder="Computer Lab 101" />
+                </div>
+                <div className="field">
+                  <label htmlFor="capacity">Capacity</label>
+                  <input
+                    id="capacity"
+                    name="capacity"
+                    type="number"
+                    min="1"
+                    value={form.capacity}
+                    onChange={handleFormChange}
+                    placeholder="40"
+                  />
                 </div>
                 <div className="field">
                   <label htmlFor="requestedBy">Requested by</label>
@@ -341,7 +363,9 @@ export default function BookingsPage() {
                       </div>
 
                       <div className="booking-meta">
-                        <strong>Resource:</strong> {booking.resourceId}
+                        <strong>Type:</strong> {booking.resourceId}
+                        <br />
+                        <strong>Capacity:</strong> {booking.capacity ?? 'N/A'}
                         <br />
                         <strong>Requested by:</strong> {booking.requestedBy}
                         <br />
@@ -374,6 +398,7 @@ export default function BookingsPage() {
                               setForm({
                                 resourceId: booking.resourceId || '',
                                 resourceName: booking.resourceName || '',
+                                capacity: booking.capacity ?? '',
                                 requestedBy: booking.requestedBy || '',
                                 purpose: booking.purpose || '',
                                 startDateTime: toDatetimeLocal(booking.startDateTime),

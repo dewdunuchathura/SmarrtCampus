@@ -24,6 +24,7 @@ public class Booking {
 
 	private String resourceId;
 	private String resourceName;
+	private Integer capacity;
 	private String requestedBy;
 	private String purpose;
 
